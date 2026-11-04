@@ -16,7 +16,6 @@ jobs:
       contents: write
       pull-requests: write
 
-    if: ${{ github.repository_owner == 'cloudflare' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -33,16 +32,22 @@ jobs:
 
       # changesets/action either:
       # 1. Creates/updates a "Version Packages" PR (when changesets exist)
-      # 2. Publishes to npm via `vp run release` (when Version Packages PR merges)
-      # Note: `vp run release` runs `pnpm build:all && changeset publish`,
-      # which rebuilds lark (redundant but harmless). If this becomes slow,
-      # consider a publish-only script.
+      # 2. Publishes to npm via `vp run release:npm` (when Version Packages PR merges)
+      #
+      # The publish step uses the npm CLI rather than `changeset publish`:
+      # the npm CLI is the only client that implements npm's trusted
+      # publishing (OIDC). With a Trusted Publisher configured on npmjs.com
+      # for the package — GitHub Actions, this repo, this workflow file — the
+      # job's OIDC token is exchanged for a short-lived publish token and no
+      # NPM_TOKEN secret is needed.
+      #
+      # See ci/versioning/publish-npm.sh for the publish step itself.
       - name: Create Version PR or Publish to npm
         id: changesets
         uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1
         with:
           version: vp run version
-          publish: vp run release
+          publish: vp run release:npm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true

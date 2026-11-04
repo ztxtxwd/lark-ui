@@ -408,7 +408,7 @@ pnpm version
 pnpm build:all
 
 # 4. Publish to npm
-pnpm release
+pnpm release:npm
 ```
 
 This will:
@@ -418,6 +418,9 @@ This will:
 - Remove consumed changeset files
 - Publish to npm registry
 - Create git tags
+
+Publishing uses the npm CLI so that npm's trusted publishing (OIDC) works
+from CI — see the root [AGENTS.md](../../AGENTS.md) for the release flow.
 
 ### Post-Release
 

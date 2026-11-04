@@ -6,11 +6,18 @@ set -euo pipefail
 
 echo "Starting beta release process..."
 
-# Configure npm registry authentication
-cat > ~/.npmrc << EOF
-@cloudflare:registry=https://registry.npmjs.org
+# Configure npm registry authentication.
+#
+# With npm trusted publishing (OIDC) configured for the package — GitHub
+# Actions, this repo, the release workflow — no token is needed: the npm CLI
+# exchanges the job's OIDC token for a short-lived publish token. A long-lived
+# token can still be supplied via NPM_TOKEN for setups that have not switched
+# over yet.
+if [ -n "${NPM_TOKEN:-}" ]; then
+  cat > ~/.npmrc << EOF
 //registry.npmjs.org/:_authToken=${NPM_TOKEN}
 EOF
+fi
 
 # Configure git for commits
 git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -26,7 +33,7 @@ cd packages/lark && pnpm run build && cd ../..
 
 # Run the publish step after versioning and building
 echo "Publishing to npm..."
-pnpm run release:beta
+NPM_TAG=beta bash ci/versioning/publish-npm.sh
 
 # Get the published version
 NEW_VERSION=$(node -p "require('./packages/lark/package.json').version")

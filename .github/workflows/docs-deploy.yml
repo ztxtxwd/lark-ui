@@ -1,0 +1,67 @@
+# Deploy the docs site to Cloudflare Workers.
+#
+# This is the explicit CI path. If the cloudflare-workers-and-pages GitHub app
+# (Workers Builds) is installed on the repository, it deploys on push to main
+# as well — keep only one of the two, or the site gets deployed twice.
+#
+# Secrets:
+#   CLOUDFLARE_API_TOKEN  — Workers Scripts:Edit, plus Zone:Read for the
+#                           custom domain (lark-ui.com).
+#   CLOUDFLARE_ACCOUNT_ID — the account to deploy into. Overrides the default
+#                           in packages/lark-docs-astro/cloudflare.config.ts.
+#
+name: Docs Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Deployment target"
+        type: choice
+        options:
+          - production
+          - staging
+        default: production
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-deploy-${{ github.event.inputs.mode || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          filter: "@lark-ui/docs-astro..."
+
+      - name: Build docs
+        run: vp run --filter @lark-ui/docs-astro build
+
+      - name: Install Cloudflare CLI
+        # `cf` is the CLI; `wrangler` provides the `cf-wrangler` delegate that
+        # packages the build output into a Build Output Specification.
+        run: npm install -g cf wrangler
+
+      - name: Deploy
+        run: |
+          if [ "${{ github.event.inputs.mode }}" = "staging" ]; then
+            pnpm --filter @lark-ui/docs-astro deploy:staging
+          else
+            pnpm --filter @lark-ui/docs-astro deploy
+          fi

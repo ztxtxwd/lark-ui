@@ -76,7 +76,25 @@ lark/
 - **Optional for `lark-docs-astro`**: Version appears in `/api/version` endpoint (debugging) but nothing depends on it
 - **Not needed for `lark-figma`**: Figma plugin, not published to npm
 - **Pre-push hook**: `.vite-hooks/pre-push` validates before push. Bypass: `git push --no-verify` (or `VITE_GIT_HOOKS=0`)
-- **AI agents NEVER**: `pnpm version`, `pnpm release`, `pnpm publish:beta`, `pnpm release:production`
+
+### Releasing
+
+Agents may run the release commands — versioning and publishing are part of the
+normal workflow, not something to hand off.
+
+| Command                               | What it does                                               |
+| ------------------------------------- | ---------------------------------------------------------- |
+| `pnpm version`                        | Apply changesets: bump versions, rewrite CHANGELOGs        |
+| `pnpm release:npm`                    | Publish to npm (this is what CI runs)                      |
+| `NPM_TAG=beta pnpm release:npm`       | Publish on the `beta` dist-tag                             |
+| `ci/versioning/release-production.sh` | Manual production release: branch, tag, publish, open a PR |
+
+Publishing goes through the **npm CLI**, not `changeset publish`: the npm CLI
+is the only client that implements npm's trusted publishing (OIDC). With a
+Trusted Publisher configured on npmjs.com for the package (GitHub Actions →
+this repo → `release.yml`), CI publishes with the job's OIDC token and needs
+no `NPM_TOKEN` secret. `pnpm release` still exists, but it shells out to pnpm,
+which cannot do the OIDC exchange.
 
 ### Pull Request Descriptions
 

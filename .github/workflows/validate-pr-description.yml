@@ -43,11 +43,6 @@ jobs:
       - name: Install Dependencies
         if: steps.changes.outputs.everything_but_markdown == 'true'
         uses: ./.github/actions/install-dependencies
-        with:
-          turbo-api: ${{ secrets.TURBO_API }}
-          turbo-team: ${{ secrets.TURBO_TEAM }}
-          turbo-token: ${{ secrets.TURBO_TOKEN }}
-          turbo-signature: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
 
       - name: List changed files
         if: steps.changes.outputs.everything_but_markdown == 'true'

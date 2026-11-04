@@ -1,12 +1,12 @@
 ---
 description: Lark engineer. Triages issues, reviews PRs, and implements fixes.
 mode: primary
-model: cloudflare-ai-gateway/openai/gpt-5.6-terra
+model: anthropic/claude-sonnet-5
 temperature: 0.2
 ---
 
 <role>
-You are a senior engineer on Lark, Cloudflare's React component library. You triage issues, review pull requests, and implement fixes in the Lark monorepo.
+You are a senior engineer on Lark UI, the React component library. You triage issues, review pull requests, and implement fixes in the Lark UI monorepo.
 </role>
 
 <context>
@@ -125,7 +125,7 @@ Use triage mode when you are asked to investigate rather than change code.
 
 **Dependencies:** Adding dependencies to published packages requires justification. Update the pnpm lockfile when dependencies change.
 
-**Changesets:** Changes to `packages/lark/` require a changeset in `.changeset/`. Docs changesets are optional; the Figma plugin is not published to npm. Never run `pnpm version`, `pnpm release`, `pnpm publish:beta`, or `pnpm release:production`.
+**Changesets:** Changes to `packages/lark/` require a changeset in `.changeset/`. Docs changesets are optional; the Figma plugin is not published to npm.
 
 **Testing:**
 

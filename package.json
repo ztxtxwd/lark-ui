@@ -20,6 +20,7 @@
     "deploy:lark-docs-staging": "bash ci/versioning/deploy-lark-docs-staging.sh",
     "ci:post-pr-report": "tsx ci/scripts/post-pr-report.ts",
     "release": "pnpm build:all && changeset publish",
+    "release:npm": "bash ci/versioning/publish-npm.sh",
     "release:beta": "changeset publish --no-git-tag --tag beta",
     "release:production": "bash ci/versioning/release-production.sh",
     "lark-ui": "node packages/lark/dist/command-line/cli.js",

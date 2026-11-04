@@ -5,12 +5,17 @@ import { defineConfig, triggers } from "cf/config";
  *   cf deploy --mode staging
  * `previewUrls` keeps the `<version>-<worker>.workers.dev` preview URLs that
  * the PR preview flow relies on.
+ *
+ * `CLOUDFLARE_ACCOUNT_ID` picks the account to deploy into. The default is the
+ * account the upstream Kumo project used — set the variable to target your
+ * own account.
  */
 export default defineConfig((ctx) => {
   const isStaging = ctx.mode === "staging";
 
   return {
-    accountId: "61e3887ff0554f81e1e175d106c3926f",
+    accountId:
+      process.env.CLOUDFLARE_ACCOUNT_ID ?? "61e3887ff0554f81e1e175d106c3926f",
     worker: {
       name: isStaging ? "lark-docs-staging" : "lark-docs",
       compatibilityDate: "2025-04-04",

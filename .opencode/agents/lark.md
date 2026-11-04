@@ -164,7 +164,9 @@ pnpm changeset
 
 Pre-push hook validates this. Bypass with `git push --no-verify` if needed.
 
-Never run: `pnpm version`, `pnpm release`, `pnpm publish:beta`, `pnpm release:production`
+Releasing is part of the normal workflow: `pnpm version` applies changesets,
+`pnpm release:npm` publishes to npm. Publishing goes through the npm CLI so
+that npm's trusted publishing (OIDC) works from CI.
 
 ## Figma Plugin
 

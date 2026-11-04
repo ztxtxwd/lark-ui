@@ -46,7 +46,7 @@ if [ "$DRY_RUN" = "true" ]; then
   echo "[DRY RUN] Skipping: pnpm run release"
 else
   echo "Publishing ${PACKAGE_NAME} to production..."
-  pnpm run release
+  pnpm run release:npm
 
   # Verify the version was published successfully
   echo "Verifying that version $NEW_VERSION was published to npm registry..."
