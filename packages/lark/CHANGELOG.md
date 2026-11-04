@@ -1,5 +1,33 @@
 # @lark-ui/core
 
+## 3.0.1
+
+### Patch Changes
+
+- 716ce1b: Make the Cloudflare account configurable, and publish through the npm CLI
+
+  The account ID in `cloudflare.config.ts` was inherited from the upstream
+  project and pointed at someone else's Cloudflare account. It now reads
+  `CLOUDFLARE_ACCOUNT_ID` from the environment, falling back to the previous
+  value.
+
+  The release flow has moved to the npm CLI (`pnpm release:npm`). The npm CLI is
+  the only client that implements npm's trusted publishing (OIDC), so CI can
+  publish with the job's OIDC token once a Trusted Publisher is configured on
+  npmjs.com for the package — no long-lived `NPM_TOKEN` secret.
+
+- 2e35bc6: Serve the docs from lark-ui.tapeless.eu.org, and restore the `icon` prop to the registry
+
+  - The documentation links in the package and the docs site now point at
+    `lark-ui.tapeless.eu.org`.
+  - `Badge.icon` and `Button.icon` are back in the component registry. The
+    `Icon | ReactNode` prop type is not representable as a JSON schema, so the
+    generator dropped the whole prop; they are now injected through
+    `ADDITIONAL_COMPONENT_PROPS` like the other manual overrides. The registry
+    cache version was bumped so the change takes effect without `--no-cache`.
+  - `Banner.theme`'s description no longer names the internal class it was
+    modelled on.
+
 ## 3.0.0
 
 ### Major Changes
