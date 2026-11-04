@@ -439,7 +439,7 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const fullRegression = args.includes("--full");
 
-  const beforeUrl = process.env.BEFORE_URL ?? "https://lark-ui.com";
+  const beforeUrl = process.env.BEFORE_URL ?? "https://lark-ui.tapeless.eu.org";
   const afterUrl =
     process.env.AFTER_URL ?? process.env.PREVIEW_URL ?? beforeUrl;
 

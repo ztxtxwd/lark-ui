@@ -21,6 +21,10 @@ export default defineConfig({
       SCREENSHOTS: bindings.r2({
         name: "lark-visual-regression",
       }),
+      // The workers.dev subdomain of the account this worker runs in. Preview
+      // deployments of the docs site are served from it, and the worker only
+      // navigates to hosts on the allowlist.
+      WORKERS_SUBDOMAIN: bindings.text("design-engineering"),
     },
   },
 });

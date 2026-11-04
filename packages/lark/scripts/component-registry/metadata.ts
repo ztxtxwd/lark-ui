@@ -238,6 +238,25 @@ export const ADDITIONAL_COMPONENT_PROPS: Record<
   string,
   Record<string, PropSchema>
 > = {
+  Badge: {
+    // `Icon | ReactNode` — the Phosphor component type is not representable
+    // as a JSON schema, so the generator drops the whole prop.
+    icon: {
+      type: "Icon | ReactNode",
+      optional: true,
+      description:
+        "Icon from `@phosphor-icons/react` or a React element. Rendered before children.",
+    },
+  },
+  Button: {
+    // `Icon | ReactNode` — see Badge.icon above.
+    icon: {
+      type: "Icon | ReactNode",
+      optional: true,
+      description:
+        "Icon from `@phosphor-icons/react` or a React element. Rendered before children.",
+    },
+  },
   InlineCopyText: {
     children: {
       type: "ReactNode",

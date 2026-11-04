@@ -5,7 +5,7 @@ import { COMPONENT_DESCRIPTIONS } from "../lib/component-descriptions";
 
 export const prerender = true;
 
-const SITE_URL = "https://lark-ui.com";
+const SITE_URL = "https://lark-ui.tapeless.eu.org";
 
 const componentDocPages = import.meta.glob("./components/*.{astro,mdx}");
 const blockDocPages = import.meta.glob("./blocks/*.{astro,mdx}");

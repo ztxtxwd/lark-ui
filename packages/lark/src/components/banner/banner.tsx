@@ -148,9 +148,8 @@ export interface LarkBannerVariantsProps {
   size?: LarkBannerSize;
   /**
    * Surface treatment.
-   * - `"filled"` — Flat tinted surface (Feishu `ud__notice--filled`)
+   * - `"filled"` — Flat tinted surface
    * - `"outlined"` — Pale tint with a 1px status border
-   *   (Feishu `ud__notice--outlined`)
    * @default "filled"
    */
   theme?: LarkBannerTheme;
@@ -247,9 +246,8 @@ export interface BannerProps extends Omit<
   size?: LarkBannerSize;
   /**
    * Surface treatment.
-   * - `"filled"` — Flat tinted surface (Feishu `ud__notice--filled`)
+   * - `"filled"` — Flat tinted surface
    * - `"outlined"` — Pale tint with a 1px border in the status colour
-   *   (Feishu `ud__notice--outlined`)
    * @default "filled"
    */
   theme?: LarkBannerTheme;

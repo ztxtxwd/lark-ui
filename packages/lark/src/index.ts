@@ -25,7 +25,7 @@
  * **AI resources:** See `@lark-ui/core/ai/component-registry.json` for full
  * component metadata including prop descriptions, variant values, and examples.
  *
- * @see {@link https://lark-ui.com} — Documentation site
+ * @see {@link https://lark-ui.tapeless.eu.org} — Documentation site
  */
 
 // Components

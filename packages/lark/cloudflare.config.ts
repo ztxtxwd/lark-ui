@@ -24,9 +24,9 @@ export default defineConfig((ctx) => {
       triggers: [
         triggers.fetch({
           pattern: isStaging
-            ? "storybook.staging.lark-ui.com/*"
-            : "storybook.lark-ui.com/*",
-          zone: "lark-ui.com",
+            ? "storybook.staging.lark-ui.tapeless.eu.org/*"
+            : "storybook.lark-ui.tapeless.eu.org/*",
+          zone: "tapeless.eu.org",
         }),
       ],
     },

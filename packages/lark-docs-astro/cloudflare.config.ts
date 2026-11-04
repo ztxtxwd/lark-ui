@@ -28,8 +28,10 @@ export default defineConfig((ctx) => {
       },
       triggers: [
         triggers.fetch({
-          pattern: isStaging ? "staging.lark-ui.com/*" : "lark-ui.com/*",
-          zone: "lark-ui.com",
+          pattern: isStaging
+            ? "staging.lark-ui.tapeless.eu.org/*"
+            : "lark-ui.tapeless.eu.org/*",
+          zone: "tapeless.eu.org",
         }),
       ],
     },

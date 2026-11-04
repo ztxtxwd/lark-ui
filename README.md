@@ -100,7 +100,7 @@ pnpm --filter @lark-ui/core new-component
 
 ## Documentation
 
-- **Live Docs**: [lark-ui.com](https://lark-ui.com)
+- **Live Docs**: [lark-ui.tapeless.eu.org](https://lark-ui.tapeless.eu.org)
 - **AI/Agent Guide**: [AGENTS.md](./AGENTS.md)
 
 ## Trademarks

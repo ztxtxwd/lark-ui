@@ -85,7 +85,7 @@ export default defineConfig({
     sitemap(),
     markdownPages({ passthroughPaths: ["/skill.md"] }),
   ],
-  site: "https://lark-ui.com/",
+  site: "https://lark-ui.tapeless.eu.org/",
   // Prefetch linked pages so navigation feels instant. `hover` fetches the
   // target page's HTML + assets as soon as a link is hovered/focused, so by
   // the time the user clicks it's usually already cached.

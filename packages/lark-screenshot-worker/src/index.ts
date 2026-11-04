@@ -24,10 +24,15 @@ const STABLE_SCREENSHOT_CSS = `
 
 // Allowed origins for CORS. Restricted to known Cloudflare hosts — the worker
 // is internal tooling and should never be called from arbitrary origins.
+// WORKERS_SUBDOMAIN is the workers.dev subdomain of the account the docs are
+// deployed to.
+const WORKERS_SUBDOMAIN = process.env.WORKERS_SUBDOMAIN ?? "design-engineering";
 const ALLOWED_ORIGINS = [
-  "https://lark-ui.com",
-  "https://staging.lark-ui.com",
-  /^https:\/\/[a-z0-9-]+-lark-docs\.design-engineering\.workers\.dev$/,
+  "https://lark-ui.tapeless.eu.org",
+  "https://staging.lark-ui.tapeless.eu.org",
+  new RegExp(
+    `^https://[a-z0-9-]+-lark-docs\\.${WORKERS_SUBDOMAIN}\\.workers\\.dev$`,
+  ),
   /^https:\/\/[a-z0-9-]+\.lark-docs\.pages\.dev$/,
 ];
 

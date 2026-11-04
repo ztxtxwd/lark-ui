@@ -57,8 +57,14 @@ describe("markdown pages integration", () => {
     const content = readFileSync(llmsPath, "utf-8");
     expect(content).toContain("# Lark");
     expect(content).toContain("本文件是面向 LLM 的精选索引");
-    expect(content).toContain("https://lark-ui.com/installation.md");
-    expect(content).toContain("https://lark-ui.com/components/button.md");
-    expect(content).toContain("https://lark-ui.com/blocks/resource-list.md");
+    expect(content).toContain(
+      "https://lark-ui.tapeless.eu.org/installation.md",
+    );
+    expect(content).toContain(
+      "https://lark-ui.tapeless.eu.org/components/button.md",
+    );
+    expect(content).toContain(
+      "https://lark-ui.tapeless.eu.org/blocks/resource-list.md",
+    );
   });
 });

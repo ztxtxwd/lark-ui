@@ -6,7 +6,7 @@
 #
 # Secrets:
 #   CLOUDFLARE_API_TOKEN  — Workers Scripts:Edit, plus Zone:Read for the
-#                           custom domain (lark-ui.com).
+#                           custom domain (lark-ui.tapeless.eu.org).
 #   CLOUDFLARE_ACCOUNT_ID — the account to deploy into. Overrides the default
 #                           in packages/lark-docs-astro/cloudflare.config.ts.
 #

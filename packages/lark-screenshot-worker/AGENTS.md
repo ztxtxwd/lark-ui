@@ -51,7 +51,7 @@ All requests require `X-API-Key: <API_KEY>` header.
 
 ```json
 {
-  "baseUrl": "https://lark-ui.com",
+  "baseUrl": "https://lark-ui.tapeless.eu.org",
   "pages": [
     {
       "url": "/components/button",
@@ -72,7 +72,7 @@ When `captureSections: true`, the worker looks for elements with `data-vr-demo`,
 
 ## SECURITY NOTES
 
-- **URL validation**: all Browser Rendering targets must be `https://` and match the explicit Lark docs allowlist (`lark-ui.com`, `staging.lark-ui.com`, and Lark docs preview deployments). Do not replace this with a private-IP denylist; IP notation edge cases can bypass incomplete filters.
+- **URL validation**: all Browser Rendering targets must be `https://` and match the explicit Lark docs allowlist (`lark-ui.tapeless.eu.org`, `staging.lark-ui.tapeless.eu.org`, and Lark docs preview deployments). Do not replace this with a private-IP denylist; IP notation edge cases can bypass incomplete filters.
 - **Selector injection prevention**: `sectionSelector` from the request is passed as a parameter to `page.evaluate()`, never interpolated into eval strings.
 - **CORS**: restricted to the same Lark docs allowlist used for navigation targets.
 

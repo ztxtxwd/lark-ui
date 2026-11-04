@@ -41,11 +41,15 @@ export const PROP_DESCRIPTIONS_ZH: Record<string, string> = {
     '通告栏的视觉样式。\n- `"default"` — 用于一般信息的蓝色通告栏\n- `"alert"` — 用于警示信息的黄色通告栏\n- `"error"` — 用于严重问题的红色通告栏\n- `"secondary"` — 用于次要信息的中性通告栏',
   "Banner.size":
     '通告栏的尺寸。`"sm"` 通告栏使用更紧凑的间距和 `text-sm`，将 Lark `Link` 操作内联渲染在描述旁，并把它内部的 `Banner.Action` 子元素设为 `"xs"` 尺寸——适合对话框等空间紧凑的场景。',
+  "Banner.theme":
+    '通告栏的表面处理方式。\n- `"filled"` — 平铺的淡色底（默认）\n- `"outlined"` — 淡色底加 1px 状态色边框',
   "Breadcrumbs.size":
     '面包屑导航的尺寸。\n- `"sm"` — 适用于信息密集界面的紧凑面包屑导航\n- `"base"` — 默认面包屑导航尺寸',
   "Breadcrumbs.className": "通过 `cn()` 合并的额外 CSS 类名。",
   "Button.className": "额外的 CSS 类名",
   "Button.children": "子元素",
+  "Button.icon":
+    "来自 `@phosphor-icons/react` 的图标或 React 元素。渲染在子元素之前。",
   "ButtonGroup.className":
     "通过 `cn()` 合并的额外 CSS 类名。仅使用 lark 语义化 token。",
   "ButtonGroup.children":
