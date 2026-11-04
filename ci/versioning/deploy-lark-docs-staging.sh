@@ -21,6 +21,8 @@ pnpm --filter @lark-ui/docs-astro build
 echo "🚀 Deploying to staging..."
 # `deploy:staging` packages the build output into a Build Output Specification
 # for the staging environment and deploys it with `cf`.
-pnpm --filter @lark-ui/docs-astro deploy:staging
+# `pnpm run` is required: pnpm has a built-in `deploy` command that would
+# otherwise shadow the package script.
+pnpm --filter @lark-ui/docs-astro run deploy:staging
 
 echo "🎉 Lark docs staging deployment complete!"

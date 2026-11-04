@@ -6,8 +6,13 @@ import { pathToFileURL } from "node:url";
 const WORKER_CHECK_NAME = "Workers Builds: lark-docs";
 const WORKER_APP_SLUG = "cloudflare-workers-and-pages";
 const PREVIEW_COMMENT_MARKER = "<!-- lark-docs-preview -->";
-const PREVIEW_URL_PATTERN =
-  /https:\/\/[a-z0-9-]+-lark-docs\.design-engineering\.workers\.dev/;
+// The account's workers.dev subdomain. Set WORKERS_SUBDOMAIN to the subdomain
+// of the account the docs are deployed to.
+const WORKERS_SUBDOMAIN = process.env.WORKERS_SUBDOMAIN ?? "design-engineering";
+const PREVIEW_HOST = `-lark-docs.${WORKERS_SUBDOMAIN}.workers.dev`;
+const PREVIEW_URL_PATTERN = new RegExp(
+  `https://[a-z0-9-]+-lark-docs\\.${WORKERS_SUBDOMAIN}\\.workers\\.dev`,
+);
 const VERSION_ID_PATTERN =
   /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
@@ -121,7 +126,7 @@ export function getWorkerPreviewUrl(detailsUrl: string): string {
   if (url.hostname !== "dash.cloudflare.com" || !match) {
     throw new Error(`Unexpected Worker Builds URL: ${detailsUrl}`);
   }
-  return `https://${match[1]}-lark-docs.design-engineering.workers.dev`;
+  return `https://${match[1]}${PREVIEW_HOST}`;
 }
 
 export function parsePreviewCommit(raw: string): string {
@@ -142,8 +147,9 @@ export function commitsMatch(expected: string, actual: string): boolean {
 
 function validatePreviewUrl(previewUrl: string): string {
   const url = new URL(previewUrl);
-  const allowedHost =
-    /^[a-z0-9-]+-lark-docs\.design-engineering\.workers\.dev$/;
+  const allowedHost = new RegExp(
+    `^[a-z0-9-]+-lark-docs\\.${WORKERS_SUBDOMAIN}\\.workers\\.dev$`,
+  );
   if (url.protocol !== "https:" || !allowedHost.test(url.hostname)) {
     throw new Error(`Unexpected preview URL: ${previewUrl}`);
   }
@@ -165,7 +171,7 @@ export function getCfPreviewUrl(stdout: string, stderr: string): string {
     throw new Error("cf did not return a docs preview URL.");
   }
   return validatePreviewUrl(
-    `https://${versionId.substring(0, 8)}-lark-docs.design-engineering.workers.dev`,
+    `https://${versionId.substring(0, 8)}${PREVIEW_HOST}`,
   );
 }
 

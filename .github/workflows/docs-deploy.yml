@@ -64,8 +64,10 @@ jobs:
 
       - name: Deploy
         run: |
+          # `pnpm run` is required: pnpm has a built-in `deploy` command that
+          # would otherwise shadow the package script.
           if [ "${{ github.event.inputs.mode }}" = "staging" ]; then
-            pnpm --filter @lark-ui/docs-astro deploy:staging
+            pnpm --filter @lark-ui/docs-astro run deploy:staging
           else
-            pnpm --filter @lark-ui/docs-astro deploy
+            pnpm --filter @lark-ui/docs-astro run deploy
           fi

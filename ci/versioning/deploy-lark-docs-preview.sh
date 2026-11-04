@@ -54,17 +54,20 @@ if [ -z "$VERSION_ID" ]; then
   exit 1
 fi
 
+# The account's workers.dev subdomain. Set WORKERS_SUBDOMAIN to the subdomain
+# of the account the docs are deployed to.
+WORKERS_SUBDOMAIN="${WORKERS_SUBDOMAIN:-design-engineering}"
+
 # Prefer a preview URL printed by `cf`; otherwise construct it from the version
 # ID. Format: https://<version-prefix>-<worker-name>.<subdomain>.workers.dev
 PREVIEW_URL=$(cat "$VERSION_STDOUT" "$VERSION_STDERR" |
-  grep -oE 'https://[a-z0-9-]+-lark-docs\.design-engineering\.workers\.dev' | head -1)
+  grep -oE "https://[a-z0-9-]+-lark-docs\.${WORKERS_SUBDOMAIN}\.workers\.dev" | head -1)
 
 if [ -z "$PREVIEW_URL" ]; then
   echo "  cf did not output preview URL, constructing from version ID..."
   VERSION_PREFIX=$(echo "$VERSION_ID" | cut -c1-8)
   WORKER_NAME="lark-docs"
-  SUBDOMAIN="design-engineering"
-  PREVIEW_URL="https://${VERSION_PREFIX}-${WORKER_NAME}.${SUBDOMAIN}.workers.dev"
+  PREVIEW_URL="https://${VERSION_PREFIX}-${WORKER_NAME}.${WORKERS_SUBDOMAIN}.workers.dev"
   echo "  Constructed preview URL: $PREVIEW_URL"
 fi
 

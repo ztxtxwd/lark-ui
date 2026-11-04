@@ -80,7 +80,7 @@ When `captureSections: true`, the worker looks for elements with `data-vr-demo`,
 
 ```bash
 pnpm --filter @lark-ui/screenshot-worker dev        # Local dev server
-pnpm --filter @lark-ui/screenshot-worker deploy     # Deploy to Cloudflare
+pnpm --filter @lark-ui/screenshot-worker run deploy # Deploy to Cloudflare
 pnpm --filter @lark-ui/screenshot-worker typecheck  # TypeScript check
 pnpm --filter @lark-ui/screenshot-worker lint       # vp lint (Oxlint)
 ```
