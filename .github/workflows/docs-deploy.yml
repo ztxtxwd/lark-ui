@@ -1,8 +1,11 @@
 # Deploy the docs site to Cloudflare Workers.
 #
-# This is the explicit CI path. If the cloudflare-workers-and-pages GitHub app
-# (Workers Builds) is installed on the repository, it deploys on push to main
-# as well — keep only one of the two, or the site gets deployed twice.
+# Automatic deploys run through Cloudflare Workers Builds (the
+# cloudflare-workers-and-pages GitHub App): pushes to main build and deploy the
+# site, so no GitHub Actions secrets are needed.
+#
+# This workflow is the manual fallback for environments where Workers Builds is
+# not connected. It requires:
 #
 # Secrets:
 #   CLOUDFLARE_API_TOKEN  — Workers Scripts:Edit, plus Zone:Read for the
@@ -13,9 +16,6 @@
 name: Docs Deploy
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       mode:
