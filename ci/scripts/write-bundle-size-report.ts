@@ -3,9 +3,9 @@
 /**
  * Write Bundle Size Report Artifact
  *
- * Bundles consumer fixtures against the built Kumo package and writes a
+ * Bundles consumer fixtures against the built Lark package and writes a
  * report artifact with size measurements and the npm tarball inventory.
- * Requires packages/kumo/dist to exist (run after `vp run build:kumo`).
+ * Requires packages/lark/dist to exist (run after `vp run build:lark`).
  *
  * Report-only: the script fails only when measurement itself fails.
  */

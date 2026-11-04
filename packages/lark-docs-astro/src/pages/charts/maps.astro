@@ -1,0 +1,232 @@
+---
+import DocLayout from "../../layouts/DocLayout.astro";
+import Heading from "../../components/docs/Heading.astro";
+import ComponentSection from "../../components/docs/ComponentSection.astro";
+import ComponentExample from "../../components/docs/ComponentExample.astro";
+import CodeBlock from "../../components/docs/CodeBlock.astro";
+import PropsTable from "../../components/docs/PropsTable.astro";
+import {
+  BubbleMapBasicDemo,
+  BubbleMapLarkLocationsDemo,
+} from "~/components/demos/Chart/BubbleMapDemo";
+import { ChoroplethMapBasicDemo } from "~/components/demos/Chart/ChoroplethMapDemo";
+import { GlobeMapAvailabilityZonesDemo } from "~/components/demos/Chart/GlobeMapDemo";
+import type { MapGeoJson } from "@lark-ui/core";
+
+const WORLD_GEO_JSON_URL =
+  "https://cdn.jsdelivr.net/gh/johan/world.geo.json@master/countries.geo.json";
+
+let geoJson: MapGeoJson | null = null;
+
+try {
+  const response = await fetch(WORLD_GEO_JSON_URL);
+  if (response.ok) {
+    geoJson = (await response.json()) as MapGeoJson;
+  } else {
+    console.warn(
+      `Failed to fetch BubbleMap GeoJSON: ${response.status} ${response.statusText}`,
+    );
+  }
+} catch (error) {
+  console.warn("Failed to fetch BubbleMap GeoJSON", error);
+  geoJson = null;
+}
+---
+
+<DocLayout
+  title="Maps 地图"
+  description="用于可视化地理数据的地图图表组件。"
+  sourceFile="components/chart"
+>
+  <ComponentSection>
+    <ComponentExample code={`const cloudflareLocations = [
+  { city: "San Francisco", iata: "SFO", lat: 37.77, lon: -122.42 },
+  { city: "London", iata: "LHR", lat: 51.51, lon: -0.13 },
+  { city: "Singapore", iata: "SIN", lat: 1.35, lon: 103.82 },
+  // ...more locations
+];
+
+<BubbleMap
+  echarts={echarts}
+  geoJson={geoJson}
+  data={cloudflareLocations}
+  lng="lon"
+  lat="lat"
+  name="city"
+  value={() => 1}
+  bubbleColor="#F6821F"
+  minRadius={8}
+  maxRadius={8}
+  tooltipFormatter={(row) =>
+    "<strong>" + row.city + "</strong> " + row.iata
+  }
+/>`}>
+      <BubbleMapLarkLocationsDemo geoJson={geoJson} client:visible />
+    </ComponentExample>
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="installation">安装</Heading>
+    <p class="mb-4 text-lark-subtle">
+      <code class="text-lark-default">BubbleMap</code> 和 <code class="text-lark-default">ChoroplethMap</code> 需要将 <code class="text-lark-default">echarts</code> 作为 peer dependency 安装。<code class="text-lark-default">GlobeMap</code> 会将内置的 Natural Earth 陆地遮罩直接渲染为 SVG，既不使用 WebGL，也不依赖 ECharts。平面地图的使用方需要自行提供 GeoJSON；地图组件不会自动获取地图数据，也不使用地图瓦片。
+    </p>
+    <CodeBlock code={`npm install echarts`} lang="bash" />
+
+    <Heading level={3} id="barrel" class="mb-2 mt-6 text-lg">统一导出</Heading>
+    <CodeBlock code={`import { BubbleMap, ChoroplethMap, GlobeMap } from "@lark-ui/core";`} lang="tsx" />
+    <Heading level={3} id="granular" class="mb-2 mt-4 text-lg">按需导出</Heading>
+    <CodeBlock
+      code={`import { BubbleMap, ChoroplethMap, GlobeMap } from "@lark-ui/core/components/chart";`}
+      lang="tsx"
+    />
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="usage">用法</Heading>
+    <CodeBlock
+      code={`import { BubbleMap, ChoroplethMap, type MapGeoJson } from "@lark-ui/core";
+import * as echarts from "echarts/core";
+import { MapChart, ScatterChart } from "echarts/charts";
+import { TooltipComponent, VisualMapComponent } from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+
+echarts.use([
+  MapChart,
+  ScatterChart,
+  TooltipComponent,
+  VisualMapComponent,
+  CanvasRenderer,
+]);
+
+// Load GeoJSON in your app and pass it to map components.
+const geoJson = world as MapGeoJson;
+
+const colos = [
+  { iata: "SFO", city: "San Francisco", lat: 37.77, lon: -122.42, requests: 1200 },
+  { iata: "LHR", city: "London", lat: 51.5, lon: -0.12, requests: 1500 },
+];
+
+const countries = [
+  { country: "United States of America", requests: 4200 },
+  { country: "Germany", requests: 3100 },
+];
+
+export default function Example() {
+  return (
+    <>
+      <BubbleMap
+        echarts={echarts}
+        geoJson={geoJson}
+        data={colos}
+        lng="lon"
+        lat="lat"
+        name="city"
+        value="requests"
+      />
+
+      <ChoroplethMap
+        echarts={echarts}
+        geoJson={geoJson}
+        data={countries}
+        name="country"
+        value="requests"
+      />
+    </>
+  );
+}`}
+      lang="tsx"
+    />
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="examples" class="mb-6">示例</Heading>
+
+    <div class="space-y-8">
+      <div>
+        <Heading level={3} id="bubble-map">气泡地图</Heading>
+        <p class="mb-4 text-lark-subtle">
+          按经纬度绘制原始数据行。<code class="text-lark-default">value</code> 访问器用于控制气泡的相对大小。
+        </p>
+        <ComponentExample code={`<BubbleMap
+  echarts={echarts}
+  geoJson={geoJson}
+  data={colos}
+  lng="lon"
+  lat="lat"
+  name="city"
+  value="requests"
+  minRadius={8}
+/>`}>
+          <BubbleMapBasicDemo geoJson={geoJson} client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="choropleth-map">分级设色地图</Heading>
+        <p class="mb-4 text-lark-subtle">
+          按数值对区域进行着色。数据行通过 <code class="text-lark-default">name</code> 与 GeoJSON 要素进行关联（与要素的 <code class="text-lark-default">nameProperty</code> 匹配，默认值为 <code class="text-lark-default">"name"</code>）。
+        </p>
+        <ComponentExample code={`<ChoroplethMap
+  echarts={echarts}
+  geoJson={geoJson}
+  data={countries}
+  name="country"
+  value="requests"
+/>`}>
+          <ChoroplethMapBasicDemo geoJson={geoJson} client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="lark-availability-locations">Lark 可用性区域</Heading>
+        <p class="mb-4 text-lark-subtle">
+          无需 WebGL 即可绘制地理标记。带斜线的中性色陆地、透明海洋、在地平线处淡出的标记以及密集的地理辅助线，都呼应了 Lark 营销主页上的地球样式，同时让蓝色位置保持醒目。这些示意位置取自主要网络枢纽城市，并使用 IATA 代码；拖动地球或将其聚焦后，可用方向键查看隐藏半球上的点位。
+        </p>
+        <ComponentExample code={`<GlobeMap
+  markers={cloudflareAvailabilityLocations}
+  landColor="var(--text-color-lark-inactive)"
+  landHatchSpacing={8}
+  oceanColor="transparent"
+  showGraticule
+  markerColor="var(--color-lark-brand)"
+  markerRadius={8}
+  autoRotate
+/>`}>
+          <GlobeMapAvailabilityZonesDemo client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="custom-tooltips">自定义工具提示</Heading>
+        <p class="mb-4 text-lark-subtle">
+          当默认的名称/数值工具提示不够用时，请提供 <code class="text-lark-default">tooltipFormatter</code>。格式化函数返回的是由 ECharts 渲染的 HTML，因此请对用户提供的值进行转义。
+        </p>
+        <CodeBlock
+          code={`<BubbleMap
+  echarts={echarts}
+  geoJson={geoJson}
+  data={colos}
+  lng="lon"
+  lat="lat"
+  name="city"
+  value="requests"
+  tooltipFormatter={(row) =>
+    "<strong>" + row.city + "</strong><br />" + row.requests.toLocaleString()
+  }
+/>`}
+          lang="tsx"
+        />
+      </div>
+    </div>
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="api-reference">API 参考</Heading>
+    <Heading level={3} id="bubblemap" class="mb-2 mt-4 text-lg">BubbleMap</Heading>
+    <PropsTable component="BubbleMap" />
+    <Heading level={3} id="choroplethmap" class="mb-2 mt-6 text-lg">ChoroplethMap</Heading>
+    <PropsTable component="ChoroplethMap" />
+    <Heading level={3} id="globemap" class="mb-2 mt-6 text-lg">GlobeMap</Heading>
+    <PropsTable component="GlobeMap" />
+  </ComponentSection>
+</DocLayout>

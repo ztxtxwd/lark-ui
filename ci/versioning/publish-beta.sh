@@ -22,15 +22,15 @@ pnpm run version:beta
 
 # Build the package before publishing
 echo "Building package..."
-cd packages/kumo && pnpm run build && cd ../..
+cd packages/lark && pnpm run build && cd ../..
 
 # Run the publish step after versioning and building
 echo "Publishing to npm..."
 pnpm run release:beta
 
 # Get the published version
-NEW_VERSION=$(node -p "require('./packages/kumo/package.json').version")
-PACKAGE_NAME="${PACKAGE_NAME:-@cloudflare/kumo}"
+NEW_VERSION=$(node -p "require('./packages/lark/package.json').version")
+PACKAGE_NAME="${PACKAGE_NAME:-@lark-ui/core}"
 
 echo "Published version: $NEW_VERSION"
 

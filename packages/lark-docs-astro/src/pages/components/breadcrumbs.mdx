@@ -1,0 +1,106 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Breadcrumbs 面包屑导航"
+description: "显示当前页面在导航层级中所处位置的导航组件。"
+sourceFile: "components/breadcrumbs"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  BreadcrumbsDemo,
+  BreadcrumbsWithIconsDemo,
+  BreadcrumbsWithClipboardDemo,
+  BreadcrumbsLoadingDemo,
+  BreadcrumbsRootDemo,
+} from "~/components/demos/BreadcrumbsDemo";
+
+<ComponentSection>
+  <ComponentExample demo="BreadcrumbsWithIconsDemo">
+    <BreadcrumbsWithIconsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 安装
+
+  <CodeBlock
+    code={`import { Breadcrumbs } from "@lark-ui/core";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+<ComponentSection>
+
+## 用法
+
+  <ComponentExample demo="BreadcrumbsDemo">
+    <BreadcrumbsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 示例
+
+### 基础
+
+  <ComponentExample demo="BreadcrumbsDemo">
+    <BreadcrumbsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 加载中
+
+  <ComponentExample demo="BreadcrumbsLoadingDemo">
+    <BreadcrumbsLoadingDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 根节点
+
+  <ComponentExample demo="BreadcrumbsRootDemo">
+    <BreadcrumbsRootDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 剪贴板
+
+  <ComponentExample demo="BreadcrumbsWithClipboardDemo">
+    <BreadcrumbsWithClipboardDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## API 参考
+
+### Breadcrumbs
+
+<PropsTable component="Breadcrumbs" />
+
+### Breadcrumbs.Link
+
+<PropsTable component="Breadcrumbs.Link" />
+
+### Breadcrumbs.Current
+
+<PropsTable component="Breadcrumbs.Current" />
+
+### Breadcrumbs.Separator
+
+<PropsTable component="Breadcrumbs.Separator" />
+
+### Breadcrumbs.Clipboard
+
+  <PropsTable component="Breadcrumbs.Clipboard" />
+</ComponentSection>

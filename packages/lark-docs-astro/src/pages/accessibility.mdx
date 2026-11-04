@@ -1,0 +1,39 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "无障碍"
+description: "了解如何充分利用 Lark 的无障碍功能与规范。"
+---
+
+无障碍是 Lark 的首要任务。Lark 组件基于 [Base UI](https://base-ui.com/react/overview/accessibility) 构建，替你处理了许多复杂的无障碍细节，包括 ARIA 属性、role 属性、指针交互、键盘导航和焦点管理。其目标是开箱即用地提供无障碍的用户体验，并配上易于理解的配置 API。
+
+本页重点介绍 Lark 的部分核心无障碍特性，以及为了确保你的应用对所有人都无障碍，你需要对库进行补充的一些方式。
+
+## 键盘导航
+
+Lark 组件遵循 [WAI-ARIA 创作实践](https://www.w3.org/WAI/ARIA/apg/)，开箱即用地提供基本的键盘无障碍支持。这对于难以使用指针设备的用户至关重要，对于偏好使用键盘或其他输入方式导航的用户也同样重要。
+
+许多组件都支持方向键、字母数字按键、<kbd>Home</kbd>、<kbd>End</kbd>、<kbd>Enter</kbd> 和 <kbd>Esc</kbd>。
+
+## 焦点管理
+
+Lark 组件会在用户交互后自动管理焦点。此外，一些组件还提供 `initialFocus` 和 `finalFocus` 等属性，用于配置焦点管理。
+
+虽然焦点管理由 Lark 组件负责，但以视觉方式标示焦点仍是开发者的责任。通常的做法是为 `:focus` 或 `:focus-visible` 这两个 CSS 伪类设置样式。[WCAG 提供了关于焦点外观的指南](https://www.w3.org/WAI/WCAG21/Understanding/focus-visible.html)。
+
+## 颜色对比度
+
+为元素设置样式时，必须满足前景元素与其对应背景元素之间的最低颜色对比度要求。除非你的应用对遵循现行标准有严格要求，否则建议参照 [APCA](https://www.myndex.com/APCA/)——它将成为 WCAG 3 的新标准。
+
+## 无障碍标签
+
+Lark 提供了 `Field`、`Input` 和 `Checkbox`（复选框）等组件，可自动关联表单控件。此外，你还可以使用原生 HTML 的 `<label>` 元素，为对应的输入框提供上下文。
+
+大多数应用都会呈现自定义控件，它们需要通过 `alt`、`aria-label` 或 `aria-labelledby` 等标记特性来提供无障碍名称。[WAI-ARIA 提供了如何为自定义控件提供无障碍名称的指南](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/)。
+
+## 测试
+
+Lark 组件基于 Base UI 构建，并在广泛的浏览器、设备、平台、屏幕阅读器和运行环境中接受测试，以确保在不同用户场景下都具备无障碍支持。
+
+---
+
+如需了解 Base UI 所提供无障碍功能的更多详细信息，请查阅[官方无障碍文档](https://base-ui.com/react/overview/accessibility)。

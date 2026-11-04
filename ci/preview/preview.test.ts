@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   commitsMatch,
-  getWranglerPreviewUrl,
+  getCfPreviewUrl,
   getWorkerPreviewUrl,
   parsePreviewCommit,
 } from "./preview";
@@ -11,9 +11,9 @@ describe("preview contract", () => {
   it("derives the public URL from a Worker Builds details URL", () => {
     assert.equal(
       getWorkerPreviewUrl(
-        "https://dash.cloudflare.com/account/workers/services/view/kumo-docs/production/previews/feature-branch",
+        "https://dash.cloudflare.com/account/workers/services/view/lark-docs/production/previews/feature-branch",
       ),
-      "https://feature-branch-kumo-docs.design-engineering.workers.dev",
+      "https://feature-branch-lark-docs.design-engineering.workers.dev",
     );
   });
 
@@ -34,25 +34,47 @@ describe("preview contract", () => {
     assert.equal(commitsMatch("abcdef1", "1234567"), false);
   });
 
-  it("reads the preview URL from Wrangler output", () => {
+  it("reads the preview URL from the cf output", () => {
     assert.equal(
-      getWranglerPreviewUrl(
-        "Version Preview URL: https://abcdef12-kumo-docs.design-engineering.workers.dev",
+      getCfPreviewUrl(
+        "",
+        "Uploaded version: https://abcdef12-lark-docs.design-engineering.workers.dev",
       ),
-      "https://abcdef12-kumo-docs.design-engineering.workers.dev",
+      "https://abcdef12-lark-docs.design-engineering.workers.dev",
     );
   });
 
-  it("derives the preview URL from a Wrangler version ID", () => {
+  it("derives the preview URL from a cf version result", () => {
     assert.equal(
-      getWranglerPreviewUrl(
-        "Worker Version ID: abcdef12-3456-7890-abcd-ef1234567890",
+      getCfPreviewUrl(
+        JSON.stringify({
+          result: {
+            id: "abcdef12-3456-7890-abcd-ef1234567890",
+            created_on: "2026-11-03T00:00:00Z",
+          },
+        }),
+        "",
       ),
-      "https://abcdef12-kumo-docs.design-engineering.workers.dev",
+      "https://abcdef12-lark-docs.design-engineering.workers.dev",
     );
   });
 
-  it("rejects invalid Wrangler output", () => {
-    assert.throws(() => getWranglerPreviewUrl("Upload failed"));
+  it("ignores worker ids when looking for the version id", () => {
+    assert.equal(
+      getCfPreviewUrl(
+        JSON.stringify({
+          worker_id: "11111111-2222-3333-4444-555555555555",
+          result: {
+            version_id: "abcdef12-3456-7890-abcd-ef1234567890",
+          },
+        }),
+        "",
+      ),
+      "https://abcdef12-lark-docs.design-engineering.workers.dev",
+    );
+  });
+
+  it("rejects invalid cf output", () => {
+    assert.throws(() => getCfPreviewUrl("", "Upload failed"));
   });
 });

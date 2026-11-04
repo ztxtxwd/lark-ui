@@ -22,7 +22,7 @@ function createRepositoryWithStaleMergeRef(): {
   repository: string;
   mergeRef: string;
 } {
-  const directory = mkdtempSync(join(tmpdir(), "kumo-git-operations-"));
+  const directory = mkdtempSync(join(tmpdir(), "lark-git-operations-"));
   temporaryDirectories.push(directory);
 
   const remote = join(directory, "remote.git");
@@ -49,13 +49,13 @@ function createRepositoryWithStaleMergeRef(): {
   const mergeRef = git(repository, "rev-parse", "HEAD");
 
   git(repository, "checkout", "main");
-  writeFile(repository, "packages/kumo/src/new-on-main.ts", "export {};\n");
+  writeFile(repository, "packages/lark/src/new-on-main.ts", "export {};\n");
   writeFile(
     repository,
     ".changeset/new-on-main.md",
-    '---\n"@cloudflare/kumo": patch\n---\n\nMain change.\n',
+    '---\n"@lark-ui/core": patch\n---\n\nMain change.\n',
   );
-  git(repository, "add", "packages/kumo/src/new-on-main.ts");
+  git(repository, "add", "packages/lark/src/new-on-main.ts");
   git(repository, "add", ".changeset/new-on-main.md");
   git(repository, "commit", "-m", "new main change");
   git(repository, "push", "origin", "main");
@@ -93,7 +93,7 @@ describe("pull request diffs", () => {
         "ci/pr-change.ts",
       ]);
       assert.deepEqual(
-        getChangedFiles({ cwd: repository, filterPath: "packages/kumo" }),
+        getChangedFiles({ cwd: repository, filterPath: "packages/lark" }),
         [],
       );
       assert.deepEqual(

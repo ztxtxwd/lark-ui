@@ -1,0 +1,82 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "LarkLogo Lark 标志"
+description: "Lark（飞书）官方标志，取自 Universe Design 资源包。"
+sourceFile: "components/lark-logo"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import {
+  LarkLogoBasicDemo,
+  LarkLogoColorVariantsDemo,
+  LarkLogoSizesDemo,
+} from "~/components/demos/LarkLogoDemo";
+
+<ComponentSection>
+  <ComponentExample demo="LarkLogoBasicDemo">
+    <LarkLogoBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 安装
+
+```tsx
+import { LarkLogo } from "@lark-ui/core";
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { LarkLogo } from "@lark-ui/core";
+
+export default function Example() {
+  return <LarkLogo className="size-10" />;
+}
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 示例
+
+### 颜色变体
+
+<p>
+  默认保留三个品牌色：顶部青绿
+  <code>#00D6B9</code>、中层深蓝 <code>#163C9A</code>、底层亮蓝
+  <code>#3370FF</code>，UI 元素使用深蓝与白色。也可以渲染为纯色标志。
+</p>
+<ComponentExample demo="LarkLogoColorVariantsDemo">
+  <LarkLogoColorVariantsDemo client:visible />
+</ComponentExample>
+
+### 尺寸
+
+<p>使用 Tailwind 的尺寸工具类；viewBox 会保证标志保持正方形。</p>
+<ComponentExample demo="LarkLogoSizesDemo">
+  <LarkLogoSizesDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+<ComponentSection>
+
+## API 参考
+
+<p>LarkLogo 继承自 <code>SVGSVGElement</code>，接受所有标准 SVG 属性。</p>
+
+| 属性      | 类型                          | 默认值     | 说明                      |
+| --------- | ----------------------------- | ---------- | ------------------------- |
+| color     | `"color" \| "teal" \| "dark" \| "blue" \| "black" \| "white"` | `"color"` | 三色品牌标志，或指定单色处理。 |
+| label     | `string`                      | -          | 无障碍标签。纯装饰用途时可省略。 |
+| className | `string`                      | -          | 用于控制尺寸的 CSS 类名。 |
+
+</ComponentSection>

@@ -1,0 +1,363 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  SelectStrictNullChecksDemo,
+  SelectRenderValuePlaceholderDemo,
+  SelectItemsArrayDemo,
+  SelectItemsObjectMapDemo,
+  SelectMultipleDemo,
+  SelectControlledVsUncontrolledDemo,
+  SelectGroupedOptionsDemo,
+  SelectFieldIntegrationDemo,
+  SelectSizeVariantsDemo,
+  SelectLoadingStateDemo,
+  SelectDisabledOptionsDemo,
+  SelectInferenceDemo,
+} from "../../components/demos/SelectStressTestDemo";
+
+const codeBlockClass = "mt-3 p-3 rounded-lg bg-lark-recessed text-xs font-mono overflow-x-auto whitespace-pre text-lark-default";
+---
+
+<BaseLayout title="选择器压力测试">
+  <div class="p-16 space-y-12 max-w-[900px] mx-auto mb-64">
+    <div>
+      <h1 class="text-2xl font-bold text-lark-strong">选择器组件压力测试</h1>
+      <p class="mt-2 text-lark-subtle">
+        覆盖选择器组件边界情况、TypeScript 类型推断与 API 交互的综合性测试。
+        用于验证 strictNullChecks 缺陷修复，以及 renderValue/placeholder 的行为。
+      </p>
+    </div>
+
+    <!-- 1. strictNullChecks Bug Test -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">1. strictNullChecks 缺陷</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          <code class="bg-lark-tint px-1 rounded">value=&#123;objectOrNull&#125;</code> 不应导致 T 被推断为 <code class="bg-lark-tint px-1 rounded">never</code>。
+          onValueChange 回调应当收到 <code class="bg-lark-tint px-1 rounded">User | null</code>。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectStrictNullChecksDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`const [selected, setSelected] = useState<User | null>(null);
+
+<Select<User>
+  label="Select User"
+  placeholder="Choose a user..."
+  value={selected}
+  onValueChange={(value) => setSelected(value)}  // value: User | null
+  renderValue={(user) => <span>{user.name}</span>}
+>
+  {users.map((user) => (
+    <Select.Option key={user.id} value={user}>
+      {user.name}
+    </Select.Option>
+  ))}
+</Select>`}</pre>
+    </section>
+
+    <!-- 2. renderValue + placeholder -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">2. renderValue 与 placeholder</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          <code class="bg-lark-tint px-1 rounded">renderValue</code> 只会在非空值时被调用。
+          未选中任何值时显示 placeholder。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectRenderValuePlaceholderDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`<Select<Country>
+  label="Select Country"
+  placeholder="Pick a country..."      // Shows when value is null
+  value={country}
+  onValueChange={setCountry}
+  renderValue={(c) => (                // Only called when c is non-null
+    <span>{c.flag} {c.name}</span>
+  )}
+>
+  {countries.map((c) => (
+    <Select.Option key={c.code} value={c}>
+      {c.flag} {c.name}
+    </Select.Option>
+  ))}
+</Select>`}</pre>
+    </section>
+
+    <!-- 3. items array -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">3. items 数组属性</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          使用 <code class="bg-lark-tint px-1 rounded">items</code> 属性传入 <code class="bg-lark-tint px-1 rounded">&#123; label, value &#125;</code> 对象数组。
+          会自动生成 Select.Option 元素。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectItemsArrayDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`const priorities: Priority[] = [
+  { level: 1, name: "Critical", color: "text-lark-danger" },
+  { level: 2, name: "High", color: "text-lark-warning" },
+  // ...
+];
+
+<Select<Priority>
+  label="Priority"
+  placeholder="Select priority..."
+  value={priority}
+  onValueChange={setPriority}
+  items={priorities.map((p) => ({
+    label: <span className={p.color}>[{p.level}] {p.name}</span>,
+    value: p,
+  }))}
+  renderValue={(p) => (
+    <span className={p.color}>[{p.level}] {p.name}</span>
+  )}
+/>`}</pre>
+    </section>
+
+    <!-- 4. items object map -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">4. items 对象映射</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          使用 <code class="bg-lark-tint px-1 rounded">items</code> 属性传入对象映射。
+          支持通过 <code class="bg-lark-tint px-1 rounded">SelectItemDescriptor</code> 表示禁用的选项。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectItemsObjectMapDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`<Select
+  label="Status"
+  placeholder="Select status..."
+  value={status}
+  onValueChange={setStatus}
+  items={{
+    active: "Active",                              // Simple string label
+    pending: "Pending",
+    inactive: "Inactive",
+    archived: { label: "Archived", disabled: true }, // SelectItemDescriptor
+  }}
+/>`}</pre>
+    </section>
+
+    <!-- 5. Multiple selection -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">5. 多选</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          使用对象取值的 <code class="bg-lark-tint px-1 rounded">multiple</code> 模式。
+          <code class="bg-lark-tint px-1 rounded">renderValue</code> 收到的是 <code class="bg-lark-tint px-1 rounded">T[]</code> 而不是 <code class="bg-lark-tint px-1 rounded">T</code>。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectMultipleDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+
+<Select<User, true>                    // Note: second generic is true
+  label="Select Users"
+  placeholder="Choose users..."
+  multiple                             // Enable multi-select
+  value={selectedUsers}                // T[] not T
+  onValueChange={setSelectedUsers}     // (users: User[]) => void
+  renderValue={(users) => (            // users is User[]
+    <span>{users.map((u) => u.name).join(", ")}</span>
+  )}
+>
+  {users.map((user) => (
+    <Select.Option key={user.id} value={user}>
+      {user.name}
+    </Select.Option>
+  ))}
+</Select>`}</pre>
+    </section>
+
+    <!-- 6. Controlled vs Uncontrolled -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">6. 受控与非受控</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          在受控（<code class="bg-lark-tint px-1 rounded">value</code>）与非受控（<code class="bg-lark-tint px-1 rounded">defaultValue</code>）两种模式之间切换。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectControlledVsUncontrolledDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`// Controlled: you manage the state
+const [value, setValue] = useState<string | null>(null);
+<Select
+  value={value}
+  onValueChange={setValue}
+  items={{ apple: "Apple", banana: "Banana" }}
+/>
+
+// Uncontrolled: component manages state internally
+<Select
+  defaultValue="banana"
+  items={{ apple: "Apple", banana: "Banana" }}
+/>`}</pre>
+    </section>
+
+    <!-- 7. Grouped options -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">7. 分组与分隔线</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          使用复合组件构建结构化的选项列表。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectGroupedOptionsDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`<Select label="Category" placeholder="Select...">
+  <Select.Group>
+    <Select.GroupLabel>Fruits</Select.GroupLabel>
+    <Select.Option value="apple">Apple</Select.Option>
+    <Select.Option value="banana">Banana</Select.Option>
+  </Select.Group>
+  <Select.Separator />
+  <Select.Group>
+    <Select.GroupLabel>Vegetables</Select.GroupLabel>
+    <Select.Option value="carrot">Carrot</Select.Option>
+    <Select.Option value="broccoli">Broccoli</Select.Option>
+  </Select.Group>
+</Select>`}</pre>
+    </section>
+
+    <!-- 8. Field integration -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">8. Field 集成</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          当传入 <code class="bg-lark-tint px-1 rounded">label</code> 时会自动包裹 Field 组件。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectFieldIntegrationDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`<Select
+  label="Required Field"
+  placeholder="This field is required..."
+  required                             // Shows required indicator
+  value={value}
+  onValueChange={setValue}
+  description="Helper text below"      // Shows description
+  error={!value ? "Required" : undefined}  // Shows error message
+  labelTooltip="Tooltip on hover"      // Info icon with tooltip
+  items={{ a: "Option A", b: "Option B" }}
+/>`}</pre>
+    </section>
+
+    <!-- 9. Size variants -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">9. 尺寸变体</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          四种尺寸与 Input 组件的尺寸规范保持一致。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectSizeVariantsDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`<Select size="xs" ... />  // Extra small: h-5 (20px)
+<Select size="sm" ... />  // Small: h-6.5 (26px)
+<Select size="base" ... /> // Default: h-9 (36px)
+<Select size="lg" ... />  // Large: h-10 (40px)`}</pre>
+    </section>
+
+    <!-- 10. Loading state -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">10. 加载状态</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          加载期间显示骨架屏并禁用交互。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectLoadingStateDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`const [loading, setLoading] = useState(true);
+
+<Select
+  label="Data Loading"
+  placeholder="Select when loaded..."
+  loading={loading}  // Shows SkeletonLine, disables trigger
+  items={{ ... }}
+/>`}</pre>
+    </section>
+
+    <!-- 11. Disabled options -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">11. 禁用选项</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          可以通过 <code class="bg-lark-tint px-1 rounded">SelectItemDescriptor</code> 或 Option 上的 <code class="bg-lark-tint px-1 rounded">disabled</code> 属性禁用单个选项。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectDisabledOptionsDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`// Via items prop with SelectItemDescriptor
+<Select
+  items={{
+    available: "Available",
+    disabled: { label: "Disabled", disabled: true },
+  }}
+/>
+
+// Via Select.Option prop
+<Select>
+  <Select.Option value="available">Available</Select.Option>
+  <Select.Option value="disabled" disabled>Disabled</Select.Option>
+</Select>`}</pre>
+    </section>
+
+    <!-- 12. Type inference -->
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-xl font-semibold text-lark-default">12. 类型推断（不显式指定泛型）</h2>
+        <p class="text-sm text-lark-subtle mt-1">
+          在可能的情况下，TypeScript 会根据用法推断类型。
+        </p>
+      </div>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <SelectInferenceDemo client:visible />
+      </div>
+      <pre class={codeBlockClass}>{`// No explicit <T> - inferred from items/value
+const [value, setValue] = useState<string | null>(null);
+
+<Select
+  value={value}
+  onValueChange={(v) => setValue(v)}  // v inferred as string | null
+  items={{ foo: "Foo", bar: "Bar" }}
+/>
+
+// With explicit generic for complex types
+<Select<User>
+  value={user}
+  onValueChange={setUser}
+  renderValue={(u) => u.name}  // u is User, not unknown
+>
+  ...
+</Select>`}</pre>
+    </section>
+
+    <!-- Summary -->
+    <section class="mt-16 p-6 rounded-lg bg-lark-tint">
+      <h2 class="text-lg font-semibold text-lark-strong mb-4">测试覆盖概览</h2>
+      <ul class="space-y-2 text-sm text-lark-default">
+        <li><strong>TypeScript：</strong>strictNullChecks、泛型推断、回调类型</li>
+        <li><strong>API：</strong>renderValue、placeholder、items（数组/对象）</li>
+        <li><strong>模式：</strong>受控、非受控、单选、多选</li>
+        <li><strong>Field：</strong>label、description、error、required、tooltip</li>
+        <li><strong>状态：</strong>加载中、禁用选项、尺寸变体</li>
+        <li><strong>复合组件：</strong>Group、GroupLabel、Separator、Option</li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

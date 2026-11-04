@@ -31,11 +31,11 @@ jobs:
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
         with:
-          filter: "@cloudflare/kumo..."
+          filter: "@lark-ui/core..."
 
       - uses: ./.github/actions/vite-task-cache
-      - name: Build @cloudflare/kumo
-        run: vp run build:kumo
+      - name: Build @lark-ui/core
+        run: vp run build:lark
 
       - name: Publish preview package
-        run: vp dlx pkg-pr-new publish --pnpm --compact --no-template ./packages/kumo
+        run: vp dlx pkg-pr-new publish --pnpm --compact --no-template ./packages/lark

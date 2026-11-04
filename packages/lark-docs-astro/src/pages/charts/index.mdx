@@ -1,0 +1,118 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "图表"
+description: "基于 ECharts 构建的图表。"
+sourceFile: "components/chart"
+---
+
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import {
+  PieChartPreviewDemo,
+  TimeseriesChartPreviewDemo,
+  LegendDefaultDemo,
+  LegendCompactDemo,
+  ChartExampleDemo,
+} from "~/components/demos/Chart/ChartDemo";
+import ChartCard from "~/components/demos/Chart/ChartCard.astro";
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+
+<ComponentSection>
+  <p class="mb-4">
+    图表组件基于 ECharts 构建。请将其作为依赖安装：
+  </p>
+
+```bash
+npm install echarts
+```
+
+<p class="my-4">
+  为了获得最佳的打包体积，请仅导入所需的 ECharts 组件。下面的示例展示了我们的用例所需的最小导入集合。
+</p>
+
+```tsx
+import * as echarts from "echarts/core";
+import { BarChart, LineChart, PieChart } from "echarts/charts";
+import { useEffect, useMemo, useState } from "react";
+import {
+  AriaComponent,
+  AxisPointerComponent,
+  BrushComponent,
+  GridComponent,
+  MarkLineComponent,
+  TooltipComponent,
+} from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+
+echarts.use([
+  BarChart,
+  LineChart,
+  PieChart,
+  AxisPointerComponent,
+  BrushComponent,
+  GridComponent,
+  MarkLineComponent,
+  TooltipComponent,
+  CanvasRenderer,
+  AriaComponent,
+]);
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 可用图表
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <ChartCard
+      title="时间序列图表"
+      description="用于展示基于时间的数据的专用图表。"
+      href="/charts/timeseries"
+    >
+      <TimeseriesChartPreviewDemo client:visible />
+    </ChartCard>
+
+    <ChartCard
+      title="自定义图表"
+      description="饼图等示例。"
+      href="/charts/custom"
+    >
+      <PieChartPreviewDemo client:visible />
+    </ChartCard>
+
+  </div>
+</ComponentSection>
+
+<ComponentSection>
+
+## 颜色体系
+
+  <ChartCard
+    title="颜色调色板"
+    description="关于我们的颜色体系。"
+    href="/charts/colors"
+  />
+</ComponentSection>
+
+<ComponentSection>
+
+## 图例
+
+<p class="mb-6">
+  使用 <code>LegendItem</code> 显示带颜色标识的图表系列信息。
+</p>
+
+### LargeItem 大号图例项
+
+<ComponentExample demo="LegendDefaultDemo">
+  <LegendDefaultDemo client:visible />
+</ComponentExample>
+
+### SmallItem 小号图例项
+
+  <ComponentExample demo="LegendCompactDemo">
+    <LegendCompactDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ChartExampleDemo client:visible />

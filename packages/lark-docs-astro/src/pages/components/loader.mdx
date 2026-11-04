@@ -1,0 +1,87 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Loader 加载指示器"
+description: "用于指示加载状态的加载动画。"
+sourceFile: "components/loader"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  LoaderBasicDemo,
+  LoaderCustomSizeDemo,
+} from "~/components/demos/LoaderDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="LoaderBasicDemo">
+    <LoaderBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Loader } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Loader } from "@lark-ui/core/components/loader";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Loader } from "@lark-ui/core";
+
+export default function Example() {
+  return <Loader />;
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 默认尺寸
+
+<ComponentExample demo="LoaderBasicDemo">
+  <LoaderBasicDemo client:visible />
+</ComponentExample>
+
+### 自定义尺寸
+
+<ComponentExample demo="LoaderCustomSizeDemo">
+  <LoaderCustomSizeDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Loader" />
+</ComponentSection>

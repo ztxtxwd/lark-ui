@@ -80,17 +80,17 @@ export async function discoverComponents(
  */
 const FULL_REGRESSION_PATTERNS: RegExp[] = [
   // Shared styles and theming
-  /packages\/kumo\/src\/styles\//,
-  /packages\/kumo\/src\/utils\//,
-  /packages\/kumo\/src\/hooks\//,
-  /packages\/kumo\/src\/primitives\//,
-  /theme-kumo\.css/,
+  /packages\/lark\/src\/styles\//,
+  /packages\/lark\/src\/utils\//,
+  /packages\/lark\/src\/hooks\//,
+  /packages\/lark\/src\/primitives\//,
+  /theme-lark\.css/,
   /tailwind\.config/,
 
   // Docs site infrastructure that wraps all component demos
-  /packages\/kumo-docs-astro\/src\/components\/docs\//,
-  /packages\/kumo-docs-astro\/src\/layouts\//,
-  /packages\/kumo-docs-astro\/src\/styles\//,
+  /packages\/lark-docs-astro\/src\/components\/docs\//,
+  /packages\/lark-docs-astro\/src\/layouts\//,
+  /packages\/lark-docs-astro\/src\/styles\//,
 ];
 
 /**
@@ -104,12 +104,12 @@ const SKIP_PATTERNS: RegExp[] = [
   /lint\//,
   /\.test\.(ts|tsx)$/,
   /\.spec\.(ts|tsx)$/,
-  /packages\/kumo\/ai\//,
-  /packages\/kumo\/scripts\//,
-  /packages\/kumo-figma\//,
-  /packages\/kumo\/src\/command-line\//,
-  /packages\/kumo\/src\/catalog\//,
-  /packages\/kumo\/src\/blocks\//,
+  /packages\/lark\/ai\//,
+  /packages\/lark\/scripts\//,
+  /packages\/lark-figma\//,
+  /packages\/lark\/src\/command-line\//,
+  /packages\/lark\/src\/catalog\//,
+  /packages\/lark\/src\/blocks\//,
   /lefthook/,
   /tsconfig/,
   /\.env/,
@@ -129,22 +129,22 @@ export interface ChangeClassification {
  * Returns null if the file doesn't map to a specific component.
  *
  * Examples:
- *   packages/kumo/src/components/button/button.tsx -> "button"
- *   packages/kumo/src/components/button/use-button.ts -> "button"
- *   packages/kumo/src/components/button/index.ts -> "button"
- *   packages/kumo-docs-astro/.../ButtonDemo.tsx -> "button"
+ *   packages/lark/src/components/button/button.tsx -> "button"
+ *   packages/lark/src/components/button/use-button.ts -> "button"
+ *   packages/lark/src/components/button/index.ts -> "button"
+ *   packages/lark-docs-astro/.../ButtonDemo.tsx -> "button"
  */
 export function getComponentFromFile(filePath: string): string | null {
   if (
-    filePath === "packages/kumo-docs-astro/src/components/demos/HomeGrid.tsx" ||
-    filePath === "packages/kumo-docs-astro/src/pages/index.astro"
+    filePath === "packages/lark-docs-astro/src/components/demos/HomeGrid.tsx" ||
+    filePath === "packages/lark-docs-astro/src/pages/index.astro"
   ) {
     return "home";
   }
 
-  // Match any file under a component directory: packages/kumo/src/components/{name}/
+  // Match any file under a component directory: packages/lark/src/components/{name}/
   const componentMatch = filePath.match(
-    /packages\/kumo\/src\/components\/([^/]+)\//,
+    /packages\/lark\/src\/components\/([^/]+)\//,
   );
   if (componentMatch) {
     return componentMatch[1];

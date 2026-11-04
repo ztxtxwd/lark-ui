@@ -1,0 +1,52 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "组件注册表"
+description: "面向 LLM 和代码生成工具的机器可读组件元数据。由 TypeScript 类型和组件变体自动生成。"
+---
+
+import Callout from "~/components/docs/Callout.astro";
+import { ComponentRegistryView } from "~/components/demos/RegistryDemo";
+
+## 概览
+
+组件注册表是一个机器可读的 JSON 文件，描述了所有 Lark 组件及其属性、变体、示例和语义化 token。它面向 AI agent、代码生成器和其他工具链而设计。
+
+[查看 JSON API](/api/component-registry)
+
+## 访问注册表
+
+### 通过 CLI
+
+```bash
+# List all components
+npx @lark-ui/core ls
+
+# Get docs for a specific component
+npx @lark-ui/core doc Button
+```
+
+### 通过 HTTP API
+
+```bash
+# JSON endpoint
+curl https://lark-ui.com/api/component-registry
+```
+
+### 通过 jq（本地）
+
+```bash
+# Get Button props
+jq '.components.Button.props' packages/lark/ai/component-registry.json
+
+# List components by category
+jq '.search.byCategory' packages/lark/ai/component-registry.json
+```
+
+## 注册表内容
+
+<Callout type="info">
+  注册表包含：带类型和默认值的组件属性、带说明的变体选项、来自 stories 的真实代码示例、
+  所使用的语义化颜色 token，以及用于组合模式的子组件。
+</Callout>
+
+<ComponentRegistryView client:load />

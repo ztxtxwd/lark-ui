@@ -1,0 +1,40 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "开源许可"
+description: "Lark UI 的开源许可、上游归属与第三方组件说明。"
+---
+
+Lark UI 以 **MIT** 许可开源。仓库根目录的 [`LICENSE`](https://github.com/ztxtxwd/lark-ui/blob/main/LICENSE) 文件包含完整的许可文本，[`NOTICE`](https://github.com/ztxtxwd/lark-ui/blob/main/NOTICE) 文件列出上游归属与第三方组件。发布到 npm 的 `@lark-ui/core` 包内同样附带这两份文件。
+
+## 上游项目
+
+Lark UI 是 [Kumo](https://github.com/cloudflare/kumo)（Cloudflare, Inc.，MIT 许可）的衍生作品，仓库保留了完整的提交历史。
+
+MIT 许可要求在软件的所有副本或实质性部分中保留原始的版权声明与许可声明，因此：
+
+- `LICENSE` 中保留 Cloudflare, Inc. 的原始版权行，并追加 Lark UI 贡献者的版权行；
+- 发布到 npm 的包内附带有相同内容的 `LICENSE` 与 `NOTICE`；
+- `NOTICE` 记录 fork 之后所做的改动。
+
+## 第三方组件
+
+Lark UI 依赖以下第三方组件，各自遵循其自身的许可：
+
+| 组件 | 许可 | 项目地址 |
+| --- | --- | --- |
+| `@base-ui/react` | MIT | https://github.com/mui/base-ui |
+| `@phosphor-icons/react` | MIT | https://github.com/phosphor-icons/react |
+| `shiki` / `@shikijs/langs` / `@shikijs/themes` | MIT | https://github.com/shikijs/shiki |
+| `cn` | MIT | https://github.com/lukeed/cn |
+| `d3-geo` | ISC | https://github.com/d3/d3-geo |
+| `motion` | MIT | https://github.com/motiondivision/motion |
+| `react-day-picker` | MIT | https://github.com/gpbl/react-day-picker |
+| `use-sync-external-store` | MIT | https://github.com/facebook/react |
+| `zod` | MIT | https://github.com/colinhacks/zod |
+| `echarts`（peer 依赖） | Apache-2.0 | https://github.com/apache/echarts |
+
+## 商标
+
+"Lark" 与 "Feishu" 分别是其所有者的商标。本仓库内的 Lark 标识与 Lark 品牌色板，按与商标所有者达成的条款使用。
+
+本项目是 Kumo 的衍生作品，与 Cloudflare, Inc.（上游项目的作者）无隶属、赞助或背书关系。

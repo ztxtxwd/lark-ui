@@ -1,0 +1,193 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Tabs 标签页"
+description: "一组分层的内容区块（称为标签面板），同一时刻只显示其中一个。"
+sourceFile: "components/tabs"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  TabsDefaultDemo,
+  TabsSegmentedDemo,
+  TabsUnderlineDemo,
+  TabsSmDemo,
+  TabsControlledDemo,
+  TabsManyDemo,
+  TabsOverflowDemo,
+  TabsDynamicCountDemo,
+} from "~/components/demos/TabsDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="TabsDefaultDemo">
+    <TabsDefaultDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Tabs } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Tabs } from "@lark-ui/core/components/tabs";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Tabs } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Tabs
+      tabs={[
+        { value: "overview", label: "Overview" },
+        { value: "settings", label: "Settings" },
+      ]}
+      selectedValue="overview"
+    />
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 变体
+
+#### 分段式（默认）
+
+<p>胶囊形状的指示器在浅色背景上于各标签页之间滑动。</p>
+<ComponentExample demo="TabsSegmentedDemo">
+  <TabsSegmentedDemo client:visible />
+</ComponentExample>
+
+#### 下划线式
+
+<p>
+  底部边框配合主色指示器。当前标签页的文字更粗，以突出显示。
+</p>
+<ComponentExample demo="TabsUnderlineDemo">
+  <TabsUnderlineDemo client:visible />
+</ComponentExample>
+
+### 小尺寸
+
+<p>
+  使用 `size="sm"` 可获得与 `Input size="sm"` 高度一致（h-6.5 / 26px）的紧凑标签栏。
+  适合放在工具栏（Toolbar）和筛选行中。
+</p>
+<ComponentExample demo="TabsSmDemo">
+  <TabsSmDemo client:visible />
+</ComponentExample>
+
+### 受控
+
+<p>使用 `value` 和 `onValueChange` 属性来控制受控状态。</p>
+<ComponentExample demo="TabsControlledDemo">
+  <TabsControlledDemo client:visible />
+</ComponentExample>
+
+### 标签页过多
+
+<p>当条目较多时，标签页会自动横向滚动。</p>
+<ComponentExample demo="TabsManyDemo">
+  <TabsManyDemo client:visible />
+</ComponentExample>
+
+### 横向溢出
+
+<p>
+  当分段式标签页超出容器时，被裁剪的一侧会出现滚动按钮。
+  你可以使用这些按钮、横向滚动或鼠标拖拽来查看屏幕之外的标签页。
+</p>
+<ComponentExample demo="TabsOverflowDemo">
+  <TabsOverflowDemo client:visible />
+</ComponentExample>
+
+### 动态标签数量
+
+<p>
+  此示例会在溢出的标签集合与接近生产的七标签页集合之间切换。
+  当多余标签消失后，只要剩余标签能够放下，末尾的溢出控件就应隐藏。
+</p>
+<ComponentExample demo="TabsDynamicCountDemo">
+  <TabsDynamicCountDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Tabs" />
+
+### TabsItem
+
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">必填</th>
+      </tr>
+    </thead>
+    <tbody class="text-lark-subtle">
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">value</td>
+        <td class="px-4 py-3 font-mono text-xs">string</td>
+        <td class="px-4 py-3 font-mono text-xs">是</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">label</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+        <td class="px-4 py-3 font-mono text-xs">是</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">className</td>
+        <td class="px-4 py-3 font-mono text-xs">string</td>
+        <td class="px-4 py-3 font-mono text-xs">否</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">render</td>
+        <td class="px-4 py-3 font-mono text-xs">TabsTab.Props["render"]</td>
+        <td class="px-4 py-3 font-mono text-xs">否</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">nativeButton</td>
+        <td class="px-4 py-3 font-mono text-xs">boolean</td>
+        <td class="px-4 py-3 font-mono text-xs">否</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</ComponentSection>

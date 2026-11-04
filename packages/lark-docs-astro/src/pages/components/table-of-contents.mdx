@@ -1,0 +1,254 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Table of Contents 目录"
+description: "用于章节导航的展示型复合组件，带有当前项指示条。"
+sourceFile: "components/table-of-contents"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  TableOfContentsBasicDemo,
+  TableOfContentsInteractiveDemo,
+  TableOfContentsNoActiveDemo,
+  TableOfContentsGroupDemo,
+  TableOfContentsWithoutTitleDemo,
+  TableOfContentsRenderPropDemo,
+  TableOfContentsScrollspyDemo,
+} from "~/components/demos/TableOfContentsDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="TableOfContentsBasicDemo">
+    <TableOfContentsBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { TableOfContents } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { TableOfContents } from "@lark-ui/core/components/table-of-contents";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { TableOfContents } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <TableOfContents>
+      <TableOfContents.Title>On this page</TableOfContents.Title>
+      <TableOfContents.List>
+        <TableOfContents.Item href="#intro" active>
+          Introduction
+        </TableOfContents.Item>
+        <TableOfContents.Item href="#api">API Reference</TableOfContents.Item>
+      </TableOfContents.List>
+    </TableOfContents>
+  );
+}
+```
+
+<p>
+  该组件纯粹用于展示——你可以控制每个条目的 `active`。
+  若需要自动跟踪滚动位置，请与下方的 `useTableOfContentsActiveId` hook 搭配使用。
+</p>
+
+</ComponentSection>
+
+{/* 滚动跟踪 */}
+
+<ComponentSection>
+
+## 滚动跟踪
+
+<p>
+  `useTableOfContentsActiveId` 根据滚动位置推导出当前章节：按文档顺序传入各章节的
+  id，它会返回视口中最靠上且可见的章节 id，并提供一个 `selectSection` 操作，
+  用于在被点击的章节上锁定高亮，直到平滑滚动结束（这样跳转后较短的章节仍能保持高亮）。
+  哈希深链接（`#usage`）会被自动处理。该 hook 对 SSR 安全——所有 DOM 访问都发生在副作用中。
+</p>
+
+```tsx
+import { TableOfContents, useTableOfContentsActiveId } from "@lark-ui/core";
+
+export default function Example({ headings }) {
+  const { activeId, selectSection } = useTableOfContentsActiveId({
+    ids: headings.map((h) => h.slug),
+    offset: 64, // fixed header height in px
+  });
+
+  return (
+    <TableOfContents>
+      <TableOfContents.Title>On this page</TableOfContents.Title>
+      <TableOfContents.List>
+        {headings.map((h) => (
+          <TableOfContents.Item
+            key={h.slug}
+            href={`#${h.slug}`}
+            active={activeId === h.slug}
+            onClick={() => selectSection(h.slug)}
+          >
+            {h.text}
+          </TableOfContents.Item>
+        ))}
+      </TableOfContents.List>
+    </TableOfContents>
+  );
+}
+```
+
+<p>
+  传入 `root` 元素可以改为跟踪自定义滚动容器，而不是视口（在哈希导航不适用时，同时设置 `trackHash: false`）：
+</p>
+
+<ComponentExample demo="TableOfContentsScrollspyDemo">
+  <TableOfContentsScrollspyDemo client:load />
+</ComponentExample>
+
+### 选项
+
+<p>
+  `ids`——章节锚点 id，按文档顺序排列（必填）。`offset`——从视口/root 顶部到激活线的像素距离，
+  通常设为固定头部的高度（默认 `0`）。`root`——自定义滚动容器（默认：视口）。
+  `trackHash`——在加载时及 `hashchange` 事件时根据 `location.hash` 选中对应章节（默认 `true`）。
+</p>
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 交互式
+
+<p>
+  点击某个条目即可将其设为当前项。状态由使用方通过 `active` 和 `onClick` 控制。
+</p>
+<ComponentExample demo="TableOfContentsInteractiveDemo">
+  <TableOfContentsInteractiveDemo client:load />
+</ComponentExample>
+
+### 无当前项
+
+<p>
+  当没有任何条目设置 `active` 时，所有条目都会显示默认的浅色文字样式，并在悬停时显示指示标记。
+</p>
+<ComponentExample demo="TableOfContentsNoActiveDemo">
+  <TableOfContentsNoActiveDemo client:visible />
+</ComponentExample>
+
+### 分组
+
+<p>
+  使用 `TableOfContents.Group` 可以把条目组织成带标签的分区，子项以缩进形式展示。
+  分组支持两种模式：传入 `href` 可让分组标签变成可点击链接（如下方的「示例」和「API」），
+  或省略该属性以使用普通的非交互式标题（如下方的「入门」）。
+</p>
+<ComponentExample demo="TableOfContentsGroupDemo">
+  <TableOfContentsGroupDemo client:visible />
+</ComponentExample>
+
+### 无标题
+
+<p>
+  标题子组件是可选的——如果不需要标题，可以直接使用 `TableOfContents.List`。
+</p>
+<ComponentExample demo="TableOfContentsWithoutTitleDemo">
+  <TableOfContentsWithoutTitleDemo client:visible />
+</ComponentExample>
+
+### 自定义元素
+
+<p>
+  使用 `render` 属性可以把默认的锚点替换为按钮、路由链接或任意元素。
+</p>
+<ComponentExample demo="TableOfContentsRenderPropDemo">
+  <TableOfContentsRenderPropDemo client:load />
+</ComponentExample>
+
+#### React Router
+
+```tsx
+<TableOfContents.Item render={<Link to="/intro" />} active>
+  Introduction
+</TableOfContents.Item>
+```
+
+#### Next.js
+
+```tsx
+import Link from "next/link";
+
+<TableOfContents.Item render={<Link href="/intro" />} active>
+  Introduction
+</TableOfContents.Item>;
+```
+
+#### 按钮（无导航）
+
+```tsx
+<TableOfContents.Item render={<button type="button" />} onClick={handleClick}>
+  Introduction
+</TableOfContents.Item>
+```
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### `TableOfContents`
+
+<p>根导航容器，默认 `aria-label` 为 "Table of contents"（目录）。</p>
+<PropsTable component="TableOfContents" />
+
+### `TableOfContents.Title`
+
+<p>可选的大写标题，显示在列表上方（渲染为 `<p>`）。</p>
+<PropsTable component="TableOfContents.Title" />
+
+### `TableOfContents.List`
+
+<p>带左侧边框导轨的列表容器。</p>
+<PropsTable component="TableOfContents.List" />
+
+### `TableOfContents.Item`
+
+<p>
+  单个导航链接。为当前章节设置 `active`。
+  使用 `render` 属性可把锚点替换为路由链接或按钮。
+</p>
+<PropsTable component="TableOfContents.Item" />
+
+### `TableOfContents.Group`
+
+<p>将条目归入带标签的分区，子项以缩进形式展示。传入 `href` 可让标签变成可点击链接，省略则使用普通标题。</p>
+<PropsTable component="TableOfContents.Group" />
+</ComponentSection>

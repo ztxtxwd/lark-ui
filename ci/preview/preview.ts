@@ -1,10 +1,15 @@
-import { appendFileSync, readFileSync } from "node:fs";
+import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const WORKER_CHECK_NAME = "Workers Builds: kumo-docs";
+const WORKER_CHECK_NAME = "Workers Builds: lark-docs";
 const WORKER_APP_SLUG = "cloudflare-workers-and-pages";
-const PREVIEW_COMMENT_MARKER = "<!-- kumo-docs-preview -->";
+const PREVIEW_COMMENT_MARKER = "<!-- lark-docs-preview -->";
+const PREVIEW_URL_PATTERN =
+  /https:\/\/[a-z0-9-]+-lark-docs\.design-engineering\.workers\.dev/;
+const VERSION_ID_PATTERN =
+  /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -111,12 +116,12 @@ function getPullState(value: unknown, name: string): string {
 export function getWorkerPreviewUrl(detailsUrl: string): string {
   const url = new URL(detailsUrl);
   const match = url.pathname.match(
-    /^\/[^/]+\/workers\/services\/view\/kumo-docs\/production\/previews\/([a-z0-9-]+)$/,
+    /^\/[^/]+\/workers\/services\/view\/lark-docs\/production\/previews\/([a-z0-9-]+)$/,
   );
   if (url.hostname !== "dash.cloudflare.com" || !match) {
     throw new Error(`Unexpected Worker Builds URL: ${detailsUrl}`);
   }
-  return `https://${match[1]}-kumo-docs.design-engineering.workers.dev`;
+  return `https://${match[1]}-lark-docs.design-engineering.workers.dev`;
 }
 
 export function parsePreviewCommit(raw: string): string {
@@ -138,28 +143,109 @@ export function commitsMatch(expected: string, actual: string): boolean {
 function validatePreviewUrl(previewUrl: string): string {
   const url = new URL(previewUrl);
   const allowedHost =
-    /^[a-z0-9-]+-kumo-docs\.design-engineering\.workers\.dev$/;
+    /^[a-z0-9-]+-lark-docs\.design-engineering\.workers\.dev$/;
   if (url.protocol !== "https:" || !allowedHost.test(url.hostname)) {
     throw new Error(`Unexpected preview URL: ${previewUrl}`);
   }
   return previewUrl;
 }
 
-export function getWranglerPreviewUrl(output: string): string {
-  const previewUrl = output.match(
-    /Version Preview URL:\s+(https:\/\/\S+)/,
-  )?.[1];
+export function getCfPreviewUrl(stdout: string, stderr: string): string {
+  const output = `${stdout}\n${stderr}`;
+
+  const previewUrl = output.match(PREVIEW_URL_PATTERN)?.[0];
   if (previewUrl) {
     return validatePreviewUrl(previewUrl);
   }
 
-  const versionId = output.match(/Worker Version ID:\s+([a-f0-9-]+)/)?.[1];
-  if (!versionId || versionId.length < 8) {
-    throw new Error("Wrangler did not return a docs preview URL.");
+  const versionId =
+    findVersionId(readCfResult(stdout)) ??
+    output.match(VERSION_ID_PATTERN)?.[0];
+  if (!versionId) {
+    throw new Error("cf did not return a docs preview URL.");
   }
   return validatePreviewUrl(
-    `https://${versionId.substring(0, 8)}-kumo-docs.design-engineering.workers.dev`,
+    `https://${versionId.substring(0, 8)}-lark-docs.design-engineering.workers.dev`,
   );
+}
+
+/**
+ * `cf` prints structured results as JSON on stdout. Parse it, tolerating
+ * extra log lines around the payload.
+ */
+function readCfResult(stdout: string): unknown {
+  const trimmed = stdout.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    // Fall through to line-by-line parsing.
+  }
+  for (const line of trimmed.split("\n")) {
+    const candidate = line.trim();
+    if (!candidate.startsWith("{")) {
+      continue;
+    }
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      continue;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Locate the uploaded version id in a `cf` result. Version ids are UUIDs, so
+ * only accept them where the payload identifies a version.
+ */
+function findVersionId(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = findVersionId(item);
+      if (found) {
+        return found;
+      }
+    }
+    return undefined;
+  }
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  for (const key of ["version_id", "versionId"]) {
+    const candidate = value[key];
+    if (typeof candidate === "string" && VERSION_ID_PATTERN.test(candidate)) {
+      return candidate;
+    }
+  }
+
+  const nested = value["version"];
+  if (nested !== undefined) {
+    const found = findVersionId(nested);
+    if (found) {
+      return found;
+    }
+  }
+
+  const id = value["id"];
+  if (
+    typeof id === "string" &&
+    VERSION_ID_PATTERN.test(id) &&
+    ("created_on" in value || "number" in value || "annotations" in value)
+  ) {
+    return id;
+  }
+
+  for (const child of Object.values(value)) {
+    const found = findVersionId(child);
+    if (found) {
+      return found;
+    }
+  }
+  return undefined;
 }
 
 async function resolveInternalPreview(): Promise<void> {
@@ -175,7 +261,7 @@ async function resolveInternalPreview(): Promise<void> {
     appSlug !== WORKER_APP_SLUG ||
     conclusion !== "success"
   ) {
-    throw new Error("The event is not a successful Kumo Worker Build check.");
+    throw new Error("The event is not a successful Lark Worker Build check.");
   }
 
   const pulls = requireArray(checkRun.pull_requests, "check_run.pull_requests");
@@ -274,7 +360,7 @@ async function resolveForkPreview(): Promise<void> {
 function readArtifactCommit(): void {
   const versionPath =
     process.env.DOCS_VERSION_PATH ??
-    "packages/kumo-docs-astro/dist/api/version";
+    "packages/lark-docs-astro/dist/api/version";
   writeOutputs({
     preview_commit: parsePreviewCommit(readFileSync(versionPath, "utf8")),
   });
@@ -290,33 +376,62 @@ function deployDocsPreview(): void {
     throw new Error("PR_NUMBER must be a positive integer.");
   }
 
-  const result = spawnSync(
-    "wrangler",
-    [
-      "versions",
-      "upload",
-      "--env=",
-      "--message",
-      `PR #${prNumber} (${headSha.substring(0, 7)})`,
-    ],
-    {
-      cwd: process.env.DOCS_PROJECT_PATH ?? "packages/kumo-docs-astro",
-      encoding: "utf8",
-      env: process.env,
-    },
-  );
-  const output = `${result.stdout ?? ""}${result.stderr ?? ""}`;
-  process.stdout.write(output);
+  const projectPath =
+    process.env.DOCS_PROJECT_PATH ?? "packages/lark-docs-astro";
+
+  // Package the downloaded build output into a Build Output Specification.
+  // `cf` uploads that specification when it runs with `--prebuilt`.
+  runCloudflareCli(projectPath, "cf-wrangler", ["build"]);
+
+  const result = runCloudflareCli(projectPath, "cf", [
+    "workers",
+    "versions",
+    "create",
+    "--prebuilt",
+    "--message",
+    `PR #${prNumber} (${headSha.substring(0, 7)})`,
+  ]);
+
+  writeOutputs({
+    preview_url: getCfPreviewUrl(result.stdout, result.stderr),
+  });
+}
+
+/**
+ * Run a Cloudflare CLI. Prefer the copy installed in the project so the flow
+ * works without a global install; fall back to the global binary (CI installs
+ * `cf` and `wrangler` globally).
+ */
+function runCloudflareCli(
+  projectPath: string,
+  name: string,
+  args: string[],
+): { stdout: string; stderr: string } {
+  const localBin = resolve(projectPath, "node_modules", ".bin", name);
+  const command = existsSync(localBin)
+    ? localBin
+    : existsSync(`${localBin}.cmd`)
+      ? `${localBin}.cmd`
+      : name;
+
+  const result = spawnSync(command, args, {
+    cwd: projectPath,
+    encoding: "utf8",
+    env: process.env,
+  });
+  const stdout = result.stdout ?? "";
+  const stderr = result.stderr ?? "";
+  process.stdout.write(`${stdout}${stderr}`);
 
   if (result.error) {
     throw result.error;
   }
   if (result.status !== 0) {
     throw new Error(
-      `Wrangler exited with status ${result.status ?? "unknown"}.`,
+      `${name} exited with status ${result.status ?? "unknown"}.`,
     );
   }
-  writeOutputs({ preview_url: getWranglerPreviewUrl(output) });
+  return { stdout, stderr };
 }
 
 async function verifyPreview(): Promise<void> {

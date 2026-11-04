@@ -1,0 +1,201 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "贡献指南"
+description: "了解如何为 Lark 做贡献，从环境搭建、工作流到 PR 和发布规范。搭建、开发、质量检查和 PR 流程所需的一切都在这里记录。"
+---
+
+## 开始之前
+
+对于非小改动，请先对齐思路，再动手写代码：
+
+- 先在已有 issue 下留言，或新建一个 issue。
+- 确认范围、API 方向和迁移影响。
+- 对于小的修复或文档调整，你可以直接提交 PR。
+
+---
+
+## 1. 一次性环境搭建
+
+在仓库根目录执行：
+
+```bash
+pnpm install
+pnpm build
+```
+
+环境要求：
+
+- Node `^24.12.0`
+- pnpm `>=10.26.0`
+
+推荐的本地配置：
+
+- 使用 Node 版本管理器（`nvm`、`fnm` 等）。
+- 使用 VS Code，并选择工作区的 TypeScript 版本。
+- 如果 rebase 后依赖发生变化，请再次运行 `pnpm install`。
+
+### 仓库访问与分支
+
+内部贡献者通常直接克隆并推送到 `cloudflare/lark`：
+
+```bash
+git clone https://github.com/ztxtxwd/lark-ui.git
+git switch -c <branch-name>
+git push -u origin <branch-name>
+```
+
+如果你没有写入权限，请联系你的主管或 Lark 维护者。
+
+---
+
+## 2. 选择合适的贡献类型
+
+用下面的清单判断你的改动应该放在哪里：
+
+- **组件**：`packages/lark/src/components/` 中可复用的 UI 基础元素
+- **区块**：`packages/lark/src/blocks/` 中可通过 CLI 安装的组合模式
+- **仅文档**：`packages/lark-docs-astro/` 中的文档/演示/导航更新
+
+新增**组件**时，请使用脚手架生成（不要手动创建文件）：
+
+```bash
+pnpm --filter @lark-ui/core new:component
+```
+
+---
+
+## 3. 启动开发循环
+
+在不同的终端中分别运行：
+
+```bash
+# Terminal 1: watch Lark package output
+pnpm --filter @lark-ui/core dev
+
+# Terminal 2: docs site
+pnpm dev
+```
+
+这样你就能获得快速迭代的循环，同时在真实的文档环境中验证改动。
+
+---
+
+## 4. 实现改动
+
+典型的内部改动流程：
+
+1. 在 `packages/lark/src/...` 中实现功能。
+2. 在 `packages/lark-docs-astro/src/components/demos/` 中新增或更新演示。
+3. 在 `packages/lark` 中新增或更新测试。
+4. 在 `packages/lark-docs-astro/src/pages/` 中新增或更新文档页面。
+
+如果你的演示需要出现在注册表元数据中，请严格保持命名规范：
+
+- 文件：`{Component}Demo.tsx`
+- 导出名称必须以 `Demo` 结尾
+
+实现要求：
+
+- 保持无障碍语义和键盘行为不变。
+- 保持 API 聚焦，避免为一次性场景做抽象。
+- 在变体、属性和结构上遵循 Lark 既有的模式。
+
+---
+
+## 5. 提交 PR 前运行校验
+
+在打开或更新 PR 之前，从仓库根目录运行：
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm --filter @lark-ui/core test
+```
+
+如果你改动了导出或构建行为，还需要运行：
+
+```bash
+pnpm --filter @lark-ui/core build
+```
+
+可选（视情况而定）：
+
+```bash
+pnpm format
+pnpm --filter @lark-ui/core test:run
+```
+
+Windsurf 和 hooks 能发现更多问题，但在请求评审之前，你仍应在本地运行这些检查。
+
+---
+
+## 6. 正确处理 changeset
+
+如果你的改动涉及 `packages/lark/` 且需要发布，请添加 changeset：
+
+```bash
+pnpm changeset
+```
+
+changeset 使用建议：
+
+- 缺陷修复和低风险改进使用 `patch`。
+- 新增向后兼容的功能使用 `minor`。
+- 仅在破坏性变更时使用 `major`。
+- 摘要应聚焦于用户可见的影响。
+
+如果你的改动仅涉及文档，或属于不可发布的工作，通常不需要 changeset。
+
+---
+
+## 7. 提交并维护 PR
+
+- 从 `main` 切出分支并推送到 `origin`。
+- PR 标题格式：`[package] 简短描述`（示例：`[lark] add meter warning variant`）。
+- 在 PR 模板中填写测试细节和影响范围。
+- 评审开始后，请使用后续提交，而不是强制推送重写历史。
+
+Git 卫生要求：
+
+- 在首次评审前保持提交历史清晰可读。
+- 评审开始后，避免重写已被评审过的提交。
+- 根据反馈追加后续提交（使用 `fixup` 提交也可以）。
+
+合并前必须经过 PR 评审。
+
+---
+
+## PR 预览与测试
+
+- PR 会通过 CI 评论中的 `pkg.pr.new` 链接发布预发布产物。
+- 每个涉及行为变化的 PR 都应包含测试。
+- Lark 的大多数测试基于 Vitest，位于 `packages/lark` 下。
+
+---
+
+## 发布流程（你的改动如何上线）
+
+- 发布通过 Changesets 管理。
+- `main` 上合并的 changeset 会进入自动化的版本号/发布流程。
+- 如果你需要紧急的非常规发布，请联系维护者。
+
+---
+
+## 实用规范
+
+- 使用 Lark 的语义化 token，避免原始的 Tailwind 颜色类。
+- 使用 `cn(...)` 组合类名。
+- 优先扩展既有模式，而不是引入一次性的 API 设计。
+- 为行为变化补充测试，而不只是渲染快照。
+
+需要避免的常见陷阱：
+
+- 不要手动为组件生成脚手架；请使用 `new:component`。
+- 不要依赖原始的 Tailwind 颜色类（`bg-blue-500` 等）。
+- 对于 `packages/lark` 中需要发布的改动，不要跳过 changeset。
+
+---
+
+## 相关文档
+
+请遵循 [changeset 指南](https://github.com/ztxtxwd/lark-ui/blob/main/.changeset/README.md) 来记录需要发布的库改动，并查阅 [AGENTS.md](https://github.com/ztxtxwd/lark-ui/blob/main/packages/lark/AGENTS.md) 了解规范与模式。

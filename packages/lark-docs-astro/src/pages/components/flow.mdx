@@ -1,0 +1,382 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Flow 流程图"
+description: "一组用于构建带节点和连接线的有向流程图的组件。"
+sourceFile: "components/flow"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import {
+  FlowBasicDemo,
+  FlowVerticalDemo,
+  FlowVerticalParallelDemo,
+  FlowParallelDemo,
+  FlowCustomContentDemo,
+  FlowComplexDemo,
+  FlowAnchorDemo,
+  FlowCenteredDemo,
+  FlowPanningDemo,
+  FlowDisabledDemo,
+  FlowParallelAlignEndDemo,
+  FlowParallelNestedListDemo,
+} from "~/components/demos/FlowDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="FlowParallelDemo">
+    <FlowParallelDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Flow } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Flow } from "@lark-ui/core/components/flow";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+  <p>
+    流程图（Flow）组件组合使用可以创建有向流程图。使用
+    `Flow` 作为容器，用
+    `Flow.Node` 表示单个步骤，用
+    `Flow.Parallel` 创建分支路径。
+  </p>
+
+```tsx
+import { Flow } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Flow>
+      <Flow.Node>Step 1</Flow.Node>
+      <Flow.Node>Step 2</Flow.Node>
+      <Flow.Node>Step 3</Flow.Node>
+    </Flow>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 顺序流程
+
+<p>节点依次相连的简单线性流程。</p>
+<ComponentExample demo="FlowBasicDemo">
+  <FlowBasicDemo client:visible />
+</ComponentExample>
+
+### 并行分支
+
+<p>使用 `Flow.Parallel` 创建并行运行的分支路径。</p>
+<ComponentExample demo="FlowParallelDemo">
+  <FlowParallelDemo client:visible />
+</ComponentExample>
+
+### 垂直方向
+
+<p>
+  设置 `orientation="vertical"` 可让节点自上而下排列，而不是默认的从左到右。连接线、并行分支和 `align` 都会适配垂直方向。
+</p>
+<ComponentExample demo="FlowVerticalDemo">
+  <FlowVerticalDemo client:visible />
+</ComponentExample>
+
+<p>
+  在垂直流程中，并行分支的用法完全相同。此时 `align` 控制节点的水平对齐方式。
+</p>
+<ComponentExample demo="FlowVerticalParallelDemo">
+  <FlowVerticalParallelDemo client:visible />
+</ComponentExample>
+
+### 自定义节点样式
+
+<p>
+  使用 `render` 属性可完全自定义节点外观。该属性接受一个 React 元素，将替代默认样式的节点进行渲染。
+</p>
+<ComponentExample demo="FlowCustomContentDemo">
+  <FlowCustomContentDemo client:visible />
+</ComponentExample>
+
+### 居中对齐
+
+<p>
+  使用 `align` 属性让节点垂直居中。当各节点高度不一致时，这非常有用。
+</p>
+<ComponentExample demo="FlowCenteredDemo">
+  <FlowCenteredDemo client:visible />
+</ComponentExample>
+
+### 复杂流程
+
+<p>将顺序节点与并行节点组合，构建复杂的工作流。</p>
+<ComponentExample demo="FlowComplexDemo">
+  <FlowComplexDemo client:visible />
+</ComponentExample>
+
+### 自定义锚点
+
+<p>
+  默认情况下，连接线连接到每个节点的中心。使用 `Flow.Anchor` 及其 `render` 属性可以指定自定义的连接点。`type` 属性决定锚点是作为 `"start"` 点（连接线出发处）还是 `"end"` 点（连接线到达处）。
+</p>
+<ComponentExample demo="FlowAnchorDemo">
+  <FlowAnchorDemo client:visible />
+</ComponentExample>
+
+### 平移大型图表
+
+<p>
+  当图表超出容器范围时，Flow 会自动启用平移。可以拖动来平移视口，也可以使用滚轮。悬停时会出现滚动条，指示可滚动的区域。
+</p>
+<ComponentExample demo="FlowPanningDemo">
+  <FlowPanningDemo client:visible />
+</ComponentExample>
+
+### 禁用节点
+
+<p>
+  在节点上使用 `disabled` 属性，以视觉方式表明其处于未激活状态。连接到禁用节点的连线会以降低的不透明度渲染。
+</p>
+<ComponentExample demo="FlowDisabledDemo">
+  <FlowDisabledDemo client:visible />
+</ComponentExample>
+
+### 并行节点对齐
+
+  <p>
+    在 `Flow.Parallel` 上使用
+    `align` 属性，控制宽度不同的节点如何对齐。使用
+    `"start"`
+    （默认）左对齐，使用
+    `"end"` 右对齐。
+  </p>
+  <ComponentExample demo="FlowParallelAlignEndDemo">
+    <FlowParallelAlignEndDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Other Examples */}
+
+<ComponentSection>
+
+## 其他示例
+
+### 并行中的嵌套节点列表
+
+  <p>
+    在
+    `Flow.Parallel`
+    内部使用
+    `Flow.List`，可创建每个分支都包含一串相连节点的并行分支。
+  </p>
+  <ComponentExample demo="FlowParallelNestedListDemo">
+    <FlowParallelNestedListDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Components */}
+
+<ComponentSection>
+
+## 组件
+
+### Flow
+
+<p>
+  流程图的根容器。为大型图表提供平移和滚动能力。
+</p>
+<div class="overflow-x-auto">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">orientation</td>
+        <td class="px-4 py-3 font-mono">"horizontal" | "vertical"</td>
+        <td class="px-4 py-3">
+          流程的布局方向。`"horizontal"`（默认）让节点从左到右排列，`"vertical"` 让节点从上到下排列。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">align</td>
+        <td class="px-4 py-3 font-mono">"start" | "center"</td>
+        <td class="px-4 py-3">
+          节点在交叉轴上的对齐方式。水平方向下指垂直对齐，垂直方向下指水平对齐。`"start"`（默认）对齐到交叉轴的起始位置，`"center"` 让节点居中。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">className</td>
+        <td class="px-4 py-3 font-mono">string</td>
+        <td class="px-4 py-3">容器的额外 CSS 类名</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">children</td>
+        <td class="px-4 py-3 font-mono">ReactNode</td>
+        <td class="px-4 py-3">Flow.Node 和 Flow.Parallel 组件</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Flow.Node
+
+<p>
+  流程图中的单个节点。渲染为带样式、带自动连接点的卡片。使用 `render` 属性可自定义该元素。
+</p>
+<div class="overflow-x-auto">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">render</td>
+        <td class="px-4 py-3 font-mono">ReactElement</td>
+        <td class="px-4 py-3">
+          用于替代默认样式节点的自定义元素
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">disabled</td>
+        <td class="px-4 py-3 font-mono">boolean</td>
+        <td class="px-4 py-3">
+          为 true 时，连接到该节点的连线以降低的不透明度渲染
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">children</td>
+        <td class="px-4 py-3 font-mono">ReactNode</td>
+        <td class="px-4 py-3">在节点内展示的内容</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Flow.Anchor
+
+<p>
+  用于在 Flow.Node 内标记连接线自定义连接点的组件。通过 `render` 属性提供自定义元素，可以精确控制连接线的连接位置，而不是默认连接到节点中心。
+</p>
+<div class="overflow-x-auto">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">type</td>
+        <td class="px-4 py-3 font-mono">"start" | "end"</td>
+        <td class="px-4 py-3">
+          该锚点是作为 "start" 点（出向连线）还是 "end" 点（入向连线）。省略时两者皆可。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">render</td>
+        <td class="px-4 py-3 font-mono">ReactElement</td>
+        <td class="px-4 py-3">为锚点渲染的自定义元素</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">children</td>
+        <td class="px-4 py-3 font-mono">ReactNode</td>
+        <td class="px-4 py-3">在锚点处渲染的内容</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Flow.Parallel
+
+<p>
+  并行分支的容器。子级的 Flow.Node 组件会并行展示，并以汇合连接线相连。
+</p>
+<div class="overflow-x-auto">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">align</td>
+        <td class="px-4 py-3 font-mono">"start" | "end"</td>
+        <td class="px-4 py-3">
+          控制并行分组内节点的水平对齐方式。`"start"`（默认）左对齐，`"end"` 右对齐。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono">children</td>
+        <td class="px-4 py-3 font-mono">ReactNode</td>
+        <td class="px-4 py-3">
+          并行展示的 Flow.Node 或 Flow.List 组件
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Flow.List
+
+  <p>
+    用于承载一串 Flow.Node 组件的容器，组件之间会自动添加连接线。在 Flow.Parallel 内部使用，可创建包含多个顺序步骤的分支。
+  </p>
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b border-lark-hairline">
+          <th class="px-4 py-3 text-left font-semibold">属性</th>
+          <th class="px-4 py-3 text-left font-semibold">类型</th>
+          <th class="px-4 py-3 text-left font-semibold">说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono">children</td>
+          <td class="px-4 py-3 font-mono">ReactNode</td>
+          <td class="px-4 py-3">依次展示的 Flow.Node 组件</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ComponentSection>

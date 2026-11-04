@@ -1,0 +1,143 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Layer Card 分层卡片"
+description: "带有分层视觉效果的卡片组件，适合用于导航或功能亮点展示。"
+sourceFile: "components/layer-card"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  LayerCardDemo,
+  LayerCardBasicDemo,
+  LayerCardSurfaceDemo,
+  LayerCardMultipleDemo,
+  LayerCardTestIdDemo,
+} from "~/components/demos/LayerCardDemo";
+import {
+  LayerCardFilterSubrequestsDemo,
+} from "~/components/demos/LayerCardFilterMockupDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="LayerCardDemo">
+    <LayerCardDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { LayerCard } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { LayerCard } from "@lark-ui/core/components/layer-card";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { LayerCard } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <LayerCard className="w-[250px]">
+      <LayerCard.Secondary>Documentation</LayerCard.Secondary>
+      <LayerCard.Primary>Learn how to use Lark components</LayerCard.Primary>
+    </LayerCard>
+  );
+}
+```
+
+<p>
+  <code>LayerCard</code> 还支持简单的表面样式模式，适用于不需要次级标题行的场景。在这种情况下，请直接把内容渲染在 <code>LayerCard</code> 内部，而不要包裹在 <code>LayerCard.Primary</code> 中。
+</p>
+
+```tsx
+import { LayerCard } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <LayerCard className="w-[250px] p-4">
+      Learn how to use Lark components
+    </LayerCard>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础卡片
+
+<ComponentExample demo="LayerCardBasicDemo">
+  <LayerCardBasicDemo client:visible />
+</ComponentExample>
+
+### 表面样式的卡片
+
+<p>
+  对于简单的卡片容器，请直接把内容渲染在 <code>LayerCard</code> 内部，不要使用 <code>LayerCard.Primary</code>。
+</p>
+<ComponentExample demo="LayerCardSurfaceDemo">
+  <LayerCardSurfaceDemo client:visible />
+</ComponentExample>
+
+### 多张卡片
+
+<ComponentExample demo="LayerCardMultipleDemo">
+  <LayerCardMultipleDemo client:visible />
+</ComponentExample>
+
+### 带小号标签页的筛选工具栏
+
+<p>
+  在 LayerCard 内部组合使用 <code>Tabs size="sm"</code> 和 <code>Input size="sm"</code>，即可构建紧凑的筛选工具栏。两者使用相同的 <code>h-6.5</code>（26px）高度。
+</p>
+
+<ComponentExample demo="LayerCardFilterSubrequestsDemo">
+  <LayerCardFilterSubrequestsDemo client:visible />
+</ComponentExample>
+
+### 测试 ID
+
+<p>
+  <code>LayerCard.Primary</code> 和 <code>LayerCard.Secondary</code> 接受所有标准 HTML 属性，包括用于测试的 <code>data-testid</code>。
+</p>
+
+<ComponentExample demo="LayerCardTestIdDemo">
+  <LayerCardTestIdDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="LayerCard" />
+</ComponentSection>

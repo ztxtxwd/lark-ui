@@ -1,0 +1,265 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Pagination 分页"
+description: "用于在分页内容之间切换的页码导航组件。"
+sourceFile: "components/pagination"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  PaginationBasicDemo,
+  PaginationSimpleDemo,
+  PaginationUnknownTotalDemo,
+  PaginationFullDemo,
+  PaginationMidPageDemo,
+  PaginationEmptyDemo,
+  PaginationLargeDatasetDemo,
+  PaginationCustomTextDemo,
+  PaginationPageSizeSelectorDemo,
+  PaginationCustomPageSizeOptionsDemo,
+  PaginationCompoundCustomInfoDemo,
+  PaginationDropdownSelectorDemo,
+  PaginationPageSizeRightDemo,
+  PaginationI18nDemo,
+} from "~/components/demos/PaginationDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="PaginationBasicDemo">
+    <PaginationBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Pagination } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Pagination } from "@lark-ui/core/components/pagination";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { useState } from "react";
+import { Pagination } from "@lark-ui/core";
+
+export default function Example() {
+  const [page, setPage] = useState(1);
+
+  return (
+    <Pagination page={page} setPage={setPage} perPage={10} totalCount={100} />
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 完整控件（默认）
+
+<p>
+  默认的分页包含首页、上一页、页码输入框、下一页和末页按钮。
+</p>
+<ComponentExample demo="PaginationFullDemo">
+  <PaginationFullDemo client:visible />
+</ComponentExample>
+
+### 简洁控件
+
+<p>
+  使用 `controls="simple"` 可获得只包含上一页和下一页按钮的极简分页。
+</p>
+<ComponentExample demo="PaginationSimpleDemo">
+  <PaginationSimpleDemo client:visible />
+</ComponentExample>
+
+### 未知总数
+
+<p>
+  当数据源不返回总数时，请使用 `hasNextPage`。这在基于游标的 API 中很常见，因为计算总数
+  可能代价高昂或根本无法获取。请根据响应中的「还有下一页」信号来设置它，使「下一页」按钮
+  仅在仍存在后续结果集时保持可用。
+</p>
+<p>
+  没有总数时，用户只能顺序翻页，因此分页（Pagination）会隐藏首页、末页和页码选择器控件。
+  `page` 值对界面仍然有用，但每次请求的游标或续传令牌需要由你的应用负责存储和发送。
+</p>
+
+```tsx
+const [page, setPage] = useState(1);
+const { data } = useQuery({
+  queryKey: ["events", page],
+  queryFn: () => getEvents({ cursor: cursors[page - 1] }),
+});
+
+return (
+  <Pagination
+    page={page}
+    setPage={setPage}
+    hasNextPage={data.hasMore}
+    text={() => `Page ${page}`}
+  />
+);
+```
+
+<ComponentExample demo="PaginationUnknownTotalDemo">
+  <PaginationUnknownTotalDemo client:visible />
+</ComponentExample>
+
+### 中间页状态
+
+<p>位于数据集中间位置、所有导航均可用的分页状态。</p>
+<ComponentExample demo="PaginationMidPageDemo">
+  <PaginationMidPageDemo client:visible />
+</ComponentExample>
+
+### 空结果
+
+<p>
+  当 `totalCount={0}` 时，分页会显示一个空页面，且 `setPage` 永远不会被调用为第 0 页。
+  在第 1 页时，所有导航按钮均为禁用状态。如果在较后面的页面（例如筛选之后）结果可能变为空，
+  请将 `page` 重置为 1。
+</p>
+<ComponentExample demo="PaginationEmptyDemo">
+  <PaginationEmptyDemo client:visible />
+</ComponentExample>
+
+### 页码输入框
+
+<p>
+  页码输入框只接受整数页码。按回车或将焦点移开即可跳转到该页。超出范围的数字会跳到首页或末页。
+  其他内容（如 `abc`、`2.5` 或 `1e1`）会恢复当前页，并且不会调用 `setPage`。
+</p>
+
+### 大型数据集
+
+<p>分页组件可以处理页数众多的大型数据集。</p>
+<ComponentExample demo="PaginationLargeDatasetDemo">
+  <PaginationLargeDatasetDemo client:visible />
+</ComponentExample>
+
+### 自定义文本
+
+<p>你可以自定义分页文本。</p>
+<ComponentExample demo="PaginationCustomTextDemo">
+  <PaginationCustomTextDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* 复合组件 */}
+
+<ComponentSection>
+
+## 复合组件
+
+  <p>
+    如果需要更多布局和功能上的控制，请使用复合组件 API。你可以按任意顺序组合 `Pagination.Info`、`Pagination.PageSize`、`Pagination.Controls` 和 `Pagination.Separator`。
+  </p>
+
+### 每页条数选择器
+
+<p>添加下拉菜单，让用户选择每页显示的条目数。</p>
+<ComponentExample demo="PaginationPageSizeSelectorDemo">
+  <PaginationPageSizeSelectorDemo client:visible />
+</ComponentExample>
+
+### 自定义每页条数选项
+
+<p>
+  通过 `options` 属性自定义可选的每页条数。默认为 `[25, 50, 100, 250]`。
+</p>
+<ComponentExample demo="PaginationCustomPageSizeOptionsDemo">
+  <PaginationCustomPageSizeOptionsDemo client:visible />
+</ComponentExample>
+
+### 自定义信息文本
+
+<p>使用渲染函数自定义信息文本。</p>
+<ComponentExample demo="PaginationCompoundCustomInfoDemo">
+  <PaginationCompoundCustomInfoDemo client:visible />
+</ComponentExample>
+
+### 自定义布局
+
+<p>
+  可以按任意顺序排列组件。这里每页条数选择器位于右侧。
+</p>
+<ComponentExample demo="PaginationPageSizeRightDemo">
+  <PaginationPageSizeRightDemo client:visible />
+</ComponentExample>
+
+### 下拉式页码选择器
+
+    <p>
+      在 `Pagination.Controls` 上使用 `pageSelector="dropdown"`，可以用下拉选择器代替文本输入框
+      进行页码导航。当你希望用户从可用页面列表中选择，而不是手动输入数字时，这会非常有用。
+    </p>
+    <ComponentExample
+      code={`<Pagination page={page} setPage={setPage} perPage={perPage} totalCount={500}>
+
+  <Pagination.Info />
+  <Pagination.Separator />
+  <Pagination.PageSize
+    value={perPage}
+    onChange={(size) => {
+      setPerPage(size);
+      setPage(1);
+    }}
+  />
+  <Pagination.Controls pageSelector="dropdown" />
+</Pagination>`}
+    >
+      <PaginationDropdownSelectorDemo client:visible />
+    </ComponentExample>
+</ComponentSection>
+
+{/* 国际化 */}
+
+<ComponentSection>
+
+## 国际化
+
+  <p>
+    使用 `labels` 属性可以为不同语言环境自定义所有界面文案。所有标签默认使用英文。
+  </p>
+
+<ComponentExample demo="PaginationI18nDemo">
+  <PaginationI18nDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Pagination" />
+</ComponentSection>

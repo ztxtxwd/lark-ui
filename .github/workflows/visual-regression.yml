@@ -46,7 +46,7 @@ jobs:
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
         with:
-          filter: kumo-workspace
+          filter: lark-workspace
 
       - name: Verify preview
         env:
@@ -60,7 +60,7 @@ jobs:
           GITHUB_PR_NUMBER: ${{ inputs.pr_number }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_HEAD_SHA: ${{ inputs.head_sha }}
-          BEFORE_URL: "https://kumo-ui.com"
+          BEFORE_URL: "https://lark-ui.com"
           AFTER_URL: ${{ inputs.preview_url }}
           SCREENSHOT_API_KEY: ${{ secrets.SCREENSHOT_API_KEY }}
         run: vp exec tsx ci/visual-regression/run-visual-regression.ts

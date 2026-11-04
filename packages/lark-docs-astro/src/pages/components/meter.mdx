@@ -1,0 +1,113 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Meter 进度指示器"
+description: "用于在已知范围内显示数值的进度／百分比指示器组件。"
+sourceFile: "components/meter"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  MeterBasicDemo,
+  MeterCustomValueDemo,
+  MeterHiddenValueDemo,
+  MeterFullDemo,
+  MeterLowDemo,
+} from "~/components/demos/MeterDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="MeterBasicDemo">
+    <MeterBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Meter } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Meter } from "@lark-ui/core/components/meter";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Meter } from "@lark-ui/core";
+
+export default function Example() {
+  return <Meter label="Storage used" value={65} />;
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础进度指示器
+
+<p>进度指示器（Meter）默认会显示标签和百分比数值。</p>
+<ComponentExample demo="MeterBasicDemo">
+  <MeterBasicDemo client:visible />
+</ComponentExample>
+
+### 自定义数值显示
+
+<p>使用 `customValue` 可以用自定义字符串代替百分比显示。</p>
+<ComponentExample demo="MeterCustomValueDemo">
+  <MeterCustomValueDemo client:visible />
+</ComponentExample>
+
+### 隐藏数值
+
+<p>设置 `showValue={false}` 可隐藏数值显示。</p>
+<ComponentExample demo="MeterHiddenValueDemo">
+  <MeterHiddenValueDemo client:visible />
+</ComponentExample>
+
+### 满量程
+
+<p>数值达到 100% 时的进度指示器。</p>
+<ComponentExample demo="MeterFullDemo">
+  <MeterFullDemo client:visible />
+</ComponentExample>
+
+### 低数值
+
+<p>数值为较低值的进度指示器。</p>
+<ComponentExample demo="MeterLowDemo">
+  <MeterLowDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Meter" />
+</ComponentSection>

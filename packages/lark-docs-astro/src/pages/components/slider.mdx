@@ -1,0 +1,142 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Slider 滑块"
+description: "通过沿轨道拖动手柄来选取数值或两个数值之间区间的输入控件。"
+sourceFile: "components/slider"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  SliderBasicDemo,
+  SliderRangeDemo,
+  SliderStepDemo,
+  SliderFormatDemo,
+  SliderSizesDemo,
+  SliderControlledDemo,
+  SliderDisabledDemo,
+} from "~/components/demos/SliderDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="SliderRangeDemo">
+    <SliderRangeDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Slider } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Slider } from "@lark-ui/core/components/slider";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Slider } from "@lark-ui/core";
+
+export default function Example() {
+  return <Slider label="Volume" defaultValue={40} />;
+}
+```
+
+滑块（`Slider`）基于 [Base UI 的 Slider](https://base-ui.com/react/components/slider) 构建。`value`、`defaultValue`、`min`、`max`、`step`、`format` 和 `onValueChange` 等属性会直接透传给它。
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础滑块
+
+<p>单个滑块手柄，数值以徽标形式显示在其下方，最小值和最大值分别位于轨道两端。</p>
+<ComponentExample demo="SliderBasicDemo">
+  <SliderBasicDemo client:visible />
+</ComponentExample>
+
+### 区间
+
+<p>向 `value` 或 `defaultValue` 传入数组，即可为每个数值渲染一个滑块手柄。使用 `getAriaLabel` 可以为每个手柄设置各自的无障碍名称。</p>
+<ComponentExample demo="SliderRangeDemo">
+  <SliderRangeDemo client:visible />
+</ComponentExample>
+
+### 自定义范围与步长
+
+<p>设置 `min`、`max` 和 `step` 可以约束可选取的数值。</p>
+<ComponentExample demo="SliderStepDemo">
+  <SliderStepDemo client:visible />
+</ComponentExample>
+
+### 格式化数值
+
+<p>`format` 接受 `Intl.NumberFormat` 选项，并应用于徽标、范围标签以及向辅助技术播报的数值。</p>
+<ComponentExample demo="SliderFormatDemo">
+  <SliderFormatDemo client:visible />
+</ComponentExample>
+
+### 尺寸
+
+<p>在紧凑布局中使用 `size="sm"`。</p>
+<ComponentExample demo="SliderSizesDemo">
+  <SliderSizesDemo client:visible />
+</ComponentExample>
+
+### 受控
+
+<p>传入 `value` 和 `onValueChange` 即可控制滑块。</p>
+<ComponentExample demo="SliderControlledDemo">
+  <SliderControlledDemo client:visible />
+</ComponentExample>
+
+### 禁用
+
+<ComponentExample demo="SliderDisabledDemo">
+  <SliderDisabledDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* 无障碍 */}
+
+<ComponentSection>
+
+## 无障碍
+
+- 每个滑块手柄都是原生范围输入框，因此方向键、<kbd>Page Up</kbd>/<kbd>Page Down</kbd> 和 <kbd>Home</kbd>/<kbd>End</kbd> 默认即可使用。
+- `label` 为滑块及其手柄命名。如果没有可见标签，请传入 `getAriaLabel`。
+- 数值徽标和范围标签对辅助技术隐藏，因为每个手柄已经会播报其格式化后的数值。
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Slider" />
+</ComponentSection>

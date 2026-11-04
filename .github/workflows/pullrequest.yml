@@ -24,16 +24,16 @@ jobs:
           fetch-depth: 1
       - uses: ./.github/actions/install-dependencies
       - uses: ./.github/actions/vite-task-cache
-      - run: vp run build:kumo
+      - run: vp run build:lark
       - uses: actions/upload-artifact@v4
         with:
-          name: kumo-dist
-          path: packages/kumo/dist
+          name: lark-dist
+          path: packages/lark/dist
           retention-days: 1
       - uses: actions/upload-artifact@v4
         with:
-          name: kumo-ai
-          path: packages/kumo/ai
+          name: lark-ai
+          path: packages/lark/ai
           retention-days: 1
 
   bundle-report:
@@ -47,12 +47,12 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-dist
-          path: packages/kumo/dist
+          name: lark-dist
+          path: packages/lark/dist
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-ai
-          path: packages/kumo/ai
+          name: lark-ai
+          path: packages/lark/ai
       - run: vp exec tsx ci/scripts/write-bundle-size-report.ts
       - uses: actions/upload-artifact@v4
         with:
@@ -81,16 +81,16 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-dist
-          path: packages/kumo/dist
+          name: lark-dist
+          path: packages/lark/dist
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-ai
-          path: packages/kumo/ai
+          name: lark-ai
+          path: packages/lark/ai
       - uses: ./.github/actions/vite-task-cache
-      # kumo-figma imports generated JSON data; type-aware lint needs it
+      # lark-figma imports generated JSON data; type-aware lint needs it
       - run: vp run gen:figma-data
-      - run: vp run --filter @cloudflare/kumo lint:oxlint
+      - run: vp run --filter @lark-ui/core lint:oxlint
       - run: vp lint packages/*/src
 
   typecheck:
@@ -104,12 +104,12 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-dist
-          path: packages/kumo/dist
+          name: lark-dist
+          path: packages/lark/dist
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-ai
-          path: packages/kumo/ai
+          name: lark-ai
+          path: packages/lark/ai
       - run: vp run typecheck
       - run: vp run ci:typecheck
 
@@ -124,13 +124,13 @@ jobs:
       - uses: ./.github/actions/install-dependencies
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-dist
-          path: packages/kumo/dist
+          name: lark-dist
+          path: packages/lark/dist
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-ai
-          path: packages/kumo/ai
-      - run: vp run --filter @cloudflare/kumo test
+          name: lark-ai
+          path: packages/lark/ai
+      - run: vp run --filter @lark-ui/core test
       - run: vp run test:ci
 
   visual-contracts:
@@ -142,18 +142,18 @@ jobs:
           fetch-depth: 1
       - uses: ./.github/actions/install-dependencies
         with:
-          filter: "@cloudflare/kumo"
+          filter: "@lark-ui/core"
       - name: Install Chromium
-        working-directory: packages/kumo
+        working-directory: packages/lark
         run: vp exec playwright install --with-deps chromium
       - name: Run visual contracts
-        run: vp run --filter @cloudflare/kumo test:visual-contracts
+        run: vp run --filter @lark-ui/core test:visual-contracts
       - name: Upload visual-contract artifacts
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: visual-contract-artifacts
-          path: packages/kumo/.vitest-attachments/
+          path: packages/lark/.vitest-attachments/
           if-no-files-found: ignore
           retention-days: 7
 
@@ -194,19 +194,19 @@ jobs:
             process.stdout.write(JSON.stringify(overrides));
           ')"
           vp pm config set --location=project --json overrides "$overrides"
-          vp install --no-frozen-lockfile --ignore-scripts --filter "@cloudflare/kumo..."
+          vp install --no-frozen-lockfile --ignore-scripts --filter "@lark-ui/core..."
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-dist
-          path: packages/kumo/dist
+          name: lark-dist
+          path: packages/lark/dist
       - uses: actions/download-artifact@v4
         with:
-          name: kumo-ai
-          path: packages/kumo/ai
+          name: lark-ai
+          path: packages/lark/ai
       - name: Verify React test versions
         run: |
-          cd packages/kumo
+          cd packages/lark
           node -e "if (require('react/package.json').version !== '${{ matrix.react-version }}') process.exit(1)"
           node -e "if (require('react-dom/package.json').version !== '${{ matrix.react-version }}') process.exit(1)"
-      - run: vp run --filter @cloudflare/kumo typecheck
-      - run: vp run --filter @cloudflare/kumo test
+      - run: vp run --filter @lark-ui/core typecheck
+      - run: vp run --filter @lark-ui/core test

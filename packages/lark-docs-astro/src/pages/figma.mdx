@@ -1,0 +1,204 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Figma 资源"
+description: "使用 Figma 插件从 Lark 定义生成 Figma 组件。"
+---
+
+import Callout from "~/components/docs/Callout.astro";
+
+## Lark Figma 插件
+
+Lark Figma 插件直接从 Lark 组件定义生成生产级质量的 Figma 组件。这让设计与代码保持同步——Figma 中的组件与你在代码中使用的 React 组件来自同一个事实来源。
+
+插件会读取 `component-registry.json`，并创建带有正确自动布局、语义化颜色变量绑定以及全部变体组合的 Figma ComponentSet。
+
+## 本地开发环境搭建
+
+按照以下步骤，即可在任意 Figma 文件中本地构建和测试该 Figma 插件。
+
+### 1. 构建插件
+
+在仓库根目录执行：
+
+```bash
+pnpm --filter @lark-ui/figma build
+```
+
+该命令会生成主题数据、loader 数据和图标，然后把插件代码打包进 `src/code.js`。
+
+### 2. 在 Figma 中导入插件
+
+打开 Figma 桌面版（插件开发需要桌面应用，而不是网页版）。
+
+1. 在菜单栏中进入 **Plugins**
+2. 选择 **Development** → **Import plugin from manifest...**
+3. 在本地 lark 仓库中定位到 `packages/lark-figma/src/manifest.json`
+
+### 3. 运行插件
+
+导入完成后，插件会出现在你的开发插件列表中。
+
+1. 打开任意 Figma 文件（如果你有权限，也可以打开 Lark 设计文件）
+2. 进入 **Plugins** → **Development** → **Lark UI Kit Generator**
+
+### 4. 使用插件界面
+
+插件会打开一个面板，你可以在其中选择要生成的组件。点击组件按钮即可生成对应的 Figma 版本。
+
+<Callout type="info">
+  **注意：** 要让组件正确绑定到语义化颜色变量，目标 Figma 文件必须包含 `lark-colors` 变量集合。如果你在新建文件，请先运行 token 同步脚本。
+</Callout>
+
+## 环境变量
+
+token 同步脚本需要通过环境变量进行 Figma API 身份验证，并指定目标文件。
+
+### 配置
+
+1. 在 Figma 设置 → Personal Access Tokens 中获取一个 [Figma 个人访问令牌](https://www.figma.com/developers/api#authentication)
+2. 复制环境变量模板：
+
+```bash
+cp packages/lark-figma/scripts/.env.example packages/lark-figma/scripts/.env
+```
+
+3. 在 `.env` 中配置环境变量
+
+### 必需变量
+
+| 变量                    | 是否必需 | 说明                                                         |
+| ----------------------- | -------- | ------------------------------------------------------------ |
+| `FIGMA_TOKEN`           | 是       | 用于 API 身份验证的 Figma 个人访问令牌                       |
+| `FIGMA_FILE_KEY`        | 是       | 你的 Figma URL 中的文件 key：`figma.com/file/{FILE_KEY}/...` |
+| `FIGMA_COLLECTION_NAME` | 否       | Figma 中的变量集合名称。默认为 `lark-colors`                 |
+
+```bash
+
+# packages/lark-figma/scripts/.env
+
+FIGMA_TOKEN=figd_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FIGMA_FILE_KEY=sKKZc6pC6W1TtzWBLxDGSU
+FIGMA_COLLECTION_NAME=lark-colors
+```
+
+<Callout type="warning">
+  **安全：** 切勿提交你的 Figma 令牌。`.env` 文件已被 gitignore。
+</Callout>
+
+## token 同步
+
+在生成组件之前，请先把 Lark 的语义化颜色 token 同步到 Figma。这会创建 `lark-colors` 变量集合，组件会绑定到它以获得一致的主题效果。
+
+### 运行 token 同步
+
+```bash
+pnpm --filter @lark-ui/figma figma:sync
+```
+
+该脚本会解析 `theme-lark.css` 中的 token，为两种模式分别解析 `light-dark()` 值，然后通过 Variables API 推送到 Figma。
+
+## 生成的内容
+
+Lark Figma 工作流会在目标 Figma 文件中产出两类内容：
+
+### 1. Figma 变量（token 同步）
+
+token 同步脚本会创建一个 `lark-colors` 变量集合，其中包含：
+
+- **颜色变量**——所有语义化 token，例如 `color-primary`、`color-surface`、`text-color-muted`
+- **浅色和深色模式**——每个变量都有两种配色方案下的取值
+- **主题覆盖**——像 FedRAMP 这样的扩展模式及其对应的颜色覆盖值
+
+变量会出现在 Figma 的 Variables 面板中，可在你的设计文件中全局使用。切换模式时，所有绑定的颜色都会自动更新。
+
+### 2. Figma 组件（插件）
+
+插件会生成一个 **"ui kit"** 页面，其中包含每个 Lark 组件对应的 ComponentSet：
+
+- **带变体的 ComponentSet**——每个组件（Button、Badge、Input 等）都会成为一个 ComponentSet，包含其全部变体组合
+- **变量绑定**——填充、描边和文字颜色都绑定到 `lark-colors` 变量，而不是硬编码的值
+- **自动布局**——组件使用与 CSS flexbox 行为相匹配的 Figma 自动布局
+- **尺寸精确**——间距、内边距、圆角和字号都与代码实现保持一致
+
+#### 当前生成的组件（30+）
+
+Badge, Banner, Breadcrumbs, Button, Checkbox, ClipboardText, Code, CodeBlock, Collapsible, Combobox, CommandPalette, Dialog, Dropdown, Empty, Input, InputArea, Label, LayerCard, LinkButton, Loader, MenuBar, Meter, Pagination, Radio, RefreshButton, Select, SensitiveInput, Surface, Switch, Table, Tabs, Text, Toast, Tooltip
+
+### 破坏性同步
+
+插件采用**破坏性同步**——每次运行都会清除所有已生成的内容并重新创建。这可以确保 Figma 文件始终与代码库的当前状态一致。请不要手动编辑生成的组件；你的改动会在下次同步时被覆盖。
+
+## 完整工作流
+
+更新组件时的典型工作流：
+
+```bash
+
+# 1. Make changes to Lark components
+
+# ...edit packages/lark/src/components/...
+
+# 2. Regenerate component registry
+
+pnpm --filter @lark-ui/core codegen:registry
+
+# 3. Sync tokens to Figma (if colors changed)
+
+pnpm --filter @lark-ui/figma figma:sync
+
+# 4. Build the plugin
+
+pnpm --filter @lark-ui/figma build
+
+# 5. Run in Figma: Plugins > Development > Lark UI Kit Generator
+
+```
+
+## 插件架构
+
+| 目录              | 用途                                       |
+| ----------------- | ------------------------------------------ |
+| `src/code.ts`     | 插件主入口，编排各生成器                   |
+| `src/ui.html`     | 插件界面（组件选择面板）                   |
+| `src/generators/` | 30+ 个组件生成器（badge.ts、button.ts 等） |
+| `src/parsers/`    | Tailwind 到 Figma 的转换器，注册表解析     |
+| `scripts/`        | 用于 Figma Variables API 的 token 同步脚本 |
+
+## 添加新的组件生成器
+
+当你向 Lark 添加新组件时，请创建对应的 Figma 生成器：
+
+1. 创建 `src/generators/yourcomponent.ts`
+2. 从 `shared.ts` 导入共享工具函数
+3. 在 `code.ts` 的 `GENERATORS` 数组中注册
+4. 运行 `pnpm --filter @lark-ui/figma validate`，确认漂移检测通过
+
+如果某个组件不需要在 Figma 中呈现（纯工具类或仅用于布局），请把它加到 `drift-detection.test.ts` 中的 `EXCLUDED_COMPONENTS`。
+
+## 故障排查
+
+### "lark-colors collection not found"——未找到 lark-colors 变量集合
+
+目标 Figma 文件需要包含该变量集合。请先运行 token 同步脚本：
+
+```bash
+pnpm --filter @lark-ui/figma figma:sync
+```
+
+### "Variable not found: color-primary"——未找到变量：color-primary
+
+变量名称必须与 lark-colors 集合一致。请在 Figma 的 Variables 面板中检查，以确认 token 已正确同步。
+
+### "Font not found"——未找到字体
+
+插件使用 Inter 字体，它是 Figma 的默认字体。请确保你的 Figma 字体列表中可用。
+
+### 插件未出现在菜单中
+
+请确认你使用的是 Figma 桌面版（而非网页版），并且从正确的路径导入了 manifest：`packages/lark-figma/src/manifest.json`
+
+## 相关文档
+
+- [颜色](/colors)——语义化颜色 token 参考
+- [组件注册表](/registry)——插件读取的组件注册表
+- [贡献指南](/contributing)——添加新的组件和生成器

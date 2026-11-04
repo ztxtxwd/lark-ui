@@ -1,0 +1,96 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Badge 徽标"
+description: "用于展示状态、分类或元信息的小标签。"
+sourceFile: "components/badge"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  BadgeSemanticVariantsDemo,
+  BadgeColorVariantsDemo,
+  BadgeInSentenceDemo,
+  BadgeIconDemo,
+  BadgeLinkDemo,
+  BadgeDotDemo,
+} from "~/components/demos/BadgeDemo";
+
+
+<ComponentExample demo="BadgeSemanticVariantsDemo">
+  <BadgeSemanticVariantsDemo client:visible />
+</ComponentExample>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Badge } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Badge } from "@lark-ui/core/components/badge";
+```
+
+## 用法
+
+```tsx
+import { Badge } from "@lark-ui/core";
+
+export default function Example() {
+  return <Badge variant="secondary">New</Badge>;
+}
+```
+
+## 示例
+
+### 主要徽标
+
+<ComponentExample demo="BadgeSemanticVariantsDemo">
+  <BadgeSemanticVariantsDemo client:visible />
+</ComponentExample>
+
+### 其他颜色变体
+
+针对特定产品或使用场景提供的其他颜色变体，适用于语义徽标不足以表达预期含义或状态的场合。
+
+<ComponentExample demo="BadgeColorVariantsDemo">
+  <BadgeColorVariantsDemo client:visible />
+</ComponentExample>
+
+### 圆点徽标
+
+使用 `appearance="dot"` 可以得到带彩色圆点的轻量状态指示器。支持 `success`、`warning`、`error` 和 `neutral` 变体。
+
+<ComponentExample demo="BadgeDotDemo">
+  <BadgeDotDemo client:visible />
+</ComponentExample>
+
+### 用于句中
+
+<ComponentExample demo="BadgeInSentenceDemo">
+  <BadgeInSentenceDemo client:visible />
+</ComponentExample>
+
+### 带图标
+
+实心徽标可通过 `icon` 接收 Phosphor 图标组件或 React 元素。圆点徽标使用自身的状态圆点，不接受图标。
+
+<ComponentExample demo="BadgeIconDemo">
+  <BadgeIconDemo client:visible />
+</ComponentExample>
+
+### 链接徽标
+
+用 [`Link`](/components/link) 包裹徽标使其可导航。当上级链接被悬停时，徽标会显示一圈描边。
+
+<ComponentExample demo="BadgeLinkDemo">
+  <BadgeLinkDemo client:visible />
+</ComponentExample>
+
+## API 参考
+
+<PropsTable component="Badge" />

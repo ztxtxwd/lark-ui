@@ -22,7 +22,7 @@ export const REPORTS_DIR = "ci/reports";
  * A single item to be included in the PR comment
  */
 export interface ReportItem {
-  /** Unique identifier for this report type (e.g., "npm-release", "kumo-docs-preview") */
+  /** Unique identifier for this report type (e.g., "npm-release", "lark-docs-preview") */
   id: string;
   /** Section title displayed in the comment */
   title: string;
@@ -60,8 +60,8 @@ export interface CIContext {
   packageName: string;
   /** Package version being released */
   packageVersion: string;
-  /** Kumo docs preview URL (if deployed) */
-  kumoDocsPreviewUrl?: string;
+  /** Lark docs preview URL (if deployed) */
+  larkDocsPreviewUrl?: string;
   /** Allow additional context to be passed */
   [key: string]: string | undefined;
 }
@@ -91,11 +91,11 @@ export function buildContextFromEnv(): CIContext {
     commitSha,
     shortSha: commitSha.substring(0, 8),
     prNumber: process.env.GITHUB_PR_NUMBER ?? process.env.PR_NUMBER ?? "",
-    repository: process.env.GITHUB_REPOSITORY ?? "cloudflare/kumo",
+    repository: process.env.GITHUB_REPOSITORY ?? "cloudflare/lark",
     apiToken: process.env.GITHUB_TOKEN ?? "",
-    packageName: process.env.PACKAGE_NAME ?? "@cloudflare/kumo",
+    packageName: process.env.PACKAGE_NAME ?? "@lark-ui/core",
     packageVersion: process.env.PACKAGE_VERSION ?? "",
-    kumoDocsPreviewUrl: process.env.KUMO_DOCS_PREVIEW_URL,
+    larkDocsPreviewUrl: process.env.LARK_DOCS_PREVIEW_URL,
   };
 }
 

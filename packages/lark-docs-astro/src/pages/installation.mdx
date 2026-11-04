@@ -1,0 +1,266 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "安装"
+description: "通过安装软件包并导入组件来开始使用 Lark。"
+---
+
+import Callout from "~/components/docs/Callout.astro";
+
+export const larkVersion =
+  typeof __LARK_VERSION__ !== "undefined" ? __LARK_VERSION__ : "latest";
+
+## NPM 注册表
+
+`@lark-ui/core` 包已发布到公共 npm 注册表。安装无需任何特殊配置。
+
+## 安装软件包
+
+使用你偏好的包管理器安装 Lark。当前版本为 <code>v{larkVersion}</code>。
+
+#### npm
+
+```bash
+npm install @lark-ui/core
+```
+
+#### pnpm
+
+```bash
+pnpm add @lark-ui/core
+```
+
+#### yarn
+
+```bash
+yarn add @lark-ui/core
+```
+
+#### peer 依赖
+
+Lark 需要以下 peer 依赖。大多数 React 项目中已经安装了它们：
+
+```bash
+# Required peer dependencies
+pnpm add react react-dom @phosphor-icons/react
+```
+
+## 导入组件
+
+从主包导入组件，或使用按需导入以获得更好的 tree-shaking 效果：
+
+#### 主包导入
+
+```tsx
+import { Button, Input, LayerCard } from "@lark-ui/core";
+```
+
+#### 按需导入（推荐）
+
+```tsx
+import { Button } from "@lark-ui/core/components/button";
+import { Input } from "@lark-ui/core/components/input";
+```
+
+## Base UI 基础组件
+
+Lark 构建在 [Base UI](https://base-ui.com) 之上，这是一个无样式、无障碍的 React 组件库。对于需要访问底层基础组件的高级用例，Lark 同时提供统一导出和按需导出两种方式，重新导出了全部 37 个 Base UI 组件：
+
+#### 统一导出（便捷）
+
+```tsx
+// Import multiple primitives at once
+import { Popover, Slider, Accordion } from "@lark-ui/core/primitives";
+```
+
+#### 按需导出（性能更优，推荐）
+
+```tsx
+// Import individual primitives for better tree-shaking
+import { Popover } from "@lark-ui/core/primitives/popover";
+import { Slider } from "@lark-ui/core/primitives/slider";
+import { Accordion } from "@lark-ui/core/primitives/accordion";
+```
+
+按需导出只会打包你真正使用的基础组件，因此产出的包体积更小。
+
+<Callout type="info">
+  **可用的基础组件（共 37 个）：** 布局 · Accordion、Collapsible、
+  Separator、ScrollArea、Toolbar——浮层 · AlertDialog、Dialog、Popover、
+  PreviewCard、Tooltip、Toast——菜单 · Menu、Menubar、ContextMenu、
+  NavigationMenu——表单控件 · Autocomplete、Button、Checkbox、
+  CheckboxGroup、Combobox、Input、NumberField、Radio、RadioGroup、Select,
+  Slider、Switch、Toggle、ToggleGroup——表单结构 · Field、Fieldset、Form——
+  展示 · Avatar、Meter、Progress、Tabs
+</Callout>
+
+<Callout type="warning">
+  **注意：** 请优先使用已有的、带样式的 Lark 组件。基础组件适用于构建 Lark 中
+  尚不存在的自定义组件，或需要对样式和行为进行细粒度控制的场景。
+</Callout>
+
+## 导入样式
+
+Lark 根据你的搭建方式提供两种 CSS 分发方案：
+
+### 面向 Tailwind CSS 用户（推荐）
+
+如果你的应用使用 Tailwind CSS，请把 Lark 的源文件加入内容配置，并导入样式。**导入顺序很重要**——Lark 样式必须位于 `@import "tailwindcss"` 之前，这样 Lark 的主题 token 才会先被注册：
+
+<Callout type="warning">
+  **重要：** Tailwind CSS v4 默认不会扫描 `node_modules/`。你
+  必须添加 `@source` 指令，让 Tailwind 能发现 Lark 组件使用的工具类。
+  否则组件渲染时可能缺少样式（例如对话框无法居中）。
+</Callout>
+
+```css
+/* app.css or main.css */
+@source "../node_modules/@lark-ui/core/dist/**/*.{js,jsx,ts,tsx}";
+@import "@lark-ui/core/styles/tailwind";
+@import "tailwindcss";
+
+/* Your custom styles */
+```
+
+<Callout type="info">
+  `@source` 路径相对于你的 CSS 文件。请根据项目结构调整——例如
+  如果 CSS 位于 `src/styles/`，你可能需要 `../../node_modules/@lark-ui/core/dist/**/*.{"{"}js,jsx,ts,tsx{"}"}`。
+</Callout>
+
+注意：你也可以使用默认导出 `@lark-ui/core/styles`，它等价于 `styles/tailwind`。
+
+### 面向非 Tailwind 用户（独立构建）
+
+如果你的应用不使用 Tailwind CSS，请使用包含全部已编译样式的独立构建：
+
+```tsx
+// In your app entry point (e.g., main.tsx, index.tsx)
+import "@lark-ui/core/styles/standalone";
+```
+
+独立构建已预编译所有 Tailwind 工具类和 Lark 组件样式，无需任何 Tailwind 配置！
+
+## 隔离你的应用根节点
+
+Lark 的浮层组件（`Select`、`Combobox`、`Dropdown`、`Popover`、`Tooltip`、`Dialog` 等）会把弹层渲染到 `document.body` 末尾的 portal 中。由于 Lark 不会给这些弹层设置 `z-index`，你自己布局中任何正值的 `z-index`（例如吸顶头部）都可能覆盖在打开的弹层之上。
+
+为避免这种情况，请按照 [Base UI 的建议](https://base-ui.com/react/overview/quick-start#portals) 在应用的根元素上添加 `isolation: isolate`：
+
+```css
+/* The element that wraps your entire app, e.g. #root or #app */
+.root {
+  isolation: isolate;
+}
+```
+
+或者使用 Tailwind：
+
+```tsx
+<div id="root" className="isolate">
+  {/* Your app */}
+</div>
+```
+
+这会为你的应用内容创建一个独立的层叠上下文，因此无论布局内部使用了怎样的 `z-index` 值，通过 portal 渲染的弹层始终显示在最上层。请把它加在包裹应用内容的元素上，而不是 `<body>` 上——隔离 body 会让 portal 处于同一个层叠上下文中，从而失去意义。
+
+<Callout type="info">
+  如果你发现自己在不断调高 `z-index`，好让 Lark 弹层显示在自己的 UI 之上，
+  那说明某个地方出了问题。解决办法几乎总是像上面那样隔离应用根节点，而不是提高
+  弹层的 `z-index` 或去定位 Base UI 的内部 data 属性。
+</Callout>
+
+## 使用示例
+
+下面是在 Tailwind CSS 中使用 Lark 组件的完整示例：
+
+#### CSS 文件（app.css）
+
+```css
+@source "../node_modules/@lark-ui/core/dist/**/*.{js,jsx,ts,tsx}";
+@import "@lark-ui/core/styles/tailwind";
+@import "tailwindcss";
+```
+
+注意：`@source` 路径相对于你的 CSS 文件。请根据项目结构调整。
+
+#### 组件文件（App.tsx）
+
+```tsx
+import { Button, Input, LayerCard } from "@lark-ui/core";
+import "./app.css";
+
+export default function App() {
+  return (
+    <LayerCard className="p-6">
+      <h1 className="mb-4 text-2xl font-bold">Welcome to Lark</h1>
+      <Input placeholder="Enter your name..." className="mb-4" />
+      <Button variant="primary">Submit</Button>
+    </LayerCard>
+  );
+}
+```
+
+## 区块与组件
+
+Lark 为你的应用提供两类构件：
+
+### 组件（NPM 导出）
+
+组件以 NPM 导出的形式发布，可以直接从包中导入。这些是核心 UI 基础元素，例如 `Button`、`Input` 和 `Dialog`。
+
+```tsx
+import { Button, Input, Dialog } from "@lark-ui/core";
+```
+
+当你需要风格统一、预先配好样式且能与应用无缝集成的 UI 基础元素时，请使用组件。组件有版本管理、支持 tree-shaking，并能自动获得更新。
+
+### 区块（CLI 安装）
+
+区块是更高层级的组合实现（例如 `PageHeader` 和 `ResourceListPage`），通过 Lark CLI 安装。区块让你完全拥有代码，可以按自身需求自由定制。
+
+```bash
+
+# Initialize Lark configuration
+
+npx @lark-ui/core init
+
+# List available blocks
+
+npx @lark-ui/core blocks
+
+# Install a block
+
+npx @lark-ui/core add PageHeader
+```
+
+安装完成后，区块会留在你的项目中（例如 `src/components/lark/`），可按需定制。CLI 会自动把相对路径的导入转换为 `@lark-ui/core`，实现无缝集成。
+
+```tsx
+import { PageHeader } from "src/components/lark/page-header/page-header";
+```
+
+<Callout type="info">
+  <strong>何时使用区块：</strong>
+  <ul class="mt-2 space-y-1 text-sm">
+    <li>你需要超出属性范围的组件定制</li>
+    <li>你希望完全掌控实现</li>
+    <li>你要构建应用特定的布局</li>
+    <li>对于某些代码，你更偏好复制粘贴而不是依赖包</li>
+  </ul>
+</Callout>
+
+## 工具函数
+
+Lark 还导出了一些常用任务的工具函数：
+
+```tsx
+import { cn, safeRandomId, LinkProvider } from "@lark-ui/core";
+
+// Merge class names with Tailwind
+const className = cn("base-class", condition && "conditional-class");
+
+// Generate safe random IDs
+const id = safeRandomId();
+
+// Configure link component for your framework (maps href to your router)
+<LinkProvider component={YourAppLink}>{/* Your app */}</LinkProvider>;
+```

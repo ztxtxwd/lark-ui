@@ -1,0 +1,373 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Radio 单选按钮"
+description: "允许用户从一组选项中选择一个的控件。始终在 Radio.Group 内部使用。"
+sourceFile: "components/radio"
+baseUIComponent: "radio-group"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  RadioBasicDemo,
+  RadioDefaultDemo,
+  RadioHorizontalDemo,
+  RadioSegmentedDemo,
+  RadioAppearanceComparisonDemo,
+  RadioSegmentedDisabledDemo,
+  RadioSegmentedLegendDemo,
+  RadioSegmentedLongLabelsDemo,
+  RadioDescriptionDemo,
+  RadioErrorDemo,
+  RadioDisabledDemo,
+  RadioControlPositionDemo,
+  RadioCardDemo,
+  RadioCardControlStartDemo,
+  RadioCardHorizontalDemo,
+  RadioRichLabelDemo,
+  RadioLegendSrOnlyDemo,
+  RadioLegendCustomDemo,
+  RadioTypedValueDemo,
+} from "~/components/demos/RadioDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="RadioBasicDemo">
+    <RadioBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Radio } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Radio } from "@lark-ui/core/components/radio";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Radio } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Radio.Group legend="Choose an option" defaultValue="a">
+      <Radio.Item label="Option A" value="a" />
+      <Radio.Item label="Option B" value="b" />
+    </Radio.Group>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 默认（垂直）
+
+<p>
+  单选按钮组（Radio.Group）默认垂直排列。每个单选按钮的标签显示在其右侧。
+</p>
+<ComponentExample demo="RadioDefaultDemo">
+  <RadioDefaultDemo client:visible />
+</ComponentExample>
+
+### 水平排列
+
+<p>
+  使用 `orientation="horizontal"` 可获得行内布局。空间不足时选项会自动换行。
+</p>
+<ComponentExample demo="RadioHorizontalDemo">
+  <RadioHorizontalDemo client:visible />
+</ComponentExample>
+
+### 分段样式
+
+<p>
+  使用 `appearance="segmented"` 可获得行内紧凑的选项。选项不会换行，因此请据此设计布局。
+</p>
+<ComponentExample
+  demo="RadioSegmentedDemo"
+  vrSection="radio-segmented"
+  vrTitle="Radio segmented"
+>
+  <RadioSegmentedDemo client:visible />
+</ComponentExample>
+
+#### 是否应该使用分段样式？
+仅当分组较小、标签简短且控件能放下一行时，才使用分段样式。标签较长、需要描述性选项、选项数量较多或布局较窄时，请使用默认样式。
+
+当选择结果决定显示哪个内容面板时，请使用 [标签页（Tabs）](/components/tabs) 组件。
+
+### 默认与分段对比
+
+<p>
+  外观仅影响呈现方式。两个示例表达的是同一组互斥的选项。
+</p>
+<ComponentExample
+  demo="RadioAppearanceComparisonDemo"
+  vrSection="radio-appearance-comparison"
+  vrTitle="Radio default and segmented"
+>
+  <RadioAppearanceComparisonDemo client:visible />
+</ComponentExample>
+
+### 禁用的分段控件
+
+<p>
+  分段控件组支持禁用整个分组或禁用单个选项。
+</p>
+<ComponentExample
+  demo="RadioSegmentedDisabledDemo"
+  vrSection="radio-segmented-disabled"
+  vrTitle="Radio segmented disabled"
+>
+  <RadioSegmentedDisabledDemo client:visible />
+</ComponentExample>
+
+### 使用自定义图例的分段控件
+
+<p>
+  `Radio.Legend` 保持在分段控件表面之外，为分组提供无障碍名称。
+</p>
+<ComponentExample
+  demo="RadioSegmentedLegendDemo"
+  vrSection="radio-segmented-legend"
+  vrTitle="Radio segmented custom legend"
+>
+  <RadioSegmentedLegendDemo client:visible />
+</ComponentExample>
+
+### 长标签与窄布局
+
+<p>
+  分段控件保持其固有宽度，不会换行、收缩或截断选项。当翻译后的标签或过窄的容器导致分组
+  无法排在一行内时，请选择默认样式。
+</p>
+<ComponentExample
+  demo="RadioSegmentedLongLabelsDemo"
+  vrSection="radio-segmented-long-labels"
+  vrTitle="Radio segmented long labels"
+>
+  <RadioSegmentedLongLabelsDemo client:visible />
+</ComponentExample>
+
+### 带描述
+
+<p>使用 `description` 属性可以在单选按钮下方添加辅助说明文字。</p>
+<ComponentExample demo="RadioDescriptionDemo">
+  <RadioDescriptionDemo client:visible />
+</ComponentExample>
+
+### 控件位置
+
+<p>使用 `controlPosition="end"` 可以把标签放在单选按钮之前。</p>
+<ComponentExample demo="RadioControlPositionDemo">
+  <RadioControlPositionDemo client:visible />
+</ComponentExample>
+
+### 单选卡片
+
+<p>
+  在分组上使用 `appearance="card"`，可以把每个选项显示为同一张卡片中的可选行，行之间用
+  分隔线隔开。结合每个选项上的 `description` 属性可以呈现更丰富的内容。
+</p>
+<ComponentExample demo="RadioCardDemo">
+  <RadioCardDemo client:visible />
+</ComponentExample>
+
+### 单选卡片（控件在左侧）
+
+<p>
+  在卡片式单选按钮组上使用 `controlPosition="start"`，可以把单选控件放在标签和描述的左侧。
+</p>
+<ComponentExample demo="RadioCardControlStartDemo">
+  <RadioCardControlStartDemo client:visible />
+</ComponentExample>
+
+### 富标签内容
+
+<p>
+  `Radio.Item` 上的 `label` 属性接受 React 节点，因此你可以在文本旁嵌入图标、徽标或其他标记。
+</p>
+<ComponentExample demo="RadioRichLabelDemo">
+  <RadioRichLabelDemo client:visible />
+</ComponentExample>
+
+### 单选卡片（水平）
+
+<p>
+  将 `appearance="card"` 与 `orientation="horizontal"` 结合使用，可以在同一张卡片内把选项
+  排成两列。
+</p>
+<ComponentExample demo="RadioCardHorizontalDemo">
+  <RadioCardHorizontalDemo client:visible />
+</ComponentExample>
+
+### 带错误
+
+<p>使用 `error` 属性在分组级别展示校验错误。</p>
+<ComponentExample demo="RadioErrorDemo">
+  <RadioErrorDemo client:visible />
+</ComponentExample>
+
+### 禁用
+
+<p>禁用整个分组或单个选项。</p>
+<ComponentExample demo="RadioDisabledDemo">
+  <RadioDisabledDemo client:visible />
+</ComponentExample>
+
+### 视觉隐藏的图例
+
+<p>
+  在 `Radio.Legend` 上使用 `className="sr-only"`，可以让图例对屏幕阅读器保持可访问，同时在
+  视觉上隐藏。当单选按钮组已经由父级 `Field` 或标题标注，显示图例会造成标签重复时，这会
+  非常有用。
+</p>
+<ComponentExample demo="RadioLegendSrOnlyDemo">
+  <RadioLegendSrOnlyDemo client:visible />
+</ComponentExample>
+
+### 自定义图例样式
+
+<p>
+  `Radio.Legend` 接受 `className`，可完全控制图例的呈现方式。当需要自定义排版、颜色或布局时，
+  请使用它代替 `legend` 字符串属性。
+</p>
+<ComponentExample demo="RadioLegendCustomDemo">
+  <RadioLegendCustomDemo client:visible />
+</ComponentExample>
+
+### 类型化取值
+
+<p>
+  `Radio.Group` 和 `Radio.Item` 支持泛型。传入类型参数（例如 `<number>` 或枚举类型），可以
+  约束两个子组件上 `value` 的类型，以及 `Radio.Group` 上的 `defaultValue` 和 `onValueChange`。
+  省略时默认为 `string`。
+</p>
+<ComponentExample
+  vrSection="radio-typed-value"
+  vrTitle="Radio Typed Value"
+  code={`enum ThemeType {
+    dark = "dark",
+    light = "light",
+    system = "system",
+}
+
+export function RadioTypedValueDemo() {
+    const [pageSize, setPageSize] = useState<number>(10);
+    const [theme, setTheme] = useState<ThemeType>(ThemeType.system);
+    return (
+      <div className="grid grid-cols-2 gap-6">
+        <Radio.Group<number>
+          legend="Items per page"
+          value={pageSize}
+          onValueChange={setPageSize}
+        >
+          <Radio.Item<number> label="10" value={10} />
+          <Radio.Item<number> label="25" value={25} />
+          <Radio.Item<number> label="50" value={50} />
+        </Radio.Group>
+        <Radio.Group<ThemeType>
+          legend="Theme"
+          value={theme}
+          onValueChange={setTheme}
+        >
+          <Radio.Item<ThemeType> label="Light" value={ThemeType.light} />
+          <Radio.Item<ThemeType> label="Dark" value={ThemeType.dark} />
+          <Radio.Item<ThemeType> label="System" value={ThemeType.system} />
+        </Radio.Group>
+      </div>
+    );
+}`}
+>
+  <RadioTypedValueDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Radio.Group
+
+<p>单选按钮的容器，支持图例（legend）、描述和错误提示。</p>
+<PropsTable component="Radio.Group" />
+
+### Radio.Legend
+
+<p>
+  Radio.Group 的可组合图例子组件。接受 `className`，可完全控制样式（例如用
+  `className="sr-only"` 在视觉上隐藏）。当需要自定义图例样式时，请使用它代替 `legend`
+  字符串属性。
+</p>
+<PropsTable component="Radio.Legend" />
+
+### Radio.Item
+
+<p>Radio.Group 中的单个单选按钮。</p>
+<PropsTable component="Radio.Item" />
+
+</ComponentSection>
+
+{/* 无障碍 */}
+
+<ComponentSection>
+
+## 无障碍
+
+  <div class="space-y-4 text-sm">
+    <div>
+
+      ### 语义化 HTML
+
+      <p>
+        Radio.Group 使用语义化的 `<fieldset>` 和 `<legend>` 元素来实现正确的分组和屏幕阅读器播报。
+      </p>
+    </div>
+    <div>
+
+      ### 键盘导航
+
+      <p>
+        使用 <kbd class="rounded bg-lark-control px-1.5 py-0.5">Arrow Up/Down</kbd> 或 <kbd class="rounded bg-lark-control px-1.5 py-0.5">Arrow Left/Right</kbd> 在选项之间移动。<kbd class="rounded bg-lark-control px-1.5 py-0.5">Space</kbd> 选中当前聚焦的选项。<kbd class="rounded bg-lark-control px-1.5 py-0.5">Tab</kbd> 将焦点移入或移出单选按钮组。
+      </p>
+    </div>
+    <div>
+
+      ### 屏幕阅读器
+
+      <p>
+        每个单选按钮都会播报其标签和选中状态。分组图例为所有选项提供上下文。
+      </p>
+    </div>
+
+  </div>
+</ComponentSection>

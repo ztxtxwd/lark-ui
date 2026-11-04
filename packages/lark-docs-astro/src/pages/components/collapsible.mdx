@@ -1,0 +1,210 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Collapsible 折叠面板"
+description: "可组合的折叠内容组件，用于显示和隐藏内容。"
+sourceFile: "components/collapsible"
+baseUIComponent: "collapsible"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  CollapsibleHeroDemo,
+  CollapsibleBasicDemo,
+  CollapsibleMultipleDemo,
+  CollapsibleCustomTriggerDemo,
+  CollapsibleKeepMountedDemo,
+  CollapsibleFormDemo,
+  CollapsibleAccordionDemo,
+} from "~/components/demos/CollapsibleDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="CollapsibleHeroDemo">
+    <CollapsibleHeroDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Collapsible } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Collapsible } from "@lark-ui/core/components/collapsible";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+Collapsible 采用复合组件模式，便于完全掌控组合方式。
+
+### 使用默认样式
+
+使用 `DefaultTrigger` 和 `DefaultPanel` 可获得经典的 Lark 样式：
+
+```tsx
+import { Collapsible } from "@lark-ui/core";
+
+export default function Example() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <Collapsible.DefaultTrigger>Show details</Collapsible.DefaultTrigger>
+      <Collapsible.DefaultPanel>
+        Content with border-left accent styling.
+      </Collapsible.DefaultPanel>
+    </Collapsible.Root>
+  );
+}
+```
+
+### 自定义触发器
+
+在 `Trigger` 上使用 `render` 属性，可完全控制触发元素：
+
+```tsx
+<Collapsible.Root open={open} onOpenChange={setOpen}>
+  <Collapsible.Trigger render={<Button variant="ghost" />}>
+    {open ? "Hide" : "Show"} details
+  </Collapsible.Trigger>
+  <Collapsible.Panel className="mt-2 p-4 bg-lark-tint rounded-lg">
+    Custom styled panel content.
+  </Collapsible.Panel>
+</Collapsible.Root>
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础
+
+<ComponentExample demo="CollapsibleBasicDemo">
+  <CollapsibleBasicDemo client:load />
+</ComponentExample>
+
+### 多项
+
+<ComponentExample demo="CollapsibleMultipleDemo">
+  <CollapsibleMultipleDemo client:load />
+</ComponentExample>
+
+### 自定义触发器
+
+使用带 `render` 属性的 `Collapsible.Trigger` 可完全控制触发器：
+
+<ComponentExample demo="CollapsibleCustomTriggerDemo">
+  <CollapsibleCustomTriggerDemo client:load />
+</ComponentExample>
+
+### 保持挂载
+
+在 `DefaultPanel`（或 `Panel`）上使用 `keepMounted`，可在面板折叠时保留内部状态（例如表单输入）：
+
+<ComponentExample demo="CollapsibleKeepMountedDemo">
+  <CollapsibleKeepMountedDemo client:load />
+</ComponentExample>
+
+### 表单内容
+
+将 `DefaultPanel` 与表单控件一起使用，可检查焦点环在动画面板内是否有足够空间：
+
+<ComponentExample demo="CollapsibleFormDemo">
+  <CollapsibleFormDemo client:load />
+</ComponentExample>
+
+### 手风琴模式
+
+通过控制哪一项处于展开状态，实现手风琴效果：同一时间只能展开一项：
+
+<ComponentExample demo="CollapsibleAccordionDemo">
+  <CollapsibleAccordionDemo client:load />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* Sub-components */}
+
+<ComponentSection>
+
+## 子组件
+
+| 组件 | 描述 |
+|-----------|-------------|
+| `Collapsible.Root` | 管理展开状态。传入 `open` 和 `onOpenChange` 可使用受控模式。 |
+| `Collapsible.Trigger` | 切换显示状态的按钮。使用 `render` 属性可替换为自定义元素。 |
+| `Collapsible.Panel` | 可折叠内容的容器。 |
+| `Collapsible.DefaultTrigger` | 预置样式的触发器，带文字标签和带动画的箭头图标。 |
+| `Collapsible.DefaultPanel` | 预置样式的面板，带左侧强调边框和标准间距。 |
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Collapsible.Root
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | 面板是否可见（受控）。 |
+| `defaultOpen` | `boolean` | `false` | 初始展开状态（非受控）。 |
+| `onOpenChange` | `(open: boolean) => void` | — | 展开状态变化时的回调。 |
+| `disabled` | `boolean` | `false` | 折叠面板是否禁用。 |
+
+### Collapsible.Trigger
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|---------|-------------|
+| `render` | `ReactElement` | — | 作为触发器渲染的自定义元素。 |
+| `className` | `string` | — | 附加的 CSS 类名。 |
+
+### Collapsible.Panel
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|---------|-------------|
+| `className` | `string` | — | 附加的 CSS 类名。 |
+| `keepMounted` | `boolean` | `false` | 关闭时是否将面板保留在 DOM 中。 |
+
+### Collapsible.DefaultTrigger
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | 触发器中显示的标签文字。 |
+| `className` | `string` | — | 附加的 CSS 类名。 |
+
+### Collapsible.DefaultPanel
+
+除下列属性外，还接受 `Collapsible.Panel` 的全部属性。
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | 面板内容。 |
+| `className` | `string` | — | 附加的 CSS 类名。 |
+| `keepMounted` | `boolean` | `false` | 关闭时是否将面板保留在 DOM 中。 |
+
+</ComponentSection>

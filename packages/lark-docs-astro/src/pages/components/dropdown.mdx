@@ -1,0 +1,274 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Dropdown Menu 下拉菜单"
+description: "通过按钮触发，向用户展示菜单（例如一组操作或功能）。"
+sourceFile: "components/dropdown"
+baseUIComponent: "menu"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  DropdownBasicDemo,
+  DropdownInsetDemo,
+  DropdownOnClickDemo,
+  DropdownCheckboxDemo,
+  DropdownNestedDemo,
+  DropdownAvatarTriggerDemo,
+  DropdownLinkItemDemo,
+  DropdownLongListDemo,
+} from "~/components/demos/DropdownDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="DropdownBasicDemo">
+    <DropdownBasicDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { DropdownMenu } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { DropdownMenu } from "@lark-ui/core/components/dropdown";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { DropdownMenu, Button } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <DropdownMenu>
+      <DropdownMenu.Trigger render={<Button>Menu</Button>} />
+      <DropdownMenu.Content>
+        <DropdownMenu.Item onClick={() => console.log("edit")}>
+          Edit
+        </DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => console.log("duplicate")}>
+          Duplicate
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item
+          variant="danger"
+          onClick={() => console.log("delete")}
+        >
+          Delete
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础下拉菜单
+
+<ComponentExample demo="DropdownBasicDemo">
+  <DropdownBasicDemo client:load />
+</ComponentExample>
+
+### 缩进对齐的菜单项
+
+<p>
+  当菜单中任意一项带有图标时，没有图标的项（包括标签）会自动缩进对齐，使文本排版整齐。当自动检测无法识别图标时（例如菜单项通过 `render` 渲染自己的内容），可使用 `inset` 强制缩进对齐。
+</p>
+<ComponentExample demo="DropdownInsetDemo">
+  <DropdownInsetDemo client:load />
+</ComponentExample>
+
+### 处理菜单项点击
+
+<p>
+  在 `DropdownMenu.Item` 上使用 `onClick` 处理操作。每个菜单项都会接收到标准的 React 鼠标事件处理器。
+</p>
+<ComponentExample demo="DropdownOnClickDemo">
+  <DropdownOnClickDemo client:load />
+</ComponentExample>
+
+### 复选框菜单项
+
+<p>
+  使用 `DropdownMenu.CheckboxItem` 表示可切换、可独立勾选或取消勾选的选项。
+</p>
+<ComponentExample demo="DropdownCheckboxDemo">
+  <DropdownCheckboxDemo client:load />
+</ComponentExample>
+
+### 带单选选择的嵌套菜单
+
+<p>
+  使用 `DropdownMenu.Sub`、`DropdownMenu.SubTrigger` 和
+  `DropdownMenu.SubContent` 创建嵌套子菜单。对于语言、时区这类单选列表，请使用
+  `DropdownMenu.RadioGroup` 和 `DropdownMenu.RadioItem`。
+</p>
+<ComponentExample demo="DropdownNestedDemo">
+  <DropdownNestedDemo client:load />
+</ComponentExample>
+
+### 使用头像的自定义触发器
+
+<p>
+  使用 `render` 属性自定义触发元素，同时把子元素渲染到其内部。当触发器不是按钮（例如头像），但又需要包裹在具备无障碍语义的按钮元素中时，这非常有用。
+</p>
+<ComponentExample demo="DropdownAvatarTriggerDemo">
+  <DropdownAvatarTriggerDemo client:load />
+</ComponentExample>
+
+### 导航链接
+
+<p>
+  对于跳转到 URL 的菜单项，请使用 `DropdownMenu.LinkItem`。它会渲染语义化的 `<a>` 元素，并完整支持 `target`、`rel` 等链接属性。
+</p>
+<ComponentExample demo="DropdownLinkItemDemo">
+  <DropdownLinkItemDemo client:load />
+</ComponentExample>
+
+### 长列表
+
+<p>
+  当下拉菜单包含大量菜单项时，内容会自动将高度限制在可用的视口空间内，并支持滚动。
+</p>
+<ComponentExample demo="DropdownLongListDemo">
+  <DropdownLongListDemo client:load />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### DropdownMenu
+
+<p>管理下拉菜单状态的根组件。</p>
+<PropsTable component="DropdownMenu" />
+
+### DropdownMenu.Trigger
+
+<p>点击时打开下拉菜单的按钮。</p>
+<PropsTable component="DropdownMenu.Trigger" />
+
+### DropdownMenu.Content
+
+<p>
+  菜单弹层。由 `Portal`、`Positioner` 和 `Popup` 组合而成：`side`、`align`、`sideOffset`、`alignOffset` 等定位属性作用于 Positioner，`className` 作用于 Popup。
+</p>
+<PropsTable component="DropdownMenu.Content" />
+
+### DropdownMenu.Portal、Positioner 和 Popup
+
+<p>
+  组成 `Content` 的各个部件。当你需要分别设置 Positioner 和 Popup 的样式或配置时，可以直接组合它们。`Portal` 会遵循 `LarkPortalProvider` 的设置，`Popup` 则承载菜单的表面样式和展开/收起动画。
+</p>
+
+```tsx
+<DropdownMenu.Portal>
+  <DropdownMenu.Positioner side="top" align="end">
+    <DropdownMenu.Popup className="min-w-56">
+      <DropdownMenu.Item>Edit</DropdownMenu.Item>
+    </DropdownMenu.Popup>
+  </DropdownMenu.Positioner>
+</DropdownMenu.Portal>
+```
+
+<p>
+  两者接受的属性与 Base UI 的 `Menu.Positioner` 和 `Menu.Popup` 相同。完整列表请参阅 [Base UI Menu 文档](https://base-ui.com/react/components/menu)。
+</p>
+
+### DropdownMenu.Item
+
+<p>用于执行操作的单个菜单项。</p>
+<PropsTable component="DropdownMenu.Item" />
+
+### DropdownMenu.LinkItem
+
+<p>
+  跳转到 URL 的菜单项。渲染语义化的 `<a>` 元素。导航链接请使用它而不是 `Item`。
+</p>
+<PropsTable component="DropdownMenu.LinkItem" />
+
+### DropdownMenu.CheckboxItem
+
+<p>
+  可切换开关状态的菜单项。适用于相互独立的布尔选项。
+</p>
+<PropsTable component="DropdownMenu.CheckboxItem" />
+
+### DropdownMenu.Sub
+
+<p>
+  嵌套子菜单的根组件。请将 SubTrigger 和 SubContent 包裹在其中。
+</p>
+<PropsTable component="DropdownMenu.Sub" />
+
+### DropdownMenu.SubTrigger
+
+<p>
+  悬停或点击时打开嵌套子菜单的菜单项。会自动显示一个箭头图标，并在子菜单展开时保持高亮。与 `Item` 一样，它的 `icon` 属性接受 Phosphor 图标组件或已渲染的元素。
+</p>
+<PropsTable component="DropdownMenu.SubTrigger" />
+
+### DropdownMenu.SubContent
+
+<p>
+  子菜单项的容器。相对于 SubTrigger 定位。当子菜单位于触发器旁边时，会取消弹层内边距，使第一项与触发器对齐并略微覆盖父菜单。若空间不足而移动到触发器上方或下方，则使用与顶级菜单相同的间距。可通过 `sideOffset` 或 `alignOffset`（数字，或根据最终 `side` 计算的函数）覆盖该行为。
+</p>
+<PropsTable component="DropdownMenu.SubContent" />
+
+### DropdownMenu.Separator
+
+<p>菜单项之间的视觉分隔线。</p>
+<PropsTable component="DropdownMenu.Separator" />
+
+### DropdownMenu.RadioGroup
+
+<p>
+  将单选项组织成一组，实现单选行为。同一时间只能选中一项。
+</p>
+<PropsTable component="DropdownMenu.RadioGroup" />
+
+### DropdownMenu.RadioItem
+
+<p>
+  行为类似单选按钮的菜单项。必须放在 RadioGroup 内部使用。
+</p>
+<PropsTable component="DropdownMenu.RadioItem" />
+
+### DropdownMenu.RadioItemIndicator
+
+<p>
+  展示 RadioItem 的选中状态。默认显示对勾标记。
+</p>
+<PropsTable component="DropdownMenu.RadioItemIndicator" />
+
+</ComponentSection>

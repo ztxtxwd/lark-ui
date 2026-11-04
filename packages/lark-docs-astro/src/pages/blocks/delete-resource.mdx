@@ -1,0 +1,149 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Delete Resource 删除资源"
+description: "一个用于安全删除资源的确认对话框，要求用户输入资源名称以确认删除。"
+sourceFile: "blocks/delete-resource"
+---
+
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import Callout from "~/components/docs/Callout.astro";
+import {
+  DeleteResourceBasicDemo,
+  DeleteResourceErrorDemo,
+  DeleteResourceWorkerDemo,
+} from "~/components/demos/DeleteResourceDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="DeleteResourceBasicDemo">
+    <DeleteResourceBasicDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+  <p>
+    DeleteResource 是一个<strong>区块（block）</strong>——通过命令行工具（CLI）安装、
+    由你拥有且可自行定制的组件。与常规组件不同，区块会被复制到你的项目中，
+    因此你可以完全掌控代码。
+  </p>
+  <div class="space-y-4">
+    <div>
+      <p>**1. 初始化 Lark 配置（仅首次需要）**</p>
+
+```bash
+npx @lark-ui/core init
+```
+
+</div>
+<div>
+<p>**2. 安装区块**</p>
+
+```bash
+npx @lark-ui/core add DeleteResource
+```
+
+</div>
+<div>
+<p>**3. 从本地路径导入**</p>
+
+```tsx
+// The path depends on your lark-ui.json blocksDir setting
+// Default: src/components/lark/
+import { DeleteResource } from "./components/lark/delete-resource/delete-resource";
+```
+
+    </div>
+
+  </div>
+  <Callout type="info">
+    <strong>为什么要用区块？</strong> 区块让你完全拥有代码，可以按自身需求定制
+    删除流程。对于经常需要按项目定制的关键操作，它们非常合适。
+  </Callout>
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { useState } from "react";
+import { DeleteResource } from "./components/lark/delete-resource/delete-resource";
+import { Button } from "@lark-ui/core";
+
+export default function Example() {
+  const [open, setOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteZone("example.com");
+      setOpen(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <>
+      <Button variant="destructive" onClick={() => setOpen(true)}>
+        Delete Zone
+      </Button>
+      <DeleteResource
+        open={open}
+        onOpenChange={setOpen}
+        resourceType="Zone"
+        resourceName="example.com"
+        onDelete={handleDelete}
+        isDeleting={isDeleting}
+      />
+    </>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 删除 Worker
+
+<p>
+  适用于任意资源类型——只需修改 resourceType 和 resourceName 属性。
+</p>
+<ComponentExample demo="DeleteResourceWorkerDemo">
+  <DeleteResourceWorkerDemo client:load />
+</ComponentExample>
+
+### 错误状态
+
+  <p>
+    使用 errorMessage 属性可显示错误信息。
+  </p>
+  <ComponentExample demo="DeleteResourceErrorDemo">
+    <DeleteResourceErrorDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="DeleteResource" />
+</ComponentSection>

@@ -5,7 +5,7 @@
  *
  * This runs from the trusted default-branch checkout after the untrusted PR
  * workflow completes. Screenshot paths come from GitHub's tree API, and only
- * PNGs beneath Kumo component screenshot directories are rendered.
+ * PNGs beneath Lark component screenshot directories are rendered.
  */
 
 import { Octokit } from "@octokit/rest";
@@ -15,9 +15,9 @@ import {
   upsertPRComment,
 } from "../utils/github-api";
 
-const COMMENT_MARKER = "<!-- kumo-visual-contracts-report -->";
+const COMMENT_MARKER = "<!-- lark-visual-contracts-report -->";
 const SCREENSHOT_PATH =
-  /^packages\/kumo\/src\/components\/.+\/__screenshots__\/.+\.png$/;
+  /^packages\/lark\/src\/components\/.+\/__screenshots__\/.+\.png$/;
 
 function displayName(path: string): string {
   return (

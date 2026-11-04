@@ -1,0 +1,234 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Toolbar 工具栏"
+description: "把显式的工具栏控件组合成一张简洁的分组卡片。"
+sourceFile: "components/toolbar"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import {
+  ToolbarDemo,
+  ToolbarSizesDemo,
+  ToolbarMixedControlsDemo,
+  ToolbarInputGroupDemo,
+  ToolbarActionsDemo,
+  ToolbarLinksDemo,
+  ToolbarLabelsDemo,
+  ToolbarSelectDemo,
+  ToolbarComboboxDemo,
+} from "~/components/demos/ToolbarDemo";
+
+<ComponentSection>
+  <ComponentExample demo="ToolbarDemo">
+    <ToolbarDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Toolbar } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+<CodeBlock
+  code={`import { Toolbar } from "@lark-ui/core/components/toolbar";`}
+  lang="tsx"
+/>
+</ComponentSection>
+
+<ComponentSection>
+
+## 用法
+
+当多个控件需要呈现为一个紧凑的工具栏（Toolbar）或筛选卡片时，请使用 `Toolbar`。
+可直接使用 `Toolbar.Button`、`Toolbar.Link`、`Toolbar.Input` 和 `Toolbar.InputGroup`。
+也可以通过 `render` 属性，把选择器（Select）和组合框（Combobox）的触发器与这些工具栏控件组合起来。
+
+```tsx
+import { InputGroup, Toolbar } from "@lark-ui/core";
+import { FunnelSimpleIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
+
+export default function Example() {
+  return (
+    <Toolbar>
+      <Toolbar.InputGroup aria-label="Search DNS records">
+        <InputGroup.Addon>
+          <MagnifyingGlassIcon />
+        </InputGroup.Addon>
+        <InputGroup.Input placeholder="Search DNS records" />
+      </Toolbar.InputGroup>
+      <Toolbar.Button icon={FunnelSimpleIcon} aria-label="Filter" />
+    </Toolbar>
+  );
+}
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 行为
+
+工具栏的条目组件有意接管分组控件的呈现方式：
+
+- 所有 `Toolbar.*` 控件默认使用 `base` 尺寸。
+- Toolbar 的 `size` 属性为兼容性保留，但已被弃用；请省略它以使用 `base` 尺寸。
+- `Toolbar.Button` 始终以低调的工具栏按钮样式渲染。
+- `Toolbar.Link` 以低调的工具栏样式渲染 `LinkButton`，并参与方向键导航。
+- `Toolbar.InputGroup` 会把属性直接传给 `InputGroup`，并应用解析后的工具栏尺寸。
+- 为选择器（Select）传入 `render={<Toolbar.Button />}`，即可把它的触发器组合进工具栏。
+- 为 `Combobox.TriggerInput` 传入 `render={<Toolbar.Input />}`，可得到可编辑的工具栏组合框。
+- 为 `Combobox.TriggerValue` 传入 `render={<Toolbar.Button />}`，可得到按钮样式的工具栏组合框。
+- 选择器和组合框在加入工具栏方向键导航的同时，仍保留各自的值行为、弹窗挂载、筛选能力和表单输入。
+- 相邻的工具栏条目共享边框，只有 Toolbar 的外角是圆角。
+- 如果选择器或组合框没有渲染成 Toolbar 控件，它会保持独立的呈现方式，也不会加入工具栏的漫游焦点顺序。
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 示例
+
+### 选择器（Select）
+
+选择器（Select）保留常规的根属性，包括 `items`。它的 `render` 属性会替换触发器，
+因此渲染为 `Toolbar.Button` 后，该触发器就成了一个工具栏条目，而不会替换掉 Select 的根元素。
+
+<ComponentExample demo="ToolbarSelectDemo">
+  <ToolbarSelectDemo client:visible />
+</ComponentExample>
+
+### 组合框（Combobox）
+
+用 `Toolbar.Input` 组合出可编辑的组合框（Combobox）触发器。对于不可编辑的值触发器，
+请从 `Combobox.TriggerValue` 渲染 `Toolbar.Button`。弹窗部分仍使用常规的 `Combobox.*` 组件组合。
+在水平工具栏中，请把可编辑的触发器放在最后，这样左右方向键就能继续稳定地同时服务于文本光标和工具栏导航。
+
+<ComponentExample demo="ToolbarComboboxDemo">
+  <ToolbarComboboxDemo client:visible />
+</ComponentExample>
+
+### 输入框简写
+
+对于不需要附加元素的简单文本输入，请使用 `Toolbar.Input`。
+
+<ComponentExample demo="ToolbarMixedControlsDemo">
+  <ToolbarMixedControlsDemo client:visible />
+</ComponentExample>
+
+### 输入框组
+
+当某个工具栏条目需要自己的行内附加元素或后缀时，请使用 `Toolbar.InputGroup`。
+
+<ComponentExample demo="ToolbarInputGroupDemo">
+  <ToolbarInputGroupDemo client:visible />
+</ComponentExample>
+
+### 已弃用的尺寸
+
+为兼容起见，`size` 属性仍支持 `xs`、`sm`、`base` 和 `lg`，但它已被弃用，
+并将在未来的主版本中移除。请省略它以使用默认的 `base` 尺寸。
+
+<ComponentExample demo="ToolbarSizesDemo">
+  <ToolbarSizesDemo client:visible />
+</ComponentExample>
+
+### 按钮操作
+
+工具栏按钮使用低调的样式，让成组的操作在视觉上保持安静且一致。
+
+<ComponentExample demo="ToolbarActionsDemo">
+  <ToolbarActionsDemo client:visible />
+</ComponentExample>
+
+### 链接
+
+导航类操作请使用 `Toolbar.Link`。它接受 `LinkButton` 的属性，但 `size` 和 `variant` 除外——这两者由 Toolbar 统一控制。
+
+<ComponentExample demo="ToolbarLinksDemo">
+  <ToolbarLinksDemo client:visible />
+</ComponentExample>
+
+### 无障碍标签
+
+对于没有可见标签的紧凑控件，请使用 `aria-label` 或 `aria-labelledby`。
+选择器的触发器以及每个组合框触发器仍然需要具备无障碍名称。
+对于可编辑输入，只有当光标已位于相应的文本边界时，工具栏焦点才会移动；当弹窗处于打开状态时，方向键会改为在弹窗选项之间导航。
+
+<ComponentExample demo="ToolbarLabelsDemo">
+  <ToolbarLabelsDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+<ComponentSection>
+
+## API 参考
+
+<table>
+  <thead>
+    <tr>
+      <th>属性</th>
+      <th>类型</th>
+      <th>默认值</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>children</code></td>
+      <td><code>ReactNode</code></td>
+      <td>-</td>
+      <td>渲染为一张分组卡片的工具栏控件。</td>
+    </tr>
+    <tr>
+      <td><code>size</code> <strong>已弃用</strong></td>
+      <td><code>&quot;xs&quot; | &quot;sm&quot; | &quot;base&quot; | &quot;lg&quot;</code></td>
+      <td><code>&quot;base&quot;</code></td>
+      <td>设置所有受支持条目的尺寸。请省略这个已弃用的属性，以使用默认的 base 尺寸。</td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>-</td>
+      <td>合并到工具栏根元素上的额外 CSS 类。</td>
+    </tr>
+  </tbody>
+</table>
+
+### Select 的组合方式
+
+向选择器（Select）传入 `render={<Toolbar.Button />}`。在渲染出的工具栏控件上配置禁用状态下的焦点行为：
+
+```tsx
+<Select
+  aria-label="Sort records"
+  disabled
+  items={{ name: "Name" }}
+  render={<Toolbar.Button focusableWhenDisabled={false} />}
+/>
+```
+
+### Combobox 的组合方式
+
+向 `Combobox.TriggerInput` 传入 `render={<Toolbar.Input />}`，或从 `Combobox.TriggerValue` 渲染 `Toolbar.Button`：
+
+```tsx
+<Combobox items={items}>
+  <Combobox.TriggerInput
+    aria-label="Filter records"
+    render={<Toolbar.Input />}
+  />
+  <Combobox.Content>...</Combobox.Content>
+</Combobox>
+```
+
+在渲染出的 `Toolbar.Button` 或 `Toolbar.Input` 上设置 `focusableWhenDisabled`，
+用于控制被禁用的触发器是否仍留在工具栏的漫游焦点顺序中。
+</ComponentSection>

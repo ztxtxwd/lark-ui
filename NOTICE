@@ -1,0 +1,63 @@
+Lark UI
+Copyright (c) 2026 Lark UI contributors
+
+This product includes software developed at Cloudflare, Inc.
+
+================================================================================
+Upstream project
+================================================================================
+
+Lark UI is a derivative work of Kumo, the React component library published by
+Cloudflare, Inc.
+
+  Kumo — https://github.com/cloudflare/kumo
+  Copyright (c) 2026 Cloudflare, Inc.
+  Licensed under the MIT License
+
+The MIT License requires the copyright notice and permission notice to be
+included in all copies or substantial portions of the Software. Both are
+reproduced in the LICENSE file at the root of this repository and in the
+LICENSE file shipped inside the published `@lark-ui/core` package.
+
+Changes made by the Lark UI contributors since the fork include renaming the
+package and its design tokens, replacing the bundled icon font with inline SVG
+icons, replacing the logomark with original artwork, and reworking the
+component styling against the design specification in
+`packages/lark/DESIGN-SPEC.md`.
+
+================================================================================
+Third-party components
+================================================================================
+
+The published packages depend on the following third-party components. Each
+is distributed under its own license, reproduced in that project's own
+repository and package.
+
+  @base-ui/react              MIT      https://github.com/mui/base-ui
+  @phosphor-icons/react       MIT      https://github.com/phosphor-icons/react
+  @shikijs/langs              MIT      https://github.com/shikijs/langs
+  @shikijs/themes             MIT      https://github.com/shikijs/themes
+  cn                          MIT      https://github.com/lukeed/cn
+  d3-geo                      ISC      https://github.com/d3/d3-geo
+  motion                      MIT      https://github.com/motiondivision/motion
+  react-day-picker            MIT      https://github.com/gpbl/react-day-picker
+  shiki                       MIT      https://github.com/shikijs/shiki
+  use-sync-external-store     MIT      https://github.com/facebook/react
+  zod                         MIT      https://github.com/colinhacks/zod
+
+Peer dependencies:
+
+  echarts                     Apache-2.0 https://github.com/apache/echarts
+  react                       MIT      https://github.com/facebook/react
+  react-dom                   MIT      https://github.com/facebook/react
+
+================================================================================
+Trademarks
+================================================================================
+
+"Lark" and "Feishu" are trademarks of their respective owners. The Lark
+logomark and the Lark brand palette shipped in this repository are used under
+the terms agreed with the trademark owner.
+
+This project is a fork of Kumo and is not affiliated with, sponsored by, or
+endorsed by Cloudflare, Inc., the author of the upstream project.

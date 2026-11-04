@@ -1,0 +1,158 @@
+---
+import { Badge, Link, type BadgeVariant } from "@lark-ui/core";
+import { CheckCircleIcon } from "@phosphor-icons/react";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const variants = [
+  { value: "primary", label: "主要" },
+  { value: "secondary", label: "次要" },
+  { value: "error", label: "错误" },
+  { value: "warning", label: "警告" },
+  { value: "success", label: "成功" },
+  { value: "destructive", label: "破坏性" },
+  { value: "info", label: "信息" },
+  { value: "beta", label: "测试版" },
+  { value: "outline", label: "轮廓" },
+  { value: "red", label: "红色" },
+  { value: "green", label: "绿色" },
+  { value: "neutral", label: "中性" },
+  { value: "orange", label: "橙色" },
+  { value: "purple", label: "紫色" },
+  { value: "teal", label: "青色" },
+  { value: "teal-subtle", label: "浅青色" },
+  { value: "blue", label: "蓝色" },
+] satisfies Array<{ value: BadgeVariant; label: string }>;
+
+const dotVariants = [
+  { value: "success", label: "成功" },
+  { value: "warning", label: "警告" },
+  { value: "error", label: "错误" },
+  { value: "neutral", label: "中性" },
+] satisfies Array<{ value: BadgeVariant; label: string }>;
+---
+
+<BaseLayout title="徽标测试">
+  <main class="mx-auto mb-64 max-w-5xl space-y-12 p-6 md:p-12">
+    <header class="grid gap-2">
+      <h1 class="text-2xl font-semibold text-lark-strong">徽标测试</h1>
+      <p class="text-sm text-lark-subtle">
+        徽标变体与属性组合的可视化测试样例。按 <kbd
+          class="rounded bg-lark-tint px-1.5 py-0.5 text-xs">D</kbd
+        > 切换深色模式，并悬停链接徽标以检查描边效果。
+      </p>
+    </header>
+
+    <section
+      class="grid gap-4"
+      data-vr-demo
+      data-vr-section="filled-variants"
+      data-vr-title="Filled badge variants"
+    >
+      <div class="grid gap-1">
+        <h2 class="text-xl font-semibold text-lark-default">
+          实心变体
+        </h2>
+        <p class="text-sm text-lark-subtle">
+          每种颜色变体分别以纯文本、带图标和置于链接中的形式渲染。
+        </p>
+      </div>
+
+      <div
+        class="grid gap-3 rounded-lg border border-lark-line bg-lark-base px-5 py-4"
+      >
+        <div
+          class="hidden grid-cols-[8rem_repeat(3,minmax(0,1fr))] gap-4 border-b border-lark-line pb-2 text-sm font-medium text-lark-subtle md:grid"
+          aria-hidden="true"
+        >
+          <span>变体</span>
+          <span>纯文本</span>
+          <span>图标</span>
+          <span>链接</span>
+        </div>
+
+        {
+          variants.map(({ value, label }) => (
+            <div
+              class="grid items-center gap-3 border-b border-lark-line pb-3 last:border-b-0 last:pb-0 md:grid-cols-[8rem_repeat(3,minmax(0,1fr))] md:gap-4"
+              id={`filled-${value}`}
+            >
+              <p class="text-sm font-medium text-lark-default">{label}</p>
+              <Badge variant={value}>{label}</Badge>
+              <Badge icon={CheckCircleIcon} variant={value}>
+                {label}
+              </Badge>
+              <Link href={`#filled-${value}`} variant="plain">
+                <Badge variant={value}>{label}</Badge>
+              </Link>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section
+      class="grid gap-4"
+      data-vr-demo
+      data-vr-section="dot-variants"
+      data-vr-title="Dot badge variants"
+    >
+      <div class="grid gap-1">
+        <h2 class="text-xl font-semibold text-lark-default">圆点变体</h2>
+        <p class="text-sm text-lark-subtle">
+          支持的圆点颜色分别以纯文本和置于链接中的形式渲染。圆点徽标不接受图标。
+        </p>
+      </div>
+
+      <div
+        class="grid gap-3 rounded-lg border border-lark-line bg-lark-base px-5 py-4"
+      >
+        {
+          dotVariants.map(({ value, label }) => (
+            <div
+              class="flex flex-wrap items-center gap-4 border-b border-lark-line pb-3 last:border-b-0 last:pb-0"
+              id={`dot-${value}`}
+            >
+              <Badge appearance="dot" variant={value}>
+                {label}
+              </Badge>
+              <Link href={`#dot-${value}`} variant="plain">
+                <Badge appearance="dot" variant={value}>
+                  {label}
+                </Badge>
+              </Link>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section
+      class="grid gap-4"
+      data-vr-demo
+      data-vr-section="content-combinations"
+      data-vr-title="Badge content combinations"
+    >
+      <div class="grid gap-1">
+        <h2 class="text-xl font-semibold text-lark-default">
+          内容组合
+        </h2>
+        <p class="text-sm text-lark-subtle">
+          默认属性、嵌套内容、自定义 class，以及图标与链接的组合用法。
+        </p>
+      </div>
+
+      <div
+        class="flex flex-wrap items-center gap-4 rounded-lg border border-lark-line bg-lark-base px-5 py-4"
+      >
+        <Badge>默认</Badge>
+        <Badge variant="secondary"><span>嵌套内容</span></Badge>
+        <Badge className="px-3" variant="info">自定义内边距</Badge>
+        <Link href="#content-combinations" variant="plain">
+          <Badge icon={CheckCircleIcon} variant="outline">
+            带图标的链接徽标
+          </Badge>
+        </Link>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "命令行工具"
+description: "在终端中查看组件文档并安装区块。"
+---
+
+import { CLITerminal } from "~/components/demos/CLIDemo";
+
+## 安装
+
+Lark 命令行工具可通过 npx 使用，无需安装。
+
+```bash
+npx @lark-ui/core help
+```
+
+## 命令
+
+### 区块
+
+把可复制粘贴的区块安装到你的项目中，以便完全自定义。
+
+```bash
+# Initialize lark-ui.json configuration
+npx @lark-ui/core init
+
+# List all available blocks
+npx @lark-ui/core blocks
+
+# Install a block to your project
+npx @lark-ui/core add PageHeader
+```
+
+### 组件注册表
+
+直接在终端中查看组件文档。
+
+```bash
+# List all Lark components with categories
+npx @lark-ui/core ls
+
+# Get detailed documentation for a component
+npx @lark-ui/core doc Button
+
+# Get documentation for all components
+npx @lark-ui/core docs
+```
+
+## 试一试
+
+在下面的交互式终端中输入命令，体验命令行工具。
+
+<CLITerminal client:load />

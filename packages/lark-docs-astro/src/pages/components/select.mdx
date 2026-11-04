@@ -1,0 +1,449 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Select 选择器"
+description: "由按钮触发、供用户挑选的选项列表。"
+sourceFile: "components/select"
+baseUIComponent: "select"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  SelectBasicDemo,
+  SelectSizesDemo,
+  SelectWithoutLabelDemo,
+  SelectWithDescriptionDemo,
+  SelectWithErrorDemo,
+  SelectPlaceholderDemo,
+  SelectWithTooltipDemo,
+  SelectCustomRenderingDemo,
+  SelectLoadingDemo,
+  SelectLoadingDataDemo,
+  SelectMultipleDemo,
+  SelectComplexDemo,
+  SelectDisabledOptionsDemo,
+  SelectDisabledItemsDemo,
+  SelectGroupedDemo,
+  SelectGroupedWithDisabledDemo,
+  SelectLongListDemo,
+  SelectPlacementDemo,
+  SelectDynamicPlacementDemo,
+} from "~/components/demos/SelectDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="SelectBasicDemo">
+    <SelectBasicDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Select } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Select } from "@lark-ui/core/components/select";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Select } from "@lark-ui/core";
+
+export default function Example() {
+  const [value, setValue] = useState("apple");
+
+  return (
+    <Select
+      label="Favorite Fruit"
+      value={value}
+      onValueChange={(v) => setValue(v ?? "apple")}
+      items={{ apple: "Apple", banana: "Banana", cherry: "Cherry" }}
+    />
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础用法
+
+<p>
+  带可见标签的选择器（Select）。提供 `label` 属性后，选择器会自动包裹在 Field 包装器中，
+  标签显示在其上方。
+</p>
+
+  <ComponentExample demo="SelectBasicDemo">
+    <SelectBasicDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 尺寸 */}
+
+<ComponentSection>
+
+### 尺寸
+
+<p>使用 `size` 属性可以与输入框（Input）的尺寸保持一致（xs、sm、base、lg）。</p>
+
+  <ComponentExample demo="SelectSizesDemo">
+    <SelectSizesDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 定位 */}
+
+<ComponentSection>
+
+### 定位
+
+<p>
+  弹层优先选择 `side="bottom"`，当该方向空间不足时会自动翻转。使用 `side`、`align`、
+  `sideOffset` 和 `alignOffset` 可以明确固定其位置——碰撞处理仍然生效。
+</p>
+
+  <ComponentExample demo="SelectPlacementDemo">
+    <SelectPlacementDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 与选中项对齐的动态定位 */}
+
+<ComponentSection>
+
+### 与选中项对齐
+
+<p>
+  设置 `alignItemWithTrigger` 后，弹层会覆盖在触发元素上，使选中的选项正好位于其上方，
+  效果与原生 `select` 一致。选中项之前的选项渲染在触发元素上方，其余选项渲染在下方，
+  因此弹层可以向上下两个方向延伸。下面的两个选择器都在列表中间选中了 `Mars`——打开它们
+  对比一下。当空间不足时，该模式会自动关闭并回退到常规的锚定定位。
+</p>
+
+  <ComponentExample demo="SelectDynamicPlacementDemo">
+    <SelectDynamicPlacementDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 无可见标签 */}
+
+<ComponentSection>
+
+### 无可见标签
+
+<p>
+  当不需要可见标签时（例如在紧凑界面中，或上下文已经明确），请使用 `aria-label` 以保证无障碍。
+</p>
+
+  <ComponentExample demo="SelectWithoutLabelDemo">
+    <SelectWithoutLabelDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 带描述 */}
+
+<ComponentSection>
+
+### 带描述
+
+<p>
+  选择器与 Field 包装器集成，可在输入框下方显示描述文字。
+</p>
+
+  <ComponentExample demo="SelectWithDescriptionDemo">
+    <SelectWithDescriptionDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 带错误 */}
+
+<ComponentSection>
+
+### 带错误
+
+<p>
+  传入 `error` 属性可显示校验错误。存在错误时，它会在界面上取代描述文字。
+</p>
+
+  <ComponentExample demo="SelectWithErrorDemo">
+    <SelectWithErrorDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 占位符 */}
+
+<ComponentSection>
+
+### 占位符
+
+<p>
+  使用 `placeholder` 属性可以在未选中任何值时显示提示文字。当使用 `renderValue` 自定义选中值的
+  显示方式时，值为 `null` 时会显示占位符，而不会调用 `renderValue`。
+</p>
+
+```tsx
+<Select
+  placeholder="Select a user..."
+  value={user}
+  renderValue={(user) => user.name} // Only called when user is not null
+/>
+```
+
+  <ComponentExample demo="SelectPlaceholderDemo">
+    <SelectPlaceholderDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 标签工具提示 */}
+
+<ComponentSection>
+
+### 带工具提示的标签
+
+<p>
+  使用 `labelTooltip` 可以在标签旁添加工具提示图标，以补充说明上下文。
+</p>
+
+  <ComponentExample demo="SelectWithTooltipDemo">
+    <SelectWithTooltipDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 自定义渲染 */}
+
+<ComponentSection>
+
+### 自定义渲染
+
+<p>
+  使用 `renderValue` 可以自定义选中值在触发按钮中的显示方式。当处理的是复杂的对象数据结构
+  而非简单字符串值时，这会非常有用。
+</p>
+
+<ComponentExample demo="SelectCustomRenderingDemo">
+  <SelectCustomRenderingDemo client:load />
+</ComponentExample>
+
+<p>
+  `renderValue` 函数仅在选中有值时才会被调用。请使用 `placeholder` 定义未选中任何值时显示的内容。
+</p>
+
+<p>
+  选择器会将 value 与 items 逐一比较以找出当前选中项。对于对象类型的选项，默认比较的是是否为
+  同一引用，而非按值比较。如果希望按值比较对象选项，可以使用 `isItemEqualToValue` 属性。
+</p>
+
+```tsx
+<Select
+  className="w-[200px]"
+  placeholder="Select a language..."
+  renderValue={(v) => (
+    <span>
+      {v.emoji} {v.label}
+    </span>
+  )}
+  value={value}
+  onValueChange={(v) => setValue(v)}
+  // Provides custom comparison logic
+  isItemEqualToValue={(item, value) => item.value === value.value}
+>
+  {languages.map((language) => (
+    <Select.Option key={language.value} value={language}>
+      {language.emoji} {language.label}
+    </Select.Option>
+  ))}
+</Select>
+```
+
+</ComponentSection>
+
+{/* 加载状态 */}
+
+<ComponentSection>
+
+### 加载状态
+
+<p>
+  带加载状态的选择器组件。加载状态通过 `loading` 属性传给组件。
+</p>
+
+  <ComponentExample demo="SelectLoadingDemo">
+    <div class="flex flex-col gap-4">
+      <p class="text-lark-default">加载状态</p>
+      <SelectLoadingDemo client:load />
+      <p class="text-lark-default">从服务器加载（模拟 2 秒延迟）</p>
+      <SelectLoadingDataDemo client:load />
+    </div>
+  </ComponentExample>
+</ComponentSection>
+
+{/* 多项选择 */}
+
+<ComponentSection>
+
+### 多选
+
+<p>
+  使用 `multiple` 属性开启多选。此时 value 变为已选项组成的数组。请用 `placeholder` 定义空状态，
+  用 `renderValue` 自定义选中项的显示方式。
+</p>
+
+```tsx
+<Select
+  multiple
+  placeholder="Select columns..."
+  value={selectedColumns}
+  renderValue={(columns) => columns.join(", ")}
+  onValueChange={setSelectedColumns}
+>
+  <Select.Option value="name">Name</Select.Option>
+  <Select.Option value="email">Email</Select.Option>
+</Select>
+```
+
+  <ComponentExample demo="SelectMultipleDemo">
+    <SelectMultipleDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 更多示例 */}
+
+<ComponentSection>
+
+### 更多示例
+
+  <ComponentExample demo="SelectComplexDemo">
+    <SelectComplexDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 禁用选项 */}
+
+<ComponentSection>
+
+### 禁用选项
+
+<p>
+  可以使用 `disabled` 属性禁用选项。被禁用的选项会置灰，且无法被选中。
+</p>
+
+  <ComponentExample demo="SelectDisabledOptionsDemo">
+    <SelectDisabledOptionsDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 通过属性禁用选项 */}
+
+<ComponentSection>
+
+### 禁用选项（通过 items 属性）
+
+<p>
+  `items` 对象映射属性既接受纯字符串值，也接受带有 `disabled` 的描述对象。
+</p>
+
+  <ComponentExample demo="SelectDisabledItemsDemo">
+    <SelectDisabledItemsDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 分组选项 */}
+
+<ComponentSection>
+
+### 分组选项
+
+<p>
+  使用 `Select.Group`、`Select.GroupLabel` 和 `Select.Separator`，可以用带标签的标题和视觉分隔线
+  来组织选项。
+</p>
+
+  <ComponentExample demo="SelectGroupedDemo">
+    <SelectGroupedDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 含禁用项的分组 */}
+
+<ComponentSection>
+
+### 含禁用选项的分组
+
+<p>
+  将分组、分隔线和禁用选项与信息工具提示结合使用，可以清晰区分可选与不可选的条目。
+</p>
+
+  <ComponentExample demo="SelectGroupedWithDisabledDemo">
+    <SelectGroupedWithDisabledDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 长列表（滚动测试） */}
+
+<ComponentSection>
+
+### 长列表（滚动测试）
+
+<p>
+  包含大量选项的选择器组件，用于测试弹层的滚动行为。弹层应平滑滚动，不出现回弹／过度滚动问题。
+</p>
+
+  <ComponentExample demo="SelectLongListDemo">
+    <SelectLongListDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Select
+
+<PropsTable component="Select" />
+
+### Select.Option
+
+<PropsTable component="Select.Option" />
+
+### Select.Group
+
+<p>
+  使用具有无障碍语义的 `role="group"` 将相关选项组合在一起。与 `Select.GroupLabel` 搭配使用
+  可提供可见标题。
+</p>
+
+### Select.GroupLabel
+
+<p>
+  `Select.Group` 的可见标题。为了无障碍，它会自动与父级分组关联。
+</p>
+
+### Select.Separator
+
+  <p>选项分组之间的视觉分隔线。渲染时带有 `role="separator"`。</p>
+</ComponentSection>

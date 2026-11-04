@@ -1,0 +1,93 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Chart Colors 图表颜色"
+description: "Lark 仪表盘图表使用的语义化 token 与分类颜色 token。"
+sourceFile: "components/chart/Color.ts"
+---
+
+import {
+  ChartColorSystemsDemo,
+  SemanticColorsDemo,
+  CategoricalColorsDemo,
+  CategoricalCvdDemo,
+  CategoricalLineChartDemo,
+  CategoricalBarChartDemo,
+  CategoricalDonutChartDemo,
+  SequentialColorsDemo,
+  SequentialHeatmapDemo,
+} from "~/components/demos/Chart/ColorDemo";
+import { Banner } from "@lark-ui/core";
+
+Lark 中的图表颜色分为三套体系——用于表达固有极性数据的**语义化** token、用于名义型序列的**分类**调色板，以及用于密度编码的**顺序**色阶。为数据类型选择合适的体系，是图表中最重要的颜色决策。
+
+## 颜色体系
+
+<div class="mb-6">
+<p>
+仪表盘中的图表承担不同的职责，因此颜色并非「一套通吃」。为避免误读数据，我们根据数据任务选用不同的颜色体系。
+</p>
+</div>
+
+<ChartColorSystemsDemo client:visible />
+
+## 语义化 token
+
+<div class="mb-6">
+<p>
+当数据具有固有极性时（即状态、严重程度和健康度数据），应使用语义化图表颜色。语义化颜色向用户传达该数据需要关注，可能需要采取行动。
+
+语义化图表颜色派生自我们现有的徽标（Badge）/状态语义化 token，从而在各组件与场景之间保持含义一致。我们有意为图表调整色相/彩度，使其比徽标更不具视觉侵略性，以减少视觉疲劳和错误制造的紧迫感。
+</p>
+</div>
+
+<div class="mb-6 flex flex-col gap-6">
+<SemanticColorsDemo client:visible />
+<CategoricalBarChartDemo client:visible />
+</div>
+
+## 分类调色板
+
+<div class="mb-6">
+<p>
+当数据没有固有极性时，请使用分类调色板。该调色板经过排序，使相邻色位之间具有最大的感知距离，从而确保对色觉障碍友好、数据易于区分。
+</p>
+</div>
+
+<div class="mb-6">
+<CategoricalColorsDemo client:visible />
+</div>
+
+<div class="text-lark-info bg-lark-info-tint/50 rounded-lg py-1 px-4 ring ring-lark-info mb-12">
+  我们将分类 token 从 16 个（8 种色相 × 2 种明度变体）减少到 5 个，因为多数图表一次只需突出展示排在最前面的少数类别（通常为 5 个）。当图表需要超过 5 个系列时，应通过取模运算循环使用这些 token（color = tokens[i % 5]），以获得一致、可预期的样式。
+</div>
+
+<div class="my-4">
+<p>
+  分类颜色会使用 CVD（色觉障碍）模拟器进行测试，以确保色觉障碍用户仍能区分它们。下面是一个绿色盲（deuteranopia）用户看到的分类颜色示例。
+</p>
+</div>
+
+<div class="mb-6 flex flex-col gap-8">
+<CategoricalCvdDemo client:visible />
+<CategoricalDonutChartDemo client:visible />
+<CategoricalLineChartDemo client:visible />
+
+<div class="text-lark-info bg-lark-info-tint/50 rounded-lg py-1 px-4 ring ring-lark-info mb-6">
+    <span class="font-semibold">不要仅靠颜色来传达信息。</span> 实现折线图时，请确保在调色板之上叠加图案（例如虚线/圆点）来区分数据点。由于圆点和虚线在视觉上更浅，我们避免将其与浅色搭配，否则这些线条可能会淡出而看不清。
+</div>
+</div>
+
+## 顺序色阶
+
+<div class="mb-6">
+<p>
+用于编码**密度**的 5 级单色阶——当某个指标在一组数值之间存在量级差异，且颜色强度应当强化这种量级关系时使用。常见用途：分级设色地图（按国家统计的流量）、热力图和直方图填充。顺序色阶不适用于区分类别型序列——那应该使用分类调色板。
+
+在浅色模式下，较深的色阶代表更高的数值；在深色模式下，较浅的色阶代表更高的数值，从而保证最醒目的颜色始终对应最大的量级。
+</p>
+</div>
+
+<div class="mb-6 flex flex-col gap-6">
+<SequentialColorsDemo client:visible /> 
+<SequentialHeatmapDemo client:visible />
+</div>

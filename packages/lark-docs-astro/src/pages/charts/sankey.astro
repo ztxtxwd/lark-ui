@@ -1,0 +1,210 @@
+---
+import DocLayout from "../../layouts/DocLayout.astro";
+import Heading from "../../components/docs/Heading.astro";
+import ComponentSection from "../../components/docs/ComponentSection.astro";
+import ComponentExample from "../../components/docs/ComponentExample.astro";
+import CodeBlock from "../../components/docs/CodeBlock.astro";
+import PropsTable from "../../components/docs/PropsTable.astro";
+import {
+  SankeyChartBasicDemo,
+  SankeyChartMultiLevelDemo,
+  SankeyChartFullWidthDemo,
+  SankeyChartTooltipDemo,
+  SankeyChartRichTooltipDemo,
+  SankeyChartInteractiveDemo,
+  SankeyChartDrillDownDemo,
+  SankeyChartInlineLabelDemo,
+} from "~/components/demos/Chart/SankeyChartDemo";
+---
+
+<DocLayout
+  title="Sankey Chart 桑基图"
+  description="使用 ECharts 可视化节点之间流数据的桑基图组件。"
+  sourceFile="components/chart"
+>
+  <!-- Demo -->
+  <ComponentSection>
+    <ComponentExample code={`<SankeyChart nodes={nodes} links={links} height={300} />`}>
+      <SankeyChartBasicDemo client:visible />
+    </ComponentExample>
+  </ComponentSection>
+
+  <!-- Installation -->
+  <ComponentSection>
+    <Heading level={2} id="installation">安装</Heading>
+    <p class="mb-4 text-lark-subtle">
+      SankeyChart 需要将 <code class="text-lark-default">echarts</code> 作为 peer dependency 安装。
+    </p>
+    <CodeBlock code={`npm install echarts`} lang="bash" />
+
+    <Heading level={3} id="barrel" class="mb-2 mt-6 text-lg">统一导出</Heading>
+    <CodeBlock code={`import { SankeyChart } from "@lark-ui/core";`} lang="tsx" />
+    <Heading level={3} id="granular" class="mb-2 mt-4 text-lg">按需导出</Heading>
+    <CodeBlock
+      code={`import { SankeyChart } from "@lark-ui/core/components/chart";`}
+      lang="tsx"
+    />
+  </ComponentSection>
+
+  <!-- Usage -->
+  <ComponentSection>
+    <Heading level={2} id="usage">用法</Heading>
+    <CodeBlock
+      code={`import { SankeyChart, ChartPalette } from "@lark-ui/core";
+import * as echarts from "echarts/core";
+import { SankeyChart as SankeyChartType } from "echarts/charts";
+import { TooltipComponent } from "echarts/components";
+import { CanvasRenderer } from "echarts/renderers";
+
+// Register required ECharts modules
+echarts.use([SankeyChartType, TooltipComponent, CanvasRenderer]);
+
+const nodes = [
+  { name: "Users", value: 103600, color: ChartPalette.categorical(0) },
+  { name: "Devices", value: 50800, color: ChartPalette.categorical(1) },
+  { name: "Apps", value: 122600, color: ChartPalette.categorical(2) },
+  { name: "Tunnels", value: 31800, color: ChartPalette.categorical(3) },
+];
+
+const links = [
+  { source: 0, target: 2, value: 80000 },
+  { source: 0, target: 3, value: 23600 },
+  { source: 1, target: 2, value: 42600 },
+  { source: 1, target: 3, value: 8200 },
+];
+
+export default function Example() {
+  return <SankeyChart echarts={echarts} nodes={nodes} links={links} height={300} />;
+}`}
+      lang="tsx"
+    />
+  </ComponentSection>
+
+  <!-- Examples -->
+  <ComponentSection>
+    <Heading level={2} id="examples" class="mb-6">示例</Heading>
+
+    <div class="space-y-8">
+      <div>
+        <Heading level={3} id="basic-sankey">基础桑基图</Heading>
+        <p class="mb-4 text-lark-subtle">
+          一个简单的桑基图，展示源节点与目标节点之间的流动。
+        </p>
+        <ComponentExample code={`<SankeyChart nodes={nodes} links={links} height={300} />`}>
+          <SankeyChartBasicDemo client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="multi-level-flow">多级流动</Heading>
+        <p class="mb-4 text-lark-subtle">
+          桑基图可以通过中间节点展示多个层级的流动。
+        </p>
+        <ComponentExample code={`<SankeyChart nodes={nodes} links={links} height={350} nodeWidth={20} nodePadding={15} />`}>
+          <SankeyChartMultiLevelDemo client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="full-width-layout">全宽布局</Heading>
+        <p class="mb-4 text-lark-subtle">
+          使用 <code class="text-lark-default">left</code> 和 <code class="text-lark-default">right</code> 控制桑基图布局在其容器中的水平内边距。将两者都设为 <code class="text-lark-default">0</code> 可去除默认的 5% 内边距并占满整个宽度。
+        </p>
+        <ComponentExample code={`<SankeyChart
+  nodes={nodes}
+  links={links}
+  height={350}
+  left={0}
+  right={0}
+/>`}>
+          <SankeyChartFullWidthDemo client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="rich-tooltips">富工具提示</Heading>
+        <p class="mb-4 text-lark-subtle">
+          使用 <code class="text-lark-default">tooltipFormatter</code> 完全掌控工具提示内容。
+        </p>
+        <ComponentExample code={`import { SankeyChart, type SankeyTooltipParams } from "@lark-ui/core";
+
+const customTooltip = (params: SankeyTooltipParams) => {
+  if (params.type === "node" && params.node) {
+    return "<strong>" + params.name + "</strong>";
+  }
+  if (params.type === "link" && params.link) {
+    return params.link.source + " → " + params.link.target;
+  }
+  return "";
+};
+
+<SankeyChart 
+  nodes={nodes} 
+  links={links} 
+  tooltipFormatter={customTooltip} 
+/>`}>
+          <SankeyChartRichTooltipDemo client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="interactive">交互</Heading>
+        <p class="mb-4 text-lark-subtle">
+          使用 <code class="text-lark-default">onNodeClick</code> 和 <code class="text-lark-default">onLinkClick</code> 处理交互。
+        </p>
+        <ComponentExample code={`<SankeyChart 
+  nodes={nodes} 
+  links={links} 
+  onNodeClick={(node) => console.log(node)}
+  onLinkClick={(link) => console.log(link)}
+/>`}>
+          <SankeyChartInteractiveDemo client:visible />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="drill-down-filtering">下钻筛选</Heading>
+        <p class="mb-4 text-lark-subtle">
+          点击源节点即可筛选图表，仅显示它的关联项。再次点击该节点或使用重置按钮可恢复完整视图。
+        </p>
+        <ComponentExample code={`const [selectedSource, setSelectedSource] = useState<string | null>(null);
+
+const handleNodeClick = (node: { name: string }) => {
+  if (sourceNames.includes(node.name)) {
+    setSelectedSource(prev => prev === node.name ? null : node.name);
+  }
+};
+
+<SankeyChart
+  nodes={filteredNodes}
+  links={filteredLinks}
+  onNodeClick={handleNodeClick}
+/>`}>
+          <SankeyChartDrillDownDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="inline-label-layout">行内标签布局</Heading>
+        <p class="mb-4 text-lark-subtle">
+          使用 <code class="text-lark-default">nodeLabelLayout="inline"</code> 可在单行内显示节点的数值和名称。这样可以避免在较小的节点上出现标签重叠——默认的堆叠布局会导致文字相互碰撞。
+        </p>
+        <ComponentExample code={`<SankeyChart
+  echarts={echarts}
+  nodes={nodes}
+  links={links}
+  height={300}
+  nodeLabelLayout="inline"
+/>`}>
+          <SankeyChartInlineLabelDemo client:visible />
+        </ComponentExample>
+      </div>
+    </div>
+  </ComponentSection>
+
+  <!-- API Reference -->
+  <ComponentSection>
+    <Heading level={2} id="api-reference">API 参考</Heading>
+    <PropsTable component="SankeyChart" />
+  </ComponentSection>
+</DocLayout>

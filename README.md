@@ -1,15 +1,18 @@
-# Kumo
+# Lark UI
 
-Cloudflare's component library for building modern web applications.
+A component library for building modern web applications, in the Universe
+Design style.
 
-Kumo provides accessible, design-system-compliant UI components built on [Base UI](https://base-ui.com/). It handles keyboard navigation, focus management, and ARIA attributes so you can build accessible applications without thinking through every detail.
+Lark UI provides accessible, design-system-compliant components built on [Base UI](https://base-ui.com/) and Tailwind CSS v4. Tokens follow the Universe Design palette and are exposed as semantic `lark-*` utilities with automatic `light-dark()` theming. It handles keyboard navigation, focus management, and ARIA attributes so you can build accessible applications without thinking through every detail.
 
-<img width="2560" height="1456" alt="image" src="https://github.com/user-attachments/assets/032f5a0e-b686-4440-b1ca-6182379479aa" />
+> **A fork of Cloudflare's [Kumo](https://github.com/cloudflare/kumo).** Lark UI
+> started as Kumo and keeps its MIT licence and its full commit history. See
+> [NOTICE](./NOTICE) for the details.
 
 ## Installation
 
 ```bash
-pnpm add @cloudflare/kumo
+pnpm add @lark-ui/core
 ```
 
 ### Peer Dependencies
@@ -18,25 +21,35 @@ pnpm add @cloudflare/kumo
 pnpm add react react-dom @phosphor-icons/react
 ```
 
+Icons are inlined SVG from [Phosphor Icons](https://phosphoricons.com) (MIT),
+so there is no font to download. Import `LarkIcon` and any of the supported
+names from `@lark-ui/core`.
+
+```tsx
+import { LarkIcon } from "@lark-ui/core";
+
+<LarkIcon name="check" />;
+```
+
 ## Usage
 
 ```tsx
-import { Button, Input, Dialog } from "@cloudflare/kumo";
-import "@cloudflare/kumo/styles";
+import { Button, Input, Dialog } from "@lark-ui/core";
+import "@lark-ui/core/styles";
 ```
 
 ### Granular Imports (Tree-Shaking)
 
 ```tsx
-import { Button } from "@cloudflare/kumo/components/button";
+import { Button } from "@lark-ui/core/components/button";
 ```
 
 ### Base UI Primitives
 
-Kumo re-exports all Base UI primitives for advanced use cases:
+Lark re-exports all Base UI primitives for advanced use cases:
 
 ```tsx
-import { Popover } from "@cloudflare/kumo/primitives/popover";
+import { Popover } from "@lark-ui/core/primitives/popover";
 ```
 
 ## CLI
@@ -44,9 +57,9 @@ import { Popover } from "@cloudflare/kumo/primitives/popover";
 Query component documentation from the command line:
 
 ```bash
-npx @cloudflare/kumo ls          # List all components
-npx @cloudflare/kumo doc Button  # Get component docs
-npx @cloudflare/kumo docs        # Get all docs
+npx @lark-ui/core ls          # List all components
+npx @lark-ui/core doc Button  # Get component docs
+npx @lark-ui/core docs        # Get all docs
 ```
 
 ## Development
@@ -64,32 +77,41 @@ See [AGENTS.md](./AGENTS.md) for comprehensive development documentation includi
 ```bash
 pnpm install
 pnpm dev                    # Start docs site at localhost:4321
-pnpm --filter @cloudflare/kumo test
+pnpm --filter @lark-ui/core test
 ```
 
 ### Figma Plugin
 
 ```bash
 # Optional: enable token sync during build
-# cp packages/kumo-figma/scripts/.env.example packages/kumo-figma/scripts/.env
-# $EDITOR packages/kumo-figma/scripts/.env  # set FIGMA_TOKEN (and optionally FIGMA_FILE_KEY)
+# cp packages/lark-figma/scripts/.env.example packages/lark-figma/scripts/.env
+# $EDITOR packages/lark-figma/scripts/.env  # set FIGMA_TOKEN (and optionally FIGMA_FILE_KEY)
 
-pnpm --filter @cloudflare/kumo-figma build
+pnpm --filter @lark-ui/figma build
 # In Figma: Plugins > Development > Import plugin from manifest...
-# Select: packages/kumo-figma/src/manifest.json
+# Select: packages/lark-figma/src/manifest.json
 ```
 
 ### Creating Components
 
 ```bash
-pnpm --filter @cloudflare/kumo new-component
+pnpm --filter @lark-ui/core new-component
 ```
 
 ## Documentation
 
-- **Live Docs**: [kumo-ui.com](https://kumo-ui.com)
+- **Live Docs**: [lark-ui.com](https://lark-ui.com)
 - **AI/Agent Guide**: [AGENTS.md](./AGENTS.md)
+
+## Trademarks
+
+"Lark" and "Feishu" are trademarks of their respective owners. The Lark
+logomark and the Lark brand palette in this repository are used under the terms
+agreed with the trademark owner.
+
+This project is a fork of Kumo and is not affiliated with, sponsored by, or
+endorsed by Cloudflare, Inc.
 
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE) and [NOTICE](./NOTICE).

@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # Configuration
-PACKAGE_NAME="${PACKAGE_NAME:-@cloudflare/kumo}"
-PACKAGE_PATH="${PACKAGE_PATH:-packages/kumo}"
+PACKAGE_NAME="${PACKAGE_NAME:-@lark-ui/core}"
+PACKAGE_PATH="${PACKAGE_PATH:-packages/lark}"
 DRY_RUN="${DRY_RUN:-false}"
 
 if [ "$DRY_RUN" = "true" ]; then
@@ -13,7 +13,7 @@ fi
 echo "Starting manual release process for ${PACKAGE_NAME}"
 
 # Create release branch
-RELEASE_BRANCH="release/kumo-$(git rev-parse --short HEAD)"
+RELEASE_BRANCH="release/lark-$(git rev-parse --short HEAD)"
 echo "Creating release branch: $RELEASE_BRANCH"
 git checkout -b "$RELEASE_BRANCH"
 

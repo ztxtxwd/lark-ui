@@ -74,7 +74,7 @@ function changePixels(source: PNG, count: number): PNG {
 }
 
 before(() => {
-  directory = mkdtempSync(join(tmpdir(), "kumo-image-comparison-"));
+  directory = mkdtempSync(join(tmpdir(), "lark-image-comparison-"));
 });
 
 after(() => {

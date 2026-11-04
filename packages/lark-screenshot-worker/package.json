@@ -1,0 +1,26 @@
+{
+  "name": "@lark-ui/screenshot-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Feishu/Lark Worker for capturing screenshots of Lark docs pages (visual regression testing)",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "cf dev",
+    "deploy": "cf deploy",
+    "typecheck": "tsc --noEmit",
+    "cf-typegen": "cf workers types",
+    "lint": "vp lint src/"
+  },
+  "dependencies": {
+    "@cloudflare/puppeteer": "^1.0.0",
+    "hono": "^4.13.5"
+  },
+  "devDependencies": {
+    "cf": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "wrangler": "catalog:"
+  }
+}

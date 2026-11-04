@@ -6,12 +6,12 @@ describe("parsePullRequestFiles", () => {
   it("reads filenames from the GitHub response", () => {
     assert.deepEqual(
       parsePullRequestFiles([
-        { filename: "packages/kumo/src/components/button/button.tsx" },
-        { filename: "packages/kumo/src/components/input/input.tsx" },
+        { filename: "packages/lark/src/components/button/button.tsx" },
+        { filename: "packages/lark/src/components/input/input.tsx" },
       ]),
       [
-        "packages/kumo/src/components/button/button.tsx",
-        "packages/kumo/src/components/input/input.tsx",
+        "packages/lark/src/components/button/button.tsx",
+        "packages/lark/src/components/input/input.tsx",
       ],
     );
   });

@@ -1,0 +1,319 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Table 表格"
+description: "用于展示表格数据的表格组件，支持行选择、行变体和列宽设置。"
+sourceFile: "components/table"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  TableBasicDemo,
+  TableWithCheckboxDemo,
+  TableWithCompactHeaderDemo,
+  TableSelectedRowDemo,
+  TableFixedLayoutDemo,
+  TableStickyColumnDemo,
+  TableCompactStickyDemo,
+  TableFullDemo,
+} from "~/components/demos/TableDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="TableBasicDemo">
+    <TableBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Table } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Table } from "@lark-ui/core/components/table";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Table, LayerCard } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <LayerCard className="p-0">
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Name</Table.Head>
+            <Table.Head>Email</Table.Head>
+            <Table.Head>Role</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>John Doe</Table.Cell>
+            <Table.Cell>john@example.com</Table.Cell>
+            <Table.Cell>Admin</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    </LayerCard>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 带复选框
+
+<p>
+  使用 `Table.CheckHead` 和 `Table.CheckCell` 添加行选择。两者都接受
+  `onCheckedChange`，其签名与底层 `Checkbox`（复选框）组件一致，并通过第二个参数提供可选的事件详情。
+</p>
+<p>
+  较早的 `onValueChange` 属性仍然可用，但已被弃用——lint 规则会对其标记警告，并将在未来的主版本中移除。请通过重命名该属性完成迁移：
+</p>
+
+```tsx
+// Before (deprecated)
+<Table.CheckCell onValueChange={(checked) => toggleRow(id)} />
+
+// After
+<Table.CheckCell onCheckedChange={(checked) => toggleRow(id)} />
+
+// With event details
+<Table.CheckCell
+  onCheckedChange={(checked, eventDetails) => {
+    toggleRow(id);
+    eventDetails?.event.stopPropagation();
+  }}
+/>
+```
+
+<ComponentExample demo="TableWithCheckboxDemo">
+  <TableWithCheckboxDemo client:visible />
+</ComponentExample>
+
+### 紧凑表头
+
+<p>
+  在 `Table.Header` 上使用 `variant="compact"` 可获得更紧凑的表头样式。
+</p>
+<ComponentExample demo="TableWithCompactHeaderDemo">
+  <TableWithCompactHeaderDemo client:visible />
+</ComponentExample>
+
+### 选中行
+
+<p>在 `Table.Row` 上使用 `variant="selected"` 可高亮选中的行。</p>
+<ComponentExample demo="TableSelectedRowDemo">
+  <TableSelectedRowDemo client:visible />
+</ComponentExample>
+
+### 固定布局与列宽
+
+<p>
+  如需精确控制列宽，请设置 `layout="fixed"` 并搭配 `col` 元素使用 `colgroup`。
+</p>
+<ComponentExample demo="TableFixedLayoutDemo">
+  <TableFixedLayoutDemo client:visible />
+</ComponentExample>
+
+### 粘性列
+
+<p>
+  在 `Table.Head` 和 `Table.Cell` 上设置 `sticky="left"` 或 `sticky="right"`，
+  即可将列固定在滚动容器的左侧或右侧边缘。组件会自动添加不透明背景和渐变淡出效果。
+  请用 `overflow-x-auto` 容器包裹表格。
+</p>
+<ComponentExample demo="TableStickyColumnDemo">
+  <TableStickyColumnDemo client:visible />
+</ComponentExample>
+
+### 紧凑表头与粘性列
+
+<p>将 `Table.Header` 上的 `variant="compact"` 与 `sticky` 列结合使用。</p>
+<ComponentExample demo="TableCompactStickyDemo">
+  <TableCompactStickyDemo client:visible />
+</ComponentExample>
+
+### 完整示例
+
+<p>
+  包含复选框、徽标（Badge）、操作按钮和固定列宽的完整表格。
+</p>
+<ComponentExample demo="TableFullDemo">
+  <TableFullDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Table
+
+<p>根表格组件。渲染语义化的 `<table>` 元素。</p>
+<PropsTable component="Table" />
+
+### Table.Header
+
+<p>表头区域。渲染 `<thead>`。设置 `sticky` 可将表头行固定在滚动容器顶部。</p>
+
+### Table.Body
+
+<p>表体区域。渲染 `<tbody>`。</p>
+
+### Table.Row
+
+<p>表格行。支持 `variant="selected"` 以高亮显示。</p>
+<PropsTable component="Table.Row" />
+
+### Table.Head
+
+<p>表头单元格。渲染 `<th>`。接受 `sticky="left"` 或 `sticky="right"` 来固定该列。</p>
+
+### Table.Cell
+
+<p>表体单元格。渲染 `<td>`。接受 `sticky="left"` 或 `sticky="right"` 来固定该列。</p>
+
+### Table.CheckHead
+
+<p>带复选框的表头单元格，用于「全选」功能。</p>
+<PropsTable component="Table.CheckHead" />
+
+### Table.CheckCell
+
+<p>带复选框的表体单元格，用于行选择。</p>
+<PropsTable component="Table.CheckCell" />
+
+### Table.ResizeHandle
+
+<p>
+  用于调整列宽的可拖拽手柄。可配合 TanStack Table 或自定义的调整逻辑使用。
+</p>
+
+</ComponentSection>
+
+{/* TanStack Table 集成 */}
+
+<ComponentSection>
+
+## TanStack Table 集成
+
+  <p>
+    如需排序、筛选和可调整列宽等高级功能，请集成 <a href="https://tanstack.com/table" class="text-lark-link hover:underline" target="_blank" rel="noopener noreferrer">TanStack Table</a>。表格（Table）组件经过专门设计，可与 TanStack 的无头 API 无缝协作。
+  </p>
+
+```tsx
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Table } from "@lark-ui/core";
+
+function DataTable({ data, columns }) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange",
+  });
+
+  return (
+    <Table layout="fixed">
+      <colgroup>
+        {table.getAllColumns().map((column) => (
+          <col key={column.id} style={{ width: column.getSize() }} />
+        ))}
+      </colgroup>
+      <Table.Header>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <Table.Row key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <Table.Head key={header.id}>
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext(),
+                )}
+                <Table.ResizeHandle
+                  onMouseDown={header.getResizeHandler()}
+                  onTouchStart={header.getResizeHandler()}
+                />
+              </Table.Head>
+            ))}
+          </Table.Row>
+        ))}
+      </Table.Header>
+      <Table.Body>
+        {table.getRowModel().rows.map((row) => (
+          <Table.Row key={row.id}>
+            {row.getVisibleCells().map((cell) => (
+              <Table.Cell key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </Table.Cell>
+            ))}
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 无障碍 */}
+
+<ComponentSection>
+
+## 无障碍
+
+### 语义化 HTML
+
+<p>
+  表格使用语义化的 `<table>`、`<thead>`、`<tbody>`、`<th>` 和 `<td>` 元素，便于屏幕阅读器正确导航。
+</p>
+
+### 复选框标签
+
+<p>
+  始终为 `Table.CheckHead` 和 `Table.CheckCell` 提供 `aria-label`，以说明其用途。
+</p>
+
+### 键盘导航
+
+<p>
+  <kbd class="rounded bg-lark-control px-1.5 py-0.5">Tab</kbd> 可在可交互元素之间移动焦点。复选框响应{" "}
+  <kbd class="rounded bg-lark-control px-1.5 py-0.5">Space</kbd>。
+</p>
+
+</ComponentSection>

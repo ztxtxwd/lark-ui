@@ -1,0 +1,44 @@
+---
+import { parseInline } from "marked";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import Heading from "~/components/docs/Heading.astro";
+import { DesignTips } from "~/components/skill/DesignTips";
+import { designTips } from "~/components/skill/design-tips";
+import DocLayout from "~/layouts/DocLayout.astro";
+
+const renderedTips = designTips.map(({ title, description }) => ({
+  title: parseInline(title, { async: false }),
+  ...(description
+    ? { description: parseInline(description, { async: false }) }
+    : {}),
+}));
+
+const headings = [
+  { depth: 2, slug: "installation", text: "安装" },
+  { depth: 2, slug: "rules", text: "规则" },
+  ...designTips.map(({ id, title }) => ({
+    depth: 3,
+    slug: id,
+    text: title,
+  })),
+];
+---
+
+<DocLayout
+  title="设计技能"
+  description="Lark Universe Design 指南，用于构建和评审 Lark 界面。"
+  headings={headings}
+>
+  <div>
+    <section>
+      <Heading level={2} id="installation" class="mt-0">安装</Heading>
+      <CodeBlock code="npx skills add cloudflare/lark@lark-design" lang="bash" />
+    </section>
+    <section>
+      <Heading level={2} id="rules">规则</Heading>
+      <div class="not-prose grid gap-16">
+        <DesignTips client:load renderedTips={renderedTips} />
+      </div>
+    </section>
+  </div>
+</DocLayout>

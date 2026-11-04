@@ -1,0 +1,171 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Banner 通告栏"
+description: "展示与上下文相关的行内消息，用于信息、警告或错误状态。"
+sourceFile: "components/banner"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  BannerVariantsDemo,
+  BannerDefaultDemo,
+  BannerAlertDemo,
+  BannerErrorDemo,
+  BannerSecondaryDemo,
+  BannerWithIconDemo,
+  BannerWithActionDemo,
+  BannerWithActionsDemo,
+  BannerCompactDemo,
+  BannerCompactWithCtaDemo,
+  BannerCompactWithoutActionDemo,
+  BannerCustomContentDemo,
+  BannerOutlinedDemo,
+} from "~/components/demos/BannerDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="BannerVariantsDemo">
+    <BannerVariantsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Banner } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Banner } from "@lark-ui/core/components/banner";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Banner } from "@lark-ui/core";
+import { Info } from "@phosphor-icons/react";
+
+export default function Example() {
+  return (
+    <Banner
+      icon={<Info weight="fill" />}
+      title="Update available"
+      description="A new version is ready to install."
+    />
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 变体
+
+#### 默认
+
+<ComponentExample demo="BannerDefaultDemo">
+  <BannerDefaultDemo client:visible />
+</ComponentExample>
+
+#### 警告
+
+<ComponentExample demo="BannerAlertDemo">
+  <BannerAlertDemo client:visible />
+</ComponentExample>
+
+#### 错误
+
+<ComponentExample demo="BannerErrorDemo">
+  <BannerErrorDemo client:visible />
+</ComponentExample>
+
+#### 次要
+
+<ComponentExample demo="BannerSecondaryDemo">
+  <BannerSecondaryDemo client:visible />
+</ComponentExample>
+
+### 带图标
+
+<ComponentExample demo="BannerWithIconDemo">
+  <BannerWithIconDemo client:visible />
+</ComponentExample>
+
+### 描边主题
+
+`theme="outlined"` 对应飞书 Universe Design 的 `ud__notice--outlined`：浅色底 + 1px 状态色描边，常用于需要更轻量提示的场合。
+
+<ComponentExample demo="BannerOutlinedDemo">
+  <BannerOutlinedDemo client:visible />
+</ComponentExample>
+
+### 带操作
+
+<ComponentExample demo="BannerWithActionDemo">
+  <BannerWithActionDemo client:visible />
+</ComponentExample>
+
+### 带多个操作
+
+<ComponentExample demo="BannerWithActionsDemo">
+  <BannerWithActionsDemo client:visible />
+</ComponentExample>
+
+### 紧凑尺寸
+
+在对话框等空间受限的场景中使用 `size="sm"`。此时通告栏应服务于周边体验，不与主要操作争夺注意力，因此优先使用与描述文字行内渲染的 Lark `Link`。需要更强强调时，请使用 `Banner.Action`，它会渲染在末尾位置。
+
+#### 带行内链接
+
+<ComponentExample demo="BannerCompactDemo">
+  <BannerCompactDemo client:visible />
+</ComponentExample>
+
+#### 带行动号召
+
+<ComponentExample demo="BannerCompactWithCtaDemo">
+  <BannerCompactWithCtaDemo client:visible />
+</ComponentExample>
+
+#### 不带操作
+
+<ComponentExample demo="BannerCompactWithoutActionDemo">
+  <BannerCompactWithoutActionDemo client:visible />
+</ComponentExample>
+
+### 自定义内容
+
+  <ComponentExample demo="BannerCustomContentDemo">
+    <BannerCustomContentDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Banner" />
+</ComponentSection>

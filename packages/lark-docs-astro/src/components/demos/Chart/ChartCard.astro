@@ -1,0 +1,29 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+}
+
+const { title, description, href } = Astro.props;
+---
+
+<div class="rounded-lg border border-lark-hairline bg-lark-elevated">
+  <div class="p-4">
+    <div class="text-lark-default">{title}</div>
+    <div class="mt-1 text-sm text-lark-subtle">{description}</div>
+
+    <div class="mt-4">
+      <a
+        href={href}
+        class="inline-flex items-center justify-center rounded-md border border-lark-hairline bg-lark-control px-3 py-1.5 text-sm font-medium text-lark-default transition-colors hover:bg-lark-recessed"
+      >
+        了解更多
+      </a>
+    </div>
+  </div>
+
+  <div class="border-lark-hairline border-t bg-lark-base p-2">
+    <slot />
+  </div>
+</div>

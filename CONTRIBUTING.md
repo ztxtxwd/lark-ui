@@ -1,14 +1,14 @@
 # Contributing
 
-Kumo is an open-source project and we welcome contributions from you. Thank you!
+Lark is an open-source project and we welcome contributions from you. Thank you!
 
 Below you can find some guidance on how to be most effective when contributing to the project.
 
-## tl;dr for contributing to Kumo
+## tl;dr for contributing to Lark
 
-Useful commands for developing Kumo (all commands below should be run in the project root):
+Useful commands for developing Lark (all commands below should be run in the project root):
 
-- `pnpm i; pnpm build` will build everything in kumo.
+- `pnpm i; pnpm build` will build everything in lark.
 - `pnpm dev` will watch and build changes while you develop.
 
 Before committing/submitting a PR:
@@ -18,15 +18,15 @@ Before committing/submitting a PR:
 
 ## Before getting started
 
-We really appreciate your interest in making a contribution, and we want to make sure that the process is as smooth and transparent as possible! To this end, we note that the Kumo team is actively doing development in this repository, and while we consistently strive to communicate status and current thinking around all open issues, there may be times when context surrounding certain items is not up to date. Therefore, **for non-trivial changes, please always engage on the issue or create a discussion or feature request issue first before writing your code.** This will give us opportunity to flag any considerations you should be aware of before you spend time developing. Of course, for trivial changes, please feel free to go directly to filing a PR, with the understanding that the PR itself will serve as the place to discuss details of the change.
+We really appreciate your interest in making a contribution, and we want to make sure that the process is as smooth and transparent as possible! To this end, we note that the Lark team is actively doing development in this repository, and while we consistently strive to communicate status and current thinking around all open issues, there may be times when context surrounding certain items is not up to date. Therefore, **for non-trivial changes, please always engage on the issue or create a discussion or feature request issue first before writing your code.** This will give us opportunity to flag any considerations you should be aware of before you spend time developing. Of course, for trivial changes, please feel free to go directly to filing a PR, with the understanding that the PR itself will serve as the place to discuss details of the change.
 
-Thanks so much for helping us improve [Kumo](https://github.com/cloudflare/kumo), and we look forward to your contribution!
+Thanks so much for helping us improve [Lark](https://github.com/ztxtxwd/lark-ui), and we look forward to your contribution!
 
 ## Getting started
 
 ### Set up your environment
 
-Kumo is built and run on the Node.js JavaScript runtime.
+Lark is built and run on the Node.js JavaScript runtime.
 
 - Install the latest LTS version of [Node.js](https://nodejs.dev/) - we recommend using a Node version manager like [nvm](https://github.com/nvm-sh/nvm).
 - Install a code editor - we recommend using [VS Code](https://code.visualstudio.com/).
@@ -40,12 +40,12 @@ Kumo is built and run on the Node.js JavaScript runtime.
 Any contributions you make will be via [Pull Requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) on [GitHub](https://github.com/) developed in a local git repository and pushed to your own fork of the repository.
 
 - Ensure you have [created an account](https://docs.github.com/en/get-started/onboarding/getting-started-with-your-github-account) on GitHub.
-- [Create your own fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) of [this repository](https://github.com/cloudflare/kumo).
+- [Create your own fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) of [this repository](https://github.com/ztxtxwd/lark-ui).
 - Clone your fork to your local machine
 
   ```sh
-  git clone https://github.com/<your-github-username>/kumo
-  cd kumo
+  git clone https://github.com/<your-github-username>/lark
+  cd lark
   ```
 
   You can see that your fork is setup as the `origin` remote repository.
@@ -53,19 +53,19 @@ Any contributions you make will be via [Pull Requests](https://docs.github.com/e
 
   ```sh
   git remote -v
-  origin	https://github.com/<your-github-username>/kumo (fetch)
-  origin	https://github.com/<your-github-username>/kumo (push)
+  origin	https://github.com/<your-github-username>/lark (fetch)
+  origin	https://github.com/<your-github-username>/lark (push)
   ```
 
-- Add `cloudflare/kumo` as the `upstream` remote repository.
+- Add `cloudflare/lark` as the `upstream` remote repository.
 
   ```sh
-  git remote add upstream https://github.com/cloudflare/kumo
+  git remote add upstream https://github.com/ztxtxwd/lark-ui
   git remote -v
-  origin	https://github.com/<your-github-username>/kumo (fetch)
-  origin	https://github.com/<your-github-username>/kumo (push)
-  upstream	https://github.com/cloudflare/kumo (fetch)
-  upstream	https://github.com/cloudflare/kumo (push)
+  origin	https://github.com/<your-github-username>/lark (fetch)
+  origin	https://github.com/<your-github-username>/lark (push)
+  upstream	https://github.com/ztxtxwd/lark-ui (fetch)
+  upstream	https://github.com/ztxtxwd/lark-ui (push)
   ```
 
 - You should regularly pull from the `main` branch of the `upstream` repository to keep up to date with the latest changes to the project.
@@ -73,7 +73,7 @@ Any contributions you make will be via [Pull Requests](https://docs.github.com/e
   ```sh
   git switch main
   git pull upstream main
-  From https://github.com/cloudflare/kumo
+  From https://github.com/ztxtxwd/lark-ui
   * branch            main       -> FETCH_HEAD
   Already up to date.
   ```
@@ -82,13 +82,13 @@ Any contributions you make will be via [Pull Requests](https://docs.github.com/e
 
 If you are a Cloudflare employee, you do not need to fork the repository - instead, you can clone the main repository directly. This allows you to push branches directly to the upstream repository.
 
-If you find that you don't have write access, please reach out to your manager or the Kumo team internally.
+If you find that you don't have write access, please reach out to your manager or the Lark team internally.
 
 Clone the main repository:
 
 ```sh
-git clone https://github.com/cloudflare/kumo.git
-cd kumo
+git clone https://github.com/ztxtxwd/lark-ui.git
+cd lark
 ```
 
 Create new branches directly in the cloned repository and push them to the main repository:
@@ -108,7 +108,7 @@ Without it, use `pnpm vp <command>` for direct commands, and `.nvmrc` / `.node-v
 
 ### Install dependencies
 
-This repository is setup as a [mono-repo](https://pnpm.io/workspaces) of workspaces. The workspaces are stored in the [`packages`](https://github.com/cloudflare/kumo/tree/main/packages) directory.
+This repository is setup as a [mono-repo](https://pnpm.io/workspaces) of workspaces. The workspaces are stored in the [`packages`](https://github.com/ztxtxwd/lark-ui/tree/main/packages) directory.
 
 While each workspace has its own dependencies, you install the dependencies using `pnpm` at the root of the project.
 
@@ -117,7 +117,7 @@ While each workspace has its own dependencies, you install the dependencies usin
 - Install all the dependencies
 
   ```sh
-  cd kumo
+  cd lark
   pnpm install
   ```
 
@@ -229,7 +229,7 @@ Changes should be committed to a new local branch, which then gets pushed to you
   ```
 
 - Once you are happy with your changes, create a Pull Request on GitHub
-- The format for Pull Request titles is `[package name] description`, where the package name should indicate which package of the `kumo` monorepo your PR pertains to (e.g. `kumo`), and the description should be a succinct summary of the change you're making.
+- The format for Pull Request titles is `[package name] description`, where the package name should indicate which package of the `lark` monorepo your PR pertains to (e.g. `lark`), and the description should be a succinct summary of the change you're making.
 - GitHub will insert a template for the body of your Pull Request—it's important to carefully fill out all the fields, giving as much detail as possible to reviewers.
 
 ### Git Hygiene
@@ -238,7 +238,7 @@ Making sure your branch follows our recommendations for git will help ensure you
 
 - When opening a PR (before the first review), try and make sure your git commit history is clean, and clearly describes the changes you want to make.
 - Once your PR has been reviewed, when addressing feedback try not to modify already reviewed commits with force pushes. This slows down the review process and makes it hard to keep track of what changes have been made. Instead, add additional commits to your PR to address any feedback (`git commit --fixup` is a helpful tool here).
-- When merging your PR into `main`, `kumo` enforces squash merges. As such, please try and make sure that the commit message associated with the merge clearly describes the entire change your PR makes.
+- When merging your PR into `main`, `lark` enforces squash merges. As such, please try and make sure that the commit message associated with the merge clearly describes the entire change your PR makes.
 
 ## PR Review
 
@@ -246,11 +246,11 @@ PR review is a critical and required step in the process for landing changes. Th
 
 ## PR Previews
 
-Every PR will have an associated pre-release build for all releasable packages within the repository, powered by [pkg.pr.new](https://github.com/stackblitz-labs/pkg.pr.new). You can find links to prereleases for each package in a comment automatically posted by GitHub Actions on each opened PR ([for example](https://github.com/cloudflare/kumo/pull/87#issuecomment-3908471698)).
+Every PR will have an associated pre-release build for all releasable packages within the repository, powered by [pkg.pr.new](https://github.com/stackblitz-labs/pkg.pr.new). You can find links to prereleases for each package in a comment automatically posted by GitHub Actions on each opened PR ([for example](https://github.com/ztxtxwd/lark-ui/pull/87#issuecomment-3908471698)).
 
 ## PR Tests
 
-Every PR should include tests for the functionality that's being added. Most changes will be to [Kumo](packages/kumo/src/) (using Vitest), and should include unit tests within the testing harness of those packages. For documentation on how these testing frameworks work, see:
+Every PR should include tests for the functionality that's being added. Most changes will be to [Lark](packages/lark/src/) (using Vitest), and should include unit tests within the testing harness of those packages. For documentation on how these testing frameworks work, see:
 
 - Vitest: <https://vitest.dev/guide>
 
@@ -274,11 +274,11 @@ git add .changeset/*.md
 
 ### Styleguide
 
-When contributing to Kumo, please refer to the [`STYLEGUIDE.md file`](STYLEGUIDE.md) file where possible to help maintain consistent patterns throughout Kumo.
+When contributing to Lark, please refer to the [`STYLEGUIDE.md file`](STYLEGUIDE.md) file where possible to help maintain consistent patterns throughout Lark.
 
 ## Releases
 
-We generally cut Kumo releases on every weekday. If you need a release cut outside of the regular cadence, please reach out to the [kumo-maintainers](https://github.com/orgs/cloudflare/teams/kumo-maintainers) team.
+We generally cut Lark releases on every weekday. If you need a release cut outside of the regular cadence, please reach out to the [lark-maintainers](https://github.com/orgs/cloudflare/teams/lark-maintainers) team.
 
 ### How Releases Work
 

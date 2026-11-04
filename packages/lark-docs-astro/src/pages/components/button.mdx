@@ -1,0 +1,268 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Button 按钮"
+description: "显示按钮，或显示外观类似按钮的组件。"
+sourceFile: "components/button"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  ButtonBasicDemo,
+  ButtonPrimaryDemo,
+  ButtonSecondaryDemo,
+  ButtonGhostDemo,
+  ButtonDestructiveDemo,
+  ButtonOutlineDemo,
+  ButtonSecondaryDestructiveDemo,
+  ButtonSizesDemo,
+  ButtonWithIconDemo,
+  ButtonIconOnlyDemo,
+  ButtonLoadingDemo,
+  ButtonDisabledDemo,
+  ButtonTitleDemo,
+  ButtonLinkAsButtonDemo,
+  ButtonLinkTooltipDemo,
+  ButtonDisabledLinkDemo,
+} from "~/components/demos/ButtonDemo";
+
+{/* Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="ButtonBasicDemo" vrSection="basic" vrTitle="Basic">
+    <ButtonBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+  <CodeBlock code={`import { Button } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Button } from "@lark-ui/core/components/button";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Button } from "@lark-ui/core";
+
+export default function Example() {
+  return <Button variant="secondary">Click me</Button>;
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+{/* Variants */}
+
+### 变体
+
+#### 主要
+
+<ComponentExample
+  demo="ButtonPrimaryDemo"
+  vrSection="variant-primary"
+  vrTitle="Variant: Primary"
+>
+  <ButtonPrimaryDemo client:visible />
+</ComponentExample>
+
+#### 次要
+
+<ComponentExample
+  demo="ButtonSecondaryDemo"
+  vrSection="variant-secondary"
+  vrTitle="Variant: Secondary"
+>
+  <ButtonSecondaryDemo client:visible />
+</ComponentExample>
+
+#### 幽灵
+
+<ComponentExample
+  demo="ButtonGhostDemo"
+  vrSection="variant-ghost"
+  vrTitle="Variant: Ghost"
+>
+  <ButtonGhostDemo client:visible />
+</ComponentExample>
+
+#### 危险
+
+<ComponentExample
+  demo="ButtonDestructiveDemo"
+  vrSection="variant-destructive"
+  vrTitle="Variant: Destructive"
+>
+  <ButtonDestructiveDemo client:visible />
+</ComponentExample>
+
+#### 描边
+
+<ComponentExample
+  demo="ButtonOutlineDemo"
+  vrSection="variant-outline"
+  vrTitle="Variant: Outline"
+>
+  <ButtonOutlineDemo client:visible />
+</ComponentExample>
+
+#### 次要危险
+
+<ComponentExample
+  demo="ButtonSecondaryDestructiveDemo"
+  vrSection="variant-secondary-destructive"
+  vrTitle="Variant: Secondary Destructive"
+>
+  <ButtonSecondaryDestructiveDemo client:visible />
+</ComponentExample>
+
+{/* Sizes */}
+
+### 尺寸
+
+<ComponentExample demo="ButtonSizesDemo" vrSection="sizes" vrTitle="Sizes">
+  <ButtonSizesDemo client:visible />
+</ComponentExample>
+
+{/* With Icon */}
+
+### 带图标
+
+<ComponentExample
+  demo="ButtonWithIconDemo"
+  vrSection="with-icon"
+  vrTitle="With Icon"
+>
+  <ButtonWithIconDemo client:visible />
+</ComponentExample>
+
+{/* Icon Only */}
+
+### 仅图标
+
+<p>
+  对于仅含图标的按钮，请结合 `icon` 属性使用 `shape="square"` 或 `shape="circle"`。
+  <strong>务必提供 `aria-label`</strong>
+  以满足无障碍要求——没有可见文字时，屏幕阅读器需要依靠该标签来传达按钮的用途。
+</p>
+<ComponentExample
+  demo="ButtonIconOnlyDemo"
+  vrSection="icon-only"
+  vrTitle="Icon Only"
+>
+  <ButtonIconOnlyDemo client:visible />
+</ComponentExample>
+
+{/* Loading State */}
+
+### 加载状态
+
+<ComponentExample
+  demo="ButtonLoadingDemo"
+  vrSection="loading"
+  vrTitle="Loading State"
+>
+  <ButtonLoadingDemo client:visible />
+</ComponentExample>
+
+{/* Disabled State */}
+
+### 禁用状态
+
+<ComponentExample
+  demo="ButtonDisabledDemo"
+  vrSection="disabled"
+  vrTitle="Disabled State"
+>
+  <ButtonDisabledDemo client:visible />
+</ComponentExample>
+
+{/* Title (Tooltip) */}
+
+### 标题
+
+  <p>
+    使用 `title` 属性可为按钮包裹一层工具提示。这对于仅含图标的按钮、禁用的按钮，或任何需要补充上下文来帮助用户理解操作行为的场景都很有用。
+  </p>
+  <ComponentExample
+    demo="ButtonTitleDemo"
+    vrSection="title"
+    vrTitle="Title"
+  >
+    <ButtonTitleDemo client:visible />
+  </ComponentExample>
+
+### 链接形式的按钮
+
+<p>
+  当交互需要跳转到其他位置、但外观仍应像按钮时，请使用 `LinkButton`。而提交、打开或切换界面等原地操作请使用 `Button`。
+</p>
+<ComponentExample
+  demo="ButtonLinkAsButtonDemo"
+  vrSection="link-as-button"
+  vrTitle="Link as Button"
+>
+  <ButtonLinkAsButtonDemo client:visible />
+</ComponentExample>
+
+### 带工具提示的链接
+
+<p>
+  与 `Button` 一样，给 `LinkButton` 传入 `title` 即可为它包裹工具提示，在悬停和聚焦时展示额外上下文。
+</p>
+<ComponentExample
+  demo="ButtonLinkTooltipDemo"
+  vrSection="link-tooltip"
+  vrTitle="Link with Tooltip"
+>
+  <ButtonLinkTooltipDemo client:visible />
+</ComponentExample>
+
+### 禁用的链接
+
+<p>
+  在 `LinkButton` 上设置 `disabled`，即可渲染出外观像链接、但不可交互的按钮。通过 `title` 配合工具提示说明它不可用的原因。
+</p>
+<ComponentExample
+  demo="ButtonDisabledLinkDemo"
+  vrSection="disabled-link"
+  vrTitle="Disabled Link"
+>
+  <ButtonDisabledLinkDemo client:visible />
+</ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Button" />
+</ComponentSection>
+
+{/* trigger-vr */}

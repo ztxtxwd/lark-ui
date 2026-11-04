@@ -1,0 +1,93 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Tag Input 标签输入框"
+description: "可创建的多值输入框，用于输入不在预定义选项列表中的值。"
+sourceFile: "components/tag-input"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  TagInputDemo,
+  TagInputFormDemo,
+  TagInputLimitedDemo,
+  TagInputReadOnlyDemo,
+  TagInputLocalizationDemo,
+  TagInputUnrestrictedDemo,
+} from "~/components/demos/TagInputDemo";
+
+<ComponentSection><ComponentExample demo="TagInputDemo"><TagInputDemo client:load /></ComponentExample></ComponentSection>
+
+<ComponentSection>
+
+## 安装
+
+<CodeBlock code={`import { TagInput } from "@lark-ui/core";`} lang="tsx" />
+
+## 用法
+
+使用 `value` 配合 `onValueChange` 来控制标签。非受控用法请使用 `defaultValue`。
+
+```tsx
+const [tags, setTags] = useState<string[]>([]);
+
+<TagInput
+  label="Labels"
+  value={tags}
+  onValueChange={setTags}
+  placeholder="Add a label"
+/>
+```
+</ComponentSection>
+
+<ComponentSection>
+
+## 示例
+
+### 不限制数量
+<ComponentExample demo="TagInputUnrestrictedDemo"><TagInputUnrestrictedDemo client:load /></ComponentExample>
+
+### 最大数量
+<ComponentExample demo="TagInputLimitedDemo"><TagInputLimitedDemo client:load /></ComponentExample>
+
+### 表单
+设置 `name` 可让每个标签作为独立的表单值提交，这样 `FormData.getAll(name)` 就能取回这些标签。输入框中尚未提交的文本会在失去焦点时变成标签，因此点击提交按钮时也会包含它。只要至少有一个标签，`required` 校验就会通过。
+<ComponentExample demo="TagInputFormDemo"><TagInputFormDemo client:load /></ComponentExample>
+
+### 只读
+`readOnly` 会显示标签并保持输入框可聚焦，但无法添加或移除标签。与原生只读输入框一样，它会被表单校验跳过，即使设置了 `required`。
+<ComponentExample demo="TagInputReadOnlyDemo"><TagInputReadOnlyDemo client:load /></ComponentExample>
+
+### 本地化
+<ComponentExample demo="TagInputLocalizationDemo"><TagInputLocalizationDemo client:load /></ComponentExample>
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 行为
+
+按 Enter、逗号或 Tab 键即可创建标签。失去焦点同样会提交当前值。粘贴以逗号或换行分隔的文本时，会先将其插入光标处的文本中，然后同步创建各个值。粘贴不含分隔符的文本时，其行为与普通粘贴相同。重复的值会被忽略。
+
+## 本地化
+
+使用 `labels` 可以翻译标签输入框（TagInput）生成的所有文案：默认输入名称、标签移除操作、无效值提示和超限提示。
+
+```tsx
+<TagInput
+  label="Etiquetas"
+  labels={{
+    input: "Agregar etiqueta",
+    removeValue: (value) => `Eliminar ${value}`,
+    invalidValue: (value) => `${value} no es valido.`,
+    maxValuesReached: (maxValues) => `Maximo de ${maxValues} etiquetas.`,
+  }}
+/>
+```
+
+## API 参考
+
+<PropsTable component="TagInput" />
+</ComponentSection>

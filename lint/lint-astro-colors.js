@@ -7,11 +7,11 @@
  *
  * Checks for:
  * 1. Tailwind primitive colors (e.g., bg-blue-500, text-gray-900)
- * 2. Invalid/unknown semantic tokens not defined in theme-kumo.css
+ * 2. Invalid/unknown semantic tokens not defined in theme-lark.css
  *
  * Usage:
  *   node lint/lint-astro-colors.js [directory]
- *   node lint/lint-astro-colors.js packages/kumo-docs-astro/src
+ *   node lint/lint-astro-colors.js packages/lark-docs-astro/src
  *
  * Exit codes:
  *   0 - No issues found
@@ -130,10 +130,9 @@ const COLOR_PREFIXES = new Set([
 
 const TEXT_COLOR_PREFIXES = new Set(["text"]);
 
-function parseKumoSemanticColors() {
+function parseLarkSemanticColors() {
   const themeFiles = [
-    resolve(__dirname, "../packages/kumo/src/styles/theme-kumo.css"),
-    resolve(__dirname, "../packages/kumo/src/styles/theme-fedramp.css"),
+    resolve(__dirname, "../packages/lark/src/styles/theme-lark.css"),
   ];
 
   const colorTokens = new Set();
@@ -171,9 +170,9 @@ function parseKumoSemanticColors() {
 const {
   colorTokens: VALID_COLOR_TOKENS,
   textColorTokens: VALID_TEXT_COLOR_TOKENS,
-} = parseKumoSemanticColors();
+} = parseLarkSemanticColors();
 
-const VALID_KUMO_SEMANTIC_COLORS = new Set([
+const VALID_LARK_SEMANTIC_COLORS = new Set([
   ...VALID_COLOR_TOKENS,
   ...VALID_TEXT_COLOR_TOKENS,
 ]);
@@ -193,14 +192,14 @@ function findPrimitiveColor(str) {
     const colorFamily = match[3];
 
     if (!fullToken || !colorFamily) continue;
-    if (VALID_KUMO_SEMANTIC_COLORS.has(colorFamily)) continue;
-    if (colorFamily.startsWith("kumo-"))
+    if (VALID_LARK_SEMANTIC_COLORS.has(colorFamily)) continue;
+    if (colorFamily.startsWith("lark-"))
       return { type: "primitive", token: fullToken };
 
     const primitiveFamily = colorFamily.replace(/-\d+$/, "");
     if (
       TAILWIND_COLOR_FAMILIES.has(primitiveFamily) &&
-      !VALID_KUMO_SEMANTIC_COLORS.has(colorFamily)
+      !VALID_LARK_SEMANTIC_COLORS.has(colorFamily)
     ) {
       return { type: "primitive", token: fullToken };
     }
@@ -314,7 +313,7 @@ function lintFile(filePath) {
         line,
         type: "primitive",
         token: primitive.token,
-        message: `Avoid Tailwind primitive color '${primitive.token}'. Use Kumo semantic tokens instead.`,
+        message: `Avoid Tailwind primitive color '${primitive.token}'. Use Lark semantic tokens instead.`,
       });
       continue;
     }
@@ -326,7 +325,7 @@ function lintFile(filePath) {
         type: "invalid",
         token: invalid.token,
         tokenName: invalid.tokenName,
-        message: `Invalid color token '${invalid.token}'. Token '${invalid.tokenName}' is not defined in theme-kumo.css.`,
+        message: `Invalid color token '${invalid.token}'. Token '${invalid.tokenName}' is not defined in theme-lark.css.`,
       });
     }
   }
@@ -365,7 +364,7 @@ function findAstroFiles(dir) {
 
 function main() {
   const args = process.argv.slice(2);
-  const targetDir = args[0] || "packages/kumo-docs-astro/src";
+  const targetDir = args[0] || "packages/lark-docs-astro/src";
   const rootDir = resolve(__dirname, "..");
   // Resolve relative to cwd if provided, otherwise relative to repo root
   const absoluteTarget = args[0]
@@ -405,7 +404,7 @@ function main() {
     for (const issue of issues) {
       const symbol = issue.type === "primitive" ? "×" : "×";
       console.log(
-        `  ${symbol} kumo/${issue.type === "primitive" ? "no-primitive-colors" : "invalid-color-token"}: ${issue.message}`,
+        `  ${symbol} lark/${issue.type === "primitive" ? "no-primitive-colors" : "invalid-color-token"}: ${issue.message}`,
       );
       console.log(`   ╭─[${path}:${issue.line}]`);
       console.log(`   ╰────`);

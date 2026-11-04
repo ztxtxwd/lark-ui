@@ -1,0 +1,282 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Dialog 对话框"
+description: "叠加在主窗口或另一个对话框上的窗口，下方内容处于不可交互状态。"
+sourceFile: "components/dialog"
+baseUIComponent: "dialog"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  DialogBasicDemo,
+  DialogWithActionsDemo,
+  DialogConfirmationDemo,
+  DialogAlertDemo,
+  DialogMaxWidthDemo,
+  DialogSizesDemo,
+  DialogWithSelectDemo,
+  DialogWithComboboxDemo,
+  DialogWithDropdownDemo,
+} from "~/components/demos/DialogDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="DialogWithActionsDemo">
+    <DialogWithActionsDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Dialog } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Dialog } from "@lark-ui/core/components/dialog";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Dialog, Button } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger render={(p) => <Button {...p}>Open</Button>} />
+      <Dialog>
+        <Dialog.Title>Dialog Title</Dialog.Title>
+        <Dialog.Description>Dialog content goes here.</Dialog.Description>
+        <div className="flex justify-end gap-2 mt-4">
+          <Dialog.Close
+            render={(p) => (
+              <Button variant="secondary" {...p}>
+                Cancel
+              </Button>
+            )}
+          />
+        </div>
+      </Dialog>
+    </Dialog.Root>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Dialog vs Alert Dialog */}
+
+<ComponentSection>
+
+## Dialog 与 Alert Dialog 的区别
+
+<p>
+  对话框（Dialog）组件支持两种 ARIA 角色，以便向辅助技术准确传达语义：
+</p>
+
+  <div class="overflow-hidden rounded-lg border border-lark-hairline">
+    <table class="w-full text-sm">
+      <thead class="bg-lark-elevated">
+        <tr>
+          <th class="px-4 py-3 text-left font-medium">角色</th>
+          <th class="px-4 py-3 text-left font-medium">使用场景</th>
+          <th class="px-4 py-3 text-left font-medium">行为</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-lark-hairline">
+        <tr>
+          <td class="px-4 py-3">
+            `role="dialog"`
+            <span class="ml-2 text-lark-subtle">（默认）</span>
+          </td>
+          <td class="px-4 py-3">
+            通用弹窗、表单、内容展示
+          </td>
+          <td class="px-4 py-3">默认可关闭</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3">`role="alertdialog"`</td>
+          <td class="px-4 py-3">
+            破坏性操作、确认、关键警告
+          </td>
+          <td class="px-4 py-3">需要用户明确确认</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础对话框
+
+<ComponentExample demo="DialogBasicDemo">
+  <DialogBasicDemo client:load />
+</ComponentExample>
+
+### 尺寸
+
+<p>
+  `size` 属性控制对话框在桌面端的固定宽度。超出对话框宽度的内容会在对话框内部横向滚动，而不是撑宽对话框。
+</p>
+<ComponentExample demo="DialogSizesDemo">
+  <DialogSizesDemo client:load />
+</ComponentExample>
+
+### 警告对话框（`role="alertdialog"`）
+
+<p>
+  对于破坏性操作或确认类对话框，请在 `Dialog.Root` 上使用 `role="alertdialog"`。这样对话框会以 `role="alertdialog"` 而不是 `role="dialog"` 渲染，提供正确的无障碍语义。
+</p>
+<div class="mb-4 rounded-lg border border-lark-info/30 bg-lark-info/10 p-4 text-sm text-lark-info">
+  <p class="font-medium mb-2 text-sm">何时使用 `role="alertdialog"`：</p>
+  <ul class="list-disc list-inside space-y-1 ml-2 mb-0">
+    <li>破坏性操作（删除、丢弃、移除）</li>
+    <li>需要用户明确确认的确认流程</li>
+    <li>无法撤销的操作</li>
+    <li>关键警告或错误</li>
+  </ul>
+</div>
+<ComponentExample demo="DialogAlertDemo">
+  <DialogAlertDemo client:load />
+</ComponentExample>
+
+### 确认对话框（配合 `disablePointerDismissal`）
+
+<p>
+  对于不希望点击外部即可关闭的确认对话框，请在 `Dialog.Root` 上使用 `disablePointerDismissal`。它可以与 `role="alertdialog"` 结合使用，以获得正确的无障碍效果。
+</p>
+<ComponentExample demo="DialogConfirmationDemo">
+  <DialogConfirmationDemo client:load />
+</ComponentExample>
+
+### 带操作按钮
+
+<ComponentExample demo="DialogWithActionsDemo">
+  <DialogWithActionsDemo client:load />
+</ComponentExample>
+
+### 自定义最大宽度
+
+<p>
+  使用方设置的最大宽度工具类（如 `max-w-lg`）应在桌面端限制对话框宽度，即使对话框内部包含宽度较大的内容。
+</p>
+<ComponentExample
+  demo="DialogMaxWidthDemo"
+  vrSection="custom-max-width"
+  vrTitle="Custom Max Width"
+>
+  <DialogMaxWidthDemo client:load />
+</ComponentExample>
+
+### 搭配 Select 使用
+
+<p>包含 Select 下拉选择器的对话框。</p>
+<ComponentExample demo="DialogWithSelectDemo">
+  <DialogWithSelectDemo client:load />
+</ComponentExample>
+
+### 搭配 Combobox 使用
+
+<p>包含 Combobox 组合框（支持搜索选择）的对话框。</p>
+<ComponentExample demo="DialogWithComboboxDemo">
+  <DialogWithComboboxDemo client:load />
+</ComponentExample>
+
+### 搭配 Dropdown 使用
+
+  <p>包含 Dropdown 下拉菜单的对话框。</p>
+  <ComponentExample demo="DialogWithDropdownDemo">
+    <DialogWithDropdownDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Dialog
+
+<p>主对话框容器，负责渲染模态遮罩和弹层。</p>
+<PropsTable component="Dialog" />
+
+### Dialog.Root
+
+<p>
+  控制对话框的打开状态。自身不渲染任何 HTML 元素。
+</p>
+<div class="mb-4 overflow-hidden rounded-lg border border-lark-hairline">
+  <table class="w-full text-sm">
+    <thead class="bg-lark-elevated">
+      <tr>
+        <th class="px-4 py-2 text-left font-medium">属性</th>
+        <th class="px-4 py-2 text-left font-medium">类型</th>
+        <th class="px-4 py-2 text-left font-medium">默认值</th>
+        <th class="px-4 py-2 text-left font-medium">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-lark-hairline">
+      <tr>
+        <td class="px-4 py-2 font-mono text-xs">role</td>
+        <td class="px-4 py-2 font-mono text-xs">"dialog" | "alertdialog"</td>
+        <td class="px-4 py-2 font-mono text-xs">"dialog"</td>
+        <td class="px-4 py-2 text-lark-subtle">
+          对话框的 ARIA 角色。破坏性操作或确认流程请使用 `"alertdialog"`。
+        </td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2 font-mono text-xs">disablePointerDismissal</td>
+        <td class="px-4 py-2 font-mono text-xs">boolean</td>
+        <td class="px-4 py-2 font-mono text-xs">false</td>
+        <td class="px-4 py-2 text-lark-subtle">
+          为 true 时，防止通过点击对话框外部将其关闭。
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<PropsTable component="Dialog.Root" />
+
+### Dialog.Trigger
+
+<p>点击时打开对话框的按钮。</p>
+<PropsTable component="Dialog.Trigger" />
+
+### Dialog.Title
+
+<p>为对话框提供无障碍标签的标题。</p>
+<PropsTable component="Dialog.Title" />
+
+### Dialog.Description
+
+<p>为对话框提供补充说明的段落。</p>
+<PropsTable component="Dialog.Description" />
+
+### Dialog.Close
+
+  <p>点击时关闭对话框的按钮。</p>
+  <PropsTable component="Dialog.Close" />
+</ComponentSection>

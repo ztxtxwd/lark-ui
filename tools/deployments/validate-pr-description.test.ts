@@ -5,7 +5,7 @@ import { validateDescription } from "./validate-pr-description.ts";
 const NO_LABELS = "[]";
 const NO_FILES = "[]";
 const WITH_CHANGESET = '[".changeset/some-change.md"]';
-const WITH_KUMO_CHANGE = '["packages/kumo/src/index.ts"]';
+const WITH_LARK_CHANGE = '["packages/lark/src/index.ts"]';
 
 describe("validateDescription", () => {
   describe("Reviews section", () => {
@@ -264,7 +264,7 @@ describe("validateDescription", () => {
       assert.deepStrictEqual(errors, []);
     });
 
-    it("fails when a Kumo change is missing a changeset", () => {
+    it("fails when a Lark change is missing a changeset", () => {
       const body = `
 - Reviews
 - [x] bonk has reviewed the change
@@ -275,12 +275,12 @@ describe("validateDescription", () => {
         "Test PR",
         body,
         NO_LABELS,
-        WITH_KUMO_CHANGE,
+        WITH_LARK_CHANGE,
       );
       assert.ok(errors.some((e) => e.includes("changeset")));
     });
 
-    it("passes without a changeset when Kumo is unchanged", () => {
+    it("passes without a changeset when Lark is unchanged", () => {
       const body = `
 - Reviews
 - [x] bonk has reviewed the change
@@ -308,7 +308,7 @@ describe("validateDescription", () => {
         "Test PR",
         body,
         labels,
-        WITH_KUMO_CHANGE,
+        WITH_LARK_CHANGE,
       );
       assert.deepStrictEqual(errors, []);
     });

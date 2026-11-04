@@ -174,7 +174,7 @@ export function parseBundleSizeArtifact(value: unknown): BundleSizeData {
 
 export function buildBundleSizeMarkdown(data: BundleSizeData): string {
   const lines: string[] = [
-    "Consumer fixtures bundled against `packages/kumo/dist` (peers external, minified ESM).",
+    "Consumer fixtures bundled against `packages/lark/dist` (peers external, minified ESM).",
     "",
     "| Fixture | Raw | Gzip | Brotli |",
     "| --- | ---: | ---: | ---: |",

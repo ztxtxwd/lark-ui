@@ -16,7 +16,7 @@ import {
 import { upsertPRComment } from "../utils/github-api";
 
 const REPORT_PATH = "ci/reports/bundle-size.json";
-const COMMENT_MARKER = "<!-- kumo-bundle-size-report -->";
+const COMMENT_MARKER = "<!-- lark-bundle-size-report -->";
 
 async function main(): Promise<void> {
   const token = process.env.GITHUB_TOKEN ?? "";

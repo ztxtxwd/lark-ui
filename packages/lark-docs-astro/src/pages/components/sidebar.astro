@@ -1,0 +1,480 @@
+---
+import DocLayout from "../../layouts/DocLayout.astro";
+import Heading from "../../components/docs/Heading.astro";
+import ComponentSection from "../../components/docs/ComponentSection.astro";
+import ComponentExample from "../../components/docs/ComponentExample.astro";
+import CodeBlock from "../../components/docs/CodeBlock.astro";
+import PropsTable from "../../components/docs/PropsTable.astro";
+import {
+  SidebarBasicDemo,
+  SidebarToggleDemo,
+  SidebarLoadingDemo,
+  SidebarScrollToItemDemo,
+  SidebarFullDemo,
+  SidebarResizableDemo,
+  SidebarRightDemo,
+  SidebarPeekingDemo,
+  SidebarAutoScrollDemo,
+  SidebarTransitionCompleteDemo,
+  SidebarSlidingViewsDemo,
+  SidebarMobileDemo,
+  SidebarFullScreenMobileDemo,
+} from "../../components/demos/SidebarDemo";
+---
+
+<DocLayout
+  title="Sidebar 侧边栏"
+  description="一个可组合的侧边栏导航组件，支持可折叠分组、仅图标模式、临时展开、滑动视图以及响应式移动端支持。"
+  sourceFile="components/sidebar"
+>
+  <ComponentSection>
+    <ComponentExample code={`<Sidebar.Provider defaultOpen>
+  <Sidebar>
+    <Sidebar.Content>
+      <Sidebar.Group>
+        <Sidebar.GroupLabel>Overview</Sidebar.GroupLabel>
+        <Sidebar.Menu>
+          <Sidebar.MenuButton icon={HouseIcon} active>Home</Sidebar.MenuButton>
+          <Sidebar.MenuButton icon={GlobeIcon}>Domains</Sidebar.MenuButton>
+        </Sidebar.Menu>
+      </Sidebar.Group>
+    </Sidebar.Content>
+  </Sidebar>
+</Sidebar.Provider>`}>
+      <SidebarFullDemo client:load />
+    </ComponentExample>
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="installation">安装</Heading>
+    <Heading level={3} id="barrel" class="mb-2 text-lg">统一导出</Heading>
+    <CodeBlock code={`import { Sidebar } from "@lark-ui/core";`} lang="tsx" />
+    <h3 class="mt-4 mb-2 text-lg font-semibold">按需导出</h3>
+    <CodeBlock code={`import { Sidebar } from "@lark-ui/core/components/sidebar";`} lang="tsx" />
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="usage">用法</Heading>
+    <p>
+      最少需要 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Provider</code>、
+      <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar</code>、
+      <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Content</code>（可滚动区域）、
+      <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Menu</code> 和
+      <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuButton</code>。
+      添加 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Header</code> /
+      <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Footer</code> 可将内容固定在滚动区域的上方或下方。
+      使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Group</code> +
+      <code class="rounded bg-lark-control px-1 py-0.5 text-xs">GroupLabel</code> 组织各个分区。
+    </p>
+    <CodeBlock code={`import { Sidebar } from "@lark-ui/core";
+import { HouseIcon, CodeIcon, GearIcon } from "@phosphor-icons/react";
+
+function AppLayout({ children }) {
+  return (
+    <Sidebar.Provider defaultOpen>
+      <Sidebar>
+        <Sidebar.Content>
+          <Sidebar.Group>
+            <Sidebar.GroupLabel>Navigation</Sidebar.GroupLabel>
+            <Sidebar.Menu>
+              <Sidebar.MenuButton icon={HouseIcon} active>Home</Sidebar.MenuButton>
+              {/* MenuItem only needed to wrap Collapsible */}
+              <Sidebar.MenuItem>
+                <Sidebar.Collapsible>
+                  <Sidebar.CollapsibleTrigger
+                    render={
+                      <Sidebar.MenuButton icon={CodeIcon}>
+                        Compute <Sidebar.MenuChevron />
+                      </Sidebar.MenuButton>
+                    }
+                  />
+                  <Sidebar.CollapsibleContent>
+                    <Sidebar.MenuSub>
+                      <Sidebar.MenuSubButton>Workers</Sidebar.MenuSubButton>
+                    </Sidebar.MenuSub>
+                  </Sidebar.CollapsibleContent>
+                </Sidebar.Collapsible>
+              </Sidebar.MenuItem>
+            </Sidebar.Menu>
+          </Sidebar.Group>
+        </Sidebar.Content>
+        <Sidebar.Footer>
+          <Sidebar.Trigger />
+        </Sidebar.Footer>
+      </Sidebar>
+      <div className="flex-1">{children}</div>
+    </Sidebar.Provider>
+  );
+}`} lang="tsx" />
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="examples" class="mb-6">示例</Heading>
+
+    <div class="space-y-8">
+      <div>
+        <Heading level={3} id="basic">基础</Heading>
+        <p>
+          最小可用的侧边栏：只有分组、菜单按钮和可折叠子菜单，没有页眉和页脚。
+          <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuButton</code> 和 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuSubButton</code> 会自动包裹在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;li&gt;</code> 中&mdash;无需 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuItem</code> / <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuSubItem</code>。
+        </p>
+        <ComponentExample code={`<Sidebar.Provider defaultOpen>
+  <Sidebar>
+    <Sidebar.Content>
+      <Sidebar.Group>
+        <Sidebar.GroupLabel>Overview</Sidebar.GroupLabel>
+        <Sidebar.Menu>
+          <Sidebar.MenuButton icon={HouseIcon} active>Home</Sidebar.MenuButton>
+          <Sidebar.MenuButton icon={ChartBarIcon}>Analytics</Sidebar.MenuButton>
+        </Sidebar.Menu>
+      </Sidebar.Group>
+    </Sidebar.Content>
+  </Sidebar>
+</Sidebar.Provider>`}>
+          <SidebarBasicDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="toggle-collapsed-state">切换与折叠状态</Heading>
+        <p>
+          在页脚中使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.Trigger</code>，或以编程方式调用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">useSidebar().toggleSidebar</code>。传入 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">tooltip</code> 可在折叠状态下悬停时显示标签。
+        </p>
+        <ComponentExample code={`<Sidebar.MenuButton icon={HouseIcon} tooltip="Home" active>
+  Home
+</Sidebar.MenuButton>
+
+<Sidebar.Footer>
+  <Sidebar.Trigger />
+</Sidebar.Footer>
+
+// Or programmatically:
+const { toggleSidebar } = useSidebar();`}>
+          <SidebarToggleDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="loading">加载中</Heading>
+        <p>
+          <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.Loading</code> 会在路由和权限加载完成之前，以导航项形状的骨架行代替导航内容。折叠状态下只保留图标方块。它会遵循减少动态效果的偏好设置。
+        </p>
+        <ComponentExample code={`<Sidebar>
+  <Sidebar.Header>…</Sidebar.Header>
+  {isLoading ? (
+    <Sidebar.Loading />
+  ) : (
+    <Sidebar.Content>…</Sidebar.Content>
+  )}
+  <Sidebar.Footer>…</Sidebar.Footer>
+</Sidebar>`}>
+          <SidebarLoadingDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="resizable">可调整大小</Heading>
+        <p>
+          拖动边缘即可调整大小。拖动到 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">minWidth</code> 以下会折叠；从折叠状态向外拖动则展开。
+          调整手柄支持键盘操作：可使用方向键、Home 和 End。
+        </p>
+        <ComponentExample code={`<Sidebar.Provider defaultOpen resizable defaultWidth={240} minWidth={180} maxWidth={400}>
+  <Sidebar>
+    <Sidebar.Content>...</Sidebar.Content>
+    <Sidebar.ResizeHandle />
+  </Sidebar>
+</Sidebar.Provider>`}>
+          <SidebarResizableDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="right-side">右侧</Heading>
+        <p>
+          使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">side="right"</code> 可将侧边栏置于右边缘。在 DOM 中需将 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;main&gt;</code> 放在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;Sidebar&gt;</code> 之前。
+        </p>
+        <ComponentExample code={`<Sidebar.Provider defaultOpen side="right">
+  <main className="flex-1">...</main>
+  <Sidebar>
+    <Sidebar.Content>
+      <Sidebar.Group>
+        <Sidebar.GroupLabel>Details</Sidebar.GroupLabel>
+        <Sidebar.Menu>
+          <Sidebar.MenuButton icon={GearIcon} active>Properties</Sidebar.MenuButton>
+          <Sidebar.MenuButton icon={ChartBarIcon}>Metrics</Sidebar.MenuButton>
+        </Sidebar.Menu>
+      </Sidebar.Group>
+    </Sidebar.Content>
+  </Sidebar>
+</Sidebar.Provider>`}>
+          <SidebarRightDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="peeking">临时展开</Heading>
+        <p>
+          在 Provider 上设置 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">peekable</code>。侧边栏折叠时，悬停或聚焦会临时将其展开；移开后会重新折叠。
+          临时展开期间，<code class="rounded bg-lark-control px-1 py-0.5 text-xs">data-state</code> 属性为 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">"peeking"</code>。
+        </p>
+        <ComponentExample code={`<Sidebar.Provider defaultOpen peekable>
+  <Sidebar>
+    <Sidebar.Content>...</Sidebar.Content>
+    <Sidebar.Footer>
+      <Sidebar.Trigger />
+    </Sidebar.Footer>
+  </Sidebar>
+</Sidebar.Provider>
+
+// Read peeking state:
+const { state, isPeeking } = useSidebar();
+// state: "expanded" | "collapsed" | "peeking"`}>
+          <SidebarPeekingDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="auto-scroll">自动滚动</Heading>
+        <p>
+          在较长的可折叠分区上使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">autoScrollOnOpen</code>，可让新展开的内容保持在可视区域内。
+          当可滚动侧边栏靠下的分组展开到可视区域之外时，这一点尤为有用。
+        </p>
+        <ComponentExample code={`<Sidebar.Collapsible autoScrollOnOpen>
+  <Sidebar.CollapsibleTrigger
+    render={
+      <Sidebar.MenuButton icon={CodeIcon}>
+        Workers <Sidebar.MenuChevron />
+      </Sidebar.MenuButton>
+    }
+  />
+  <Sidebar.CollapsibleContent>
+    <Sidebar.MenuSub>...</Sidebar.MenuSub>
+  </Sidebar.CollapsibleContent>
+</Sidebar.Collapsible>`}>
+          <SidebarAutoScrollDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="transition-completion">过渡完成</Heading>
+        <p>
+          当某些工作必须等待侧边栏或折叠面板的过渡结束后再执行时（例如测量布局或滚动到新展开的内容），请使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">onOpenChangeComplete</code>。该回调会收到过渡完成后的展开状态；在减少动态效果导致过渡被禁用时同样会触发。当侧边栏或移动端抽屉显示/隐藏已展开的分区时，<code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.Collapsible</code> 也会完成过渡，因此回调始终与用户看到的状态一致。
+        </p>
+        <ComponentExample code={`const [completion, setCompletion] = useState("");
+
+<Sidebar.Provider
+  defaultOpen
+  onOpenChangeComplete={(open) => {
+    setCompletion("Sidebar " + (open ? "opened." : "collapsed."));
+  }}
+>
+  <Sidebar>
+    <Sidebar.Content>
+      <Sidebar.Menu>
+        <Sidebar.MenuItem>
+          <Sidebar.Collapsible
+            onOpenChangeComplete={(open) => {
+              setCompletion(
+                "Compute section " + (open ? "opened." : "collapsed."),
+              );
+            }}
+          >
+            <Sidebar.CollapsibleTrigger render={<Sidebar.MenuButton>Compute</Sidebar.MenuButton>} />
+            <Sidebar.CollapsibleContent>...</Sidebar.CollapsibleContent>
+          </Sidebar.Collapsible>
+        </Sidebar.MenuItem>
+      </Sidebar.Menu>
+    </Sidebar.Content>
+    <Sidebar.Footer><Sidebar.Trigger /></Sidebar.Footer>
+  </Sidebar>
+</Sidebar.Provider>`}>
+          <SidebarTransitionCompleteDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="scroll-to-item">滚动到条目</Heading>
+        <p>
+          通过 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">itemId</code> 标记导航项，然后调用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">useSidebar().scrollToItem(id, options)</code> 将其滚动到可视区域。
+          当目标条目已完全可见时，使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">scrollItemIntoView(id, options)</code> 可保持当前位置不变。
+          <code class="rounded bg-lark-control px-1 py-0.5 text-xs">align</code> 可取 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">"start"</code>、<code class="rounded bg-lark-control px-1 py-0.5 text-xs">"center"</code>、<code class="rounded bg-lark-control px-1 py-0.5 text-xs">"end"</code> 或 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">"auto"</code>（默认——可见时不做任何处理）。<code class="rounded bg-lark-control px-1 py-0.5 text-xs">behavior</code> 默认为 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">"auto"</code>（瞬时），这样从其他应用跳转过来时不会带动画；应用内“跳转到某个分区”的场景请传入 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">"smooth"</code>。它遵循 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">prefers-reduced-motion</code>。与 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.SlidingViews</code> 配合使用时也能正常工作&mdash;条目是从每个 Provider 各自的注册表中解析的，而不是通过 DOM 查询。
+        </p>
+        <p>
+          <code class="rounded bg-lark-control px-1 py-0.5 text-xs">itemId</code> 在两种用法下都有效：直接加在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.MenuButton</code> 上（常见用法，会自动包裹在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;li&gt;</code> 中），或者在需要包裹 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Collapsible</code> 时加在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.MenuItem</code> 上。如果把 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">itemId</code> 放在嵌套于 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuItem</code> 内部的 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuButton</code> 上，同样可以工作&mdash;此时按钮本身会成为滚动目标。
+        </p>
+        <ComponentExample code={`<Sidebar.MenuButton itemId="zero-trust" href="/zt">
+  Zero Trust
+</Sidebar.MenuButton>
+
+// elsewhere:
+const { scrollToItem } = useSidebar();
+scrollToItem("zero-trust", { align: "center", behavior: "smooth" });`}>
+          <SidebarScrollToItemDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="sliding-views">滑动视图</Heading>
+        <p>
+          使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.SlidingViews</code> 和 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.SlidingView</code>
+          可在导航界面之间实现带动画的横向切换（例如账户 &harr; 区域）。
+          未激活的视图会自动标记 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">aria-hidden</code> 和 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">inert</code>。
+          动画会遵循 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">prefers-reduced-motion</code>。
+        </p>
+        <ComponentExample code={`const [surface, setSurface] = useState("account");
+
+<Sidebar.SlidingViews activeKey={surface} direction="left">
+  <Sidebar.SlidingView value="account">
+    <Sidebar.Content>...account nav...</Sidebar.Content>
+  </Sidebar.SlidingView>
+  <Sidebar.SlidingView value="zone">
+    <Sidebar.Content>...zone nav...</Sidebar.Content>
+  </Sidebar.SlidingView>
+</Sidebar.SlidingViews>`}>
+          <SidebarSlidingViewsDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="full-example">完整示例</Heading>
+        <p>
+          一个「大而全」的示例，展示了所有子组件：带账户切换器的页眉、带标签的分组、含嵌套展开项的可折叠分区、徽标、滑动视图，以及页脚触发器。
+        </p>
+        <ComponentExample code={`<Sidebar>
+  <Sidebar.Header>
+    <AccountSwitcher />
+  </Sidebar.Header>
+  <Sidebar.Content>
+    <Sidebar.Group>
+      <Sidebar.Menu>
+        <Sidebar.MenuButton icon={HouseIcon} active>Home</Sidebar.MenuButton>
+      </Sidebar.Menu>
+    </Sidebar.Group>
+    <Sidebar.Group>
+      <Sidebar.GroupLabel>Build</Sidebar.GroupLabel>
+      <Sidebar.Menu>
+        <Sidebar.MenuItem>
+          <Sidebar.Collapsible defaultOpen>
+            <Sidebar.CollapsibleTrigger
+              render={
+                <Sidebar.MenuButton icon={CodeIcon}>
+                  Compute <Sidebar.MenuChevron />
+                </Sidebar.MenuButton>
+              }
+            />
+            <Sidebar.CollapsibleContent>
+              <Sidebar.MenuSub>
+                <Sidebar.MenuSubButton>
+                  Containers <Sidebar.MenuBadge>Beta</Sidebar.MenuBadge>
+                </Sidebar.MenuSubButton>
+              </Sidebar.MenuSub>
+            </Sidebar.CollapsibleContent>
+          </Sidebar.Collapsible>
+        </Sidebar.MenuItem>
+      </Sidebar.Menu>
+    </Sidebar.Group>
+  </Sidebar.Content>
+  <Sidebar.Footer>
+    <Sidebar.Trigger />
+  </Sidebar.Footer>
+</Sidebar>`}>
+          <SidebarFullDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="mobile">移动端</Heading>
+        <p>
+          在窄视口中，侧边栏会渲染为导航抽屉。使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">mobileBreakpoint</code> 可控制断点阈值。
+          抽屉关闭时带有 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">inert</code> 和 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">aria-hidden</code>，打开时会将焦点移入其中，并支持按 Esc 关闭。
+          本示例通过设置较大的断点值强制进入移动端模式。
+        </p>
+        <ComponentExample code={`<Sidebar.Provider mobileBreakpoint={9999}>
+  <Sidebar>
+    <Sidebar.Content>...</Sidebar.Content>
+  </Sidebar>
+</Sidebar.Provider>`}>
+          <SidebarMobileDemo client:load />
+        </ComponentExample>
+      </div>
+
+      <div>
+        <Heading level={3} id="full-screen-mobile">全屏移动端</Heading>
+        <p>
+          传入 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">fullScreenOnMobile</code> 可让抽屉覆盖整个视口，而不是只露出一小条页面内容。
+          导航项会获得更舒适的触控区域，并且由于面板后面没有内容，遮罩层会被抑制。
+          在页眉内添加 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Sidebar.Close</code>，这样就可以在导航内部关闭面板。
+          将它与页面头部中的面包屑导航搭配使用，这样导航关闭后当前路由依然可见。
+        </p>
+        <ComponentExample code={`<Sidebar.Provider mobileBreakpoint={9999}>
+  <Sidebar fullScreenOnMobile>
+    <Sidebar.Header>
+      <Sidebar.Close />
+    </Sidebar.Header>
+    <Sidebar.Content>...</Sidebar.Content>
+  </Sidebar>
+
+  <header>
+    <Sidebar.Trigger />
+    <Breadcrumbs size="sm">
+      <Breadcrumbs.Link href="/">Company</Breadcrumbs.Link>
+      <Breadcrumbs.Separator />
+      <Breadcrumbs.Current>Analytics</Breadcrumbs.Current>
+    </Breadcrumbs>
+  </header>
+</Sidebar.Provider>`}>
+          <SidebarFullScreenMobileDemo client:load />
+        </ComponentExample>
+      </div>
+
+    </div>
+  </ComponentSection>
+
+  <ComponentSection>
+    <Heading level={2} id="api-reference" class="mb-6">API 参考</Heading>
+
+    <div class="space-y-8">
+      <div>
+        <h3 class="mb-3 text-lg font-semibold font-mono">Sidebar</h3>
+        <p>
+          主侧边栏容器。在桌面端渲染为 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;aside&gt;</code>，在移动端渲染为导航抽屉。
+        </p>
+        <PropsTable component="Sidebar" />
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-lg font-semibold font-mono">Sidebar.Provider</h3>
+        <p>
+          Context Provider，用于管理展开/折叠状态和移动端检测。
+        </p>
+        <PropsTable component="Sidebar.Provider" />
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-lg font-semibold font-mono">Sidebar.Content</h3>
+        <p>
+          中间的可滚动区域（<code class="rounded bg-lark-control px-1 py-0.5 text-xs">flex-1 overflow-y-auto</code>）。使用 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Header</code> / <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Footer</code> 可将内容固定在该滚动区域的上方或下方。
+        </p>
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-lg font-semibold font-mono">Sidebar.MenuButton</h3>
+        <p>
+          主要的交互元素。支持图标、激活状态、链接，以及折叠状态下的自动工具提示。
+          会自动包裹在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;li&gt;</code> 中&mdash;除非需要包裹 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">Collapsible</code>，否则无需 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuItem</code> 包装层。
+        </p>
+        <PropsTable component="Sidebar.MenuButton" />
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-lg font-semibold font-mono">Sidebar.MenuSubButton</h3>
+        <p>
+          子菜单内部的按钮，用于嵌套导航。
+          会自动包裹在 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">&lt;li&gt;</code> 中&mdash;无需 <code class="rounded bg-lark-control px-1 py-0.5 text-xs">MenuSubItem</code> 包装层。
+        </p>
+        <PropsTable component="Sidebar.MenuSubButton" />
+      </div>
+
+    </div>
+  </ComponentSection>
+</DocLayout>

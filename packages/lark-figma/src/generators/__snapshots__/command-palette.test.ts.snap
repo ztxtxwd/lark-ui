@@ -1,0 +1,321 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent base config 1`] = `
+{
+  "background": "color-lark-elevated",
+  "borderRadius": 6,
+  "item": {
+    "highlightedBackground": "color-lark-fill-hover",
+    "iconColor": "text-lark-subtle",
+    "normalBackground": null,
+    "padding": {
+      "borderRadius": 4,
+      "gap": 8,
+      "paddingX": 8,
+      "paddingY": 4,
+    },
+    "textColor": "text-color-lark-default",
+  },
+  "sections": {
+    "footer": {
+      "background": "color-lark-elevated",
+      "padding": {
+        "fillVariable": "color-lark-elevated",
+        "fontSize": 12,
+        "paddingX": 16,
+        "paddingY": 12,
+        "textVariable": "text-color-lark-subtle",
+      },
+      "textColor": "text-color-lark-subtle",
+    },
+    "inputHeader": {
+      "background": "color-lark-elevated",
+      "padding": {
+        "fillVariable": "color-lark-elevated",
+        "gap": 12,
+        "paddingX": 16,
+        "paddingY": 12,
+      },
+    },
+    "list": {
+      "background": "color-lark-elevated",
+      "padding": {
+        "fillVariable": "color-lark-elevated",
+        "paddingX": 4,
+        "paddingY": 4,
+      },
+    },
+  },
+  "shadow": {
+    "layers": [
+      {
+        "blur": 24,
+        "color": {
+          "b": 0.1607843137254902,
+          "g": 0.13725490196078433,
+          "r": 0.12156862745098039,
+        },
+        "darkColor": {
+          "b": 0,
+          "g": 0,
+          "r": 0,
+        },
+        "darkOpacity": 0.35,
+        "offsetX": 0,
+        "offsetY": 8,
+        "opacity": 0.04,
+        "spread": 8,
+      },
+      {
+        "blur": 12,
+        "color": {
+          "b": 0.1607843137254902,
+          "g": 0.13725490196078433,
+          "r": 0.12156862745098039,
+        },
+        "darkColor": {
+          "b": 0,
+          "g": 0,
+          "r": 0,
+        },
+        "darkOpacity": 0.3,
+        "offsetX": 0,
+        "offsetY": 6,
+        "opacity": 0.04,
+        "spread": 0,
+      },
+      {
+        "blur": 8,
+        "color": {
+          "b": 0.1607843137254902,
+          "g": 0.13725490196078433,
+          "r": 0.12156862745098039,
+        },
+        "darkColor": {
+          "b": 0,
+          "g": 0,
+          "r": 0,
+        },
+        "darkOpacity": 0.24,
+        "offsetX": 0,
+        "offsetY": 4,
+        "opacity": 0.06,
+        "spread": -8,
+      },
+    ],
+  },
+  "width": 672,
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent classes 1`] = `
+{
+  "breadcrumbSeparator": "h-3 w-3 text-lark-subtle",
+  "container": "rounded-md bg-lark-elevated",
+  "dialog": "max-w-2xl rounded-md",
+  "empty": "p-8 text-lark-subtle",
+  "externalIcon": "h-3.5 w-3.5 text-lark-subtle",
+  "footer": "rounded-b-md bg-lark-elevated px-4 py-3 text-xs text-lark-subtle",
+  "group": "space-y-0.5",
+  "groupLabel": "px-2.5 pt-1 text-xs text-lark-placeholder",
+  "highlightMark": "rounded-sm bg-lark-warning/50 text-lark-default",
+  "input": "text-base",
+  "inputHeader": "gap-3 bg-lark-elevated px-4 py-3",
+  "item": "gap-2 px-2 py-1 rounded",
+  "itemHighlighted": "bg-lark-fill-hover",
+  "list": "rounded-b-md bg-lark-elevated px-1 py-1",
+  "loading": "p-8",
+  "resultArrow": "h-4 w-4 text-lark-subtle",
+  "resultIcon": "text-lark-subtle",
+  "resultTitle": "text-base text-lark-default",
+  "searchIcon": "h-4 w-4 text-lark-subtle",
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent config 1`] = `
+{
+  "footerHeight": 36,
+  "groupLabelHeight": 24,
+  "inputHeight": 40,
+  "itemHeight": 26,
+  "maxHeight": 400,
+  "width": 672,
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent container styles 1`] = `
+{
+  "borderRadius": 6,
+  "fillVariable": "color-lark-elevated",
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent footer styles 1`] = `
+{
+  "fillVariable": "color-lark-elevated",
+  "fontSize": 12,
+  "paddingX": 16,
+  "paddingY": 12,
+  "textVariable": "text-color-lark-subtle",
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent inputHeader styles 1`] = `
+{
+  "fillVariable": "color-lark-elevated",
+  "gap": 12,
+  "paddingX": 16,
+  "paddingY": 12,
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent intermediate data (golden path) 1`] = `
+{
+  "classes": {
+    "breadcrumbSeparator": "h-3 w-3 text-lark-subtle",
+    "container": "rounded-md bg-lark-elevated",
+    "dialog": "max-w-2xl rounded-md",
+    "empty": "p-8 text-lark-subtle",
+    "externalIcon": "h-3.5 w-3.5 text-lark-subtle",
+    "footer": "rounded-b-md bg-lark-elevated px-4 py-3 text-xs text-lark-subtle",
+    "group": "space-y-0.5",
+    "groupLabel": "px-2.5 pt-1 text-xs text-lark-placeholder",
+    "highlightMark": "rounded-sm bg-lark-warning/50 text-lark-default",
+    "input": "text-base",
+    "inputHeader": "gap-3 bg-lark-elevated px-4 py-3",
+    "item": "gap-2 px-2 py-1 rounded",
+    "itemHighlighted": "bg-lark-fill-hover",
+    "list": "rounded-b-md bg-lark-elevated px-1 py-1",
+    "loading": "p-8",
+    "resultArrow": "h-4 w-4 text-lark-subtle",
+    "resultIcon": "text-lark-subtle",
+    "resultTitle": "text-base text-lark-default",
+    "searchIcon": "h-4 w-4 text-lark-subtle",
+  },
+  "config": {
+    "footerHeight": 36,
+    "groupLabelHeight": 24,
+    "inputHeight": 40,
+    "itemHeight": 26,
+    "maxHeight": 400,
+    "width": 672,
+  },
+  "parsedStyles": {
+    "breadcrumbSeparator": {
+      "height": 12,
+      "textVariable": "text-color-lark-subtle",
+      "width": 12,
+    },
+    "container": {
+      "borderRadius": 6,
+      "fillVariable": "color-lark-elevated",
+    },
+    "dialog": {
+      "borderRadius": 6,
+      "maxWidth": 672,
+    },
+    "empty": {
+      "textVariable": "text-color-lark-subtle",
+    },
+    "externalIcon": {
+      "height": 14,
+      "textVariable": "text-color-lark-subtle",
+      "width": 14,
+    },
+    "footer": {
+      "fillVariable": "color-lark-elevated",
+      "fontSize": 12,
+      "paddingX": 16,
+      "paddingY": 12,
+      "textVariable": "text-color-lark-subtle",
+    },
+    "group": {},
+    "groupLabel": {
+      "fontSize": 12,
+      "paddingX": 10,
+      "textVariable": "text-color-lark-placeholder",
+    },
+    "highlightMark": {
+      "borderRadius": 4,
+      "fillOpacity": 0.5,
+      "fillVariable": "color-lark-warning/50",
+      "textVariable": "text-color-lark-default",
+    },
+    "input": {
+      "fontSize": 14,
+    },
+    "inputHeader": {
+      "fillVariable": "color-lark-elevated",
+      "gap": 12,
+      "paddingX": 16,
+      "paddingY": 12,
+    },
+    "item": {
+      "borderRadius": 4,
+      "gap": 8,
+      "paddingX": 8,
+      "paddingY": 4,
+    },
+    "itemHighlighted": {
+      "fillVariable": "color-lark-fill-hover",
+    },
+    "list": {
+      "fillVariable": "color-lark-elevated",
+      "paddingX": 4,
+      "paddingY": 4,
+    },
+    "loading": {},
+    "resultArrow": {
+      "height": 16,
+      "textVariable": "text-color-lark-subtle",
+      "width": 16,
+    },
+    "resultIcon": {
+      "textVariable": "text-color-lark-subtle",
+    },
+    "resultTitle": {
+      "fontSize": 14,
+      "textVariable": "text-color-lark-default",
+    },
+    "searchIcon": {
+      "height": 16,
+      "textVariable": "text-color-lark-subtle",
+      "width": 16,
+    },
+  },
+  "subComponents": [
+    "Dialog",
+    "Root",
+    "Panel",
+    "Input",
+    "List",
+    "Group",
+    "GroupLabel",
+    "Item",
+    "ResultItem",
+    "HighlightedText",
+    "Empty",
+    "Loading",
+    "Footer",
+    "Results",
+    "Items",
+  ],
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent item styles 1`] = `
+{
+  "borderRadius": 4,
+  "gap": 8,
+  "paddingX": 8,
+  "paddingY": 4,
+}
+`;
+
+exports[`CommandPalette Generator - Snapshot Tests (Intermediate Data) > should produce consistent list styles 1`] = `
+{
+  "fillVariable": "color-lark-elevated",
+  "paddingX": 4,
+  "paddingY": 4,
+}
+`;

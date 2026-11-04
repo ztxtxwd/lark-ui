@@ -1,0 +1,295 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Layer Dialog 分层对话框"
+description: "结构严格的响应式对话框组合，标题固定在可滚动内容区域的顶部。"
+sourceFile: "components/layer-dialog"
+baseUIComponent: "drawer"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  LayerDialogActionDemo,
+  LayerDialogAlertDemo,
+  LayerDialogCancelDemo,
+  LayerDialogCleanupDemo,
+  LayerDialogFormDemo,
+  LayerDialogInformationalDemo,
+  LayerDialogMaxHeightDemo,
+  LayerDialogNestedDemo,
+  LayerDialogPendingDemo,
+  LayerDialogSearchDemo,
+  LayerDialogSeparatorDemo,
+  LayerDialogSizeDemo,
+  LayerDialogSplitActionDemo,
+  LayerDialogTopAlignDemo,
+} from "~/components/demos/LayerDialogDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="LayerDialogActionDemo">
+    <LayerDialogActionDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { LayerDialog } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { LayerDialog } from "@lark-ui/core/components/layer-dialog";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Button, LayerDialog } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <LayerDialog.Root>
+      <LayerDialog.Trigger
+        render={(props) => <Button {...props}>Open settings</Button>}
+      />
+      <LayerDialog.Content>
+        <LayerDialog.Title>Configure custom hostname</LayerDialog.Title>
+        <LayerDialog.Description>
+          Route requests for this hostname to your Worker.
+        </LayerDialog.Description>
+        <LayerDialog.Body>{/* form fields */}</LayerDialog.Body>
+        <LayerDialog.Actions>
+          <LayerDialog.Action onClick={save}>
+            Save hostname
+          </LayerDialog.Action>
+        </LayerDialog.Actions>
+      </LayerDialog.Content>
+    </LayerDialog.Root>
+  );
+}
+```
+
+</ComponentSection>
+
+<ComponentSection>
+## 组合规则
+`LayerDialog.Content` 恰好接受一个 `Title`、一个 `Body`，以及可选的 `Description` 和可选的 `Actions`。它会自动选择与关闭方式对应的界面元素：
+
+- 不使用 `Actions`：在标题栏显示 X 按钮，不显示底部栏。
+- 使用 `Actions`：去掉 X 按钮，显示 **Close** 或 **Cancel** 以及一个主操作。在移动端，它们会显示在滚动内容区下方并以细分隔线隔开；在桌面端，它们保留在固定底部栏中。
+
+使用方不能混用这两种布局，也不能添加无关的底部控件。`Actions` 接受一个 `Action`，该操作还可以选择性地展开相关菜单项。只读内容请使用 X 关闭按钮，用户必须提交变更时使用 `Actions`，破坏性操作或关键确认则使用 `LayerDialog.Alert`。
+
+`Description` 渲染在固定标题栏内标题的正下方，并成为对话框的无障碍描述。如果没有描述，则由内容区文案来描述该对话框。
+</ComponentSection>
+
+<ComponentSection>
+## 信息型对话框
+`Title` 和 `Description` 始终位于带边框的内容表面内。标题栏在内容滚动时保持可见，并承担唯一的自动 X 关闭操作。当内容滚动超过顶部后，描述会折叠到标题下方，为内容腾出更多空间；回到顶部时又会重新展开。内容边缘的遮罩用于提示内容溢出。
+<ComponentExample demo="LayerDialogInformationalDemo"><LayerDialogInformationalDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 标准操作
+添加 `Actions` 会选定恰好一个 Lark 主操作，并配备一个自动的 **Close** 按钮。在移动端，操作按钮会显示在滚动内容区下方并以细分隔线隔开；在桌面端，它们位于固定底部栏中。使用方不能添加无关的底部控件或额外的行动号召按钮。主操作接受 `variant="primary"`（默认）或 `variant="destructive"`。
+<ComponentExample demo="LayerDialogActionDemo"><LayerDialogActionDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 原生表单
+`Body` 和 `Actions` 是两个独立的插槽，因此原生的 `<form>` 应放在 `Body` 内部，而提交按钮应放在 `Actions` 中。请为表单设置一个 ID，再通过 HTML 的 `form` 属性关联主操作。这样既保留了内置校验能力，也支持不依赖 React state 的非受控表单字段。
+
+<ComponentExample demo="LayerDialogFormDemo"><LayerDialogFormDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 搜索与选择器
+控件可以作为 `Body` 的第一个元素。这里一个没有标签的搜索输入框紧挨在标题栏下方，因此需要为它提供 `aria-label`。内容区会在其内容上方留出空间，避免输入框的边框和焦点环被滚动区域裁切。
+<ComponentExample demo="LayerDialogSearchDemo"><LayerDialogSearchDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 划分内容区域
+在 `LayerDialog.Body` 的各个小节之间使用 `LayerDialog.Separator`。分隔线会贯穿内容区的横向内边距，横跨整个内容表面。
+<ComponentExample demo="LayerDialogSeparatorDemo"><LayerDialogSeparatorDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 多个主操作
+可以通过 `LayerDialog.Action` 的 `menu` 属性传入相关操作。它会在操作旁渲染一个统一的分裂按钮箭头。自动关闭按钮应保持独立。例如，**Save and deploy** 可以展开 **Save as draft**，而不会让底部栏变成三个并列的操作。
+<ComponentExample demo="LayerDialogSplitActionDemo"><LayerDialogSplitActionDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 取消按钮文案
+当存在 `LayerDialog.Actions` 时，LayerDialog 会渲染一个关闭按钮。在移动端它采用次要按钮样式，在桌面端底部栏中采用幽灵按钮样式。其默认标签是 "Close"，`LayerDialog.Alert` 则为 "Cancel"。
+
+仅当该对话框需要更具体的文案时才使用 `dismissLabel`，例如 "Keep editing" 或 "Discard changes"。标签不会改变按钮的行为：它始终用于关闭对话框。
+<ComponentExample demo="LayerDialogCancelDemo"><LayerDialogCancelDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 确认与破坏性操作
+`LayerDialog.Alert` 遵循 Base UI 的警告对话框模式：它提供 `role="alertdialog"`、一个自动的 **Cancel** 按钮、不显示 X 按钮、始终以模态呈现，并阻止点击遮罩和滑动关闭。按 Escape 键仍然可以取消，与 ARIA 警告对话框模式一致。
+当确认操作不可撤销时，请为主操作传入 `variant="destructive"`。对于确认非破坏性但关键步骤的警告，保持默认的主操作样式即可。
+<ComponentExample demo="LayerDialogAlertDemo"><LayerDialogAlertDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 嵌套对话框
+当用户必须确认某个相关操作时，可在父对话框的内容区中嵌套一个 `LayerDialog.Root` 或 `LayerDialog.Alert`。每个对话框都独立地渲染到 portal；Base UI 会让嵌套的抽屉保持在父级之上，并在其关闭时把焦点交还给父级触发器。嵌套抽屉会在父级之上渲染自己的遮罩，因此父级保持完整，但明显处于非激活状态。无需覆盖 z-index。
+<ComponentExample demo="LayerDialogNestedDemo"><LayerDialogNestedDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 进行中的任务
+在异步任务进行期间，`dismissDisabled` 会统一阻止所有由用户发起的关闭操作。通过 `actionsRef.current.close()` 或受控的 `open` 属性进行的程序化关闭仍然有效，因此操作成功后仍可关闭对话框。唯一的主操作拥有独立的加载中或禁用状态。
+<ComponentExample demo="LayerDialogPendingDemo"><LayerDialogPendingDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 清理
+请把清理逻辑放在 `onOpenChange` 中，而不是放在某个关闭按钮的点击处理函数中，这样 X、Close、Escape、遮罩点击和滑动关闭都能触发它。
+<ComponentExample demo="LayerDialogCleanupDemo"><LayerDialogCleanupDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 本地化
+该对话框会渲染两条自身的文案。请使用 `LarkLocaleProvider` 配置它们在应用范围内的默认文案：
+
+- `layerDialog.close` 用于自动的 X 按钮和默认的底部关闭按钮。默认值："Close"。
+- `layerDialog.cancel` 用于 `Alert` 内部默认的底部关闭按钮。
+
+```tsx
+<LarkLocaleProvider
+  translations={{
+    layerDialog: { close: "Schließen", cancel: "Abbrechen" },
+  }}
+>
+  <App />
+</LarkLocaleProvider>
+```
+
+当某个对话框需要自定义文案时，请在 `Content` 上使用 `closeLabel`，或在 `Actions` 上使用 `dismissLabel`；显式传入的属性会覆盖 Provider 的默认值。
+
+## 桌面端宽度
+桌面端对话框默认使用 `size="base"`（576px）。当内容需要其他宽度时，请使用 `sm`（448px）、`lg`（672px）或 `xl`（768px）。移动端对话框在所有尺寸下都保持全宽。
+<ComponentExample demo="LayerDialogSizeDemo"><LayerDialogSizeDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 桌面端位置
+桌面端对话框默认居中。仅当内容更适合顶部对齐时，才使用 `verticalAlign="top"` 覆盖；移动端仍然是底部抽屉。
+<ComponentExample demo="LayerDialogTopAlignDemo"><LayerDialogTopAlignDemo client:load /></ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+## 最大高度
+高度由内容决定，并受视口限制。遵循 Base UI 的内部滚动模式，视口会为每种位置预留垂直留白，弹层填充该空间，因此顶部对齐的对话框永远不会超出底边。超过上限后，只有内容区滚动，标题栏和操作按钮保持固定。移动端抽屉的上限则为视口的 85%。组件没有高度相关属性：使用方只能通过渲染的内容来控制高度。
+<ComponentExample demo="LayerDialogMaxHeightDemo"><LayerDialogMaxHeightDemo client:load /></ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### LayerDialog.Root
+
+<p>
+  控制打开状态。接受 Base UI Drawer 根组件的全部属性，包括 `open`、`defaultOpen`、`onOpenChange`、`modal` 和 `actionsRef`。自身不渲染任何 HTML 元素。
+</p>
+<div class="mb-4 overflow-hidden rounded-lg border border-lark-hairline">
+  <table class="w-full text-sm">
+    <thead class="bg-lark-elevated">
+      <tr>
+        <th class="px-4 py-2 text-left font-medium">属性</th>
+        <th class="px-4 py-2 text-left font-medium">类型</th>
+        <th class="px-4 py-2 text-left font-medium">默认值</th>
+        <th class="px-4 py-2 text-left font-medium">说明</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-lark-hairline">
+      <tr>
+        <td class="px-4 py-2 font-mono text-xs">dismissDisabled</td>
+        <td class="px-4 py-2 font-mono text-xs">boolean</td>
+        <td class="px-4 py-2 font-mono text-xs">false</td>
+        <td class="px-4 py-2 text-lark-subtle">
+          在任务进行期间阻止通过 X、Close、Escape、遮罩点击和滑动关闭对话框。程序化关闭始终不会被阻止。
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### LayerDialog.Alert
+
+<p>
+  属性与 `LayerDialog.Root` 相同。强制使用 `modal`，阻止指针点击关闭，渲染为 `role="alertdialog"`，并且必须搭配 `LayerDialog.Actions`。
+</p>
+
+### LayerDialog.Trigger
+
+<p>点击时打开对话框的按钮。</p>
+<PropsTable component="LayerDialog.Trigger" />
+
+### LayerDialog.Content
+
+<p>将遮罩和弹层渲染到 portal，并校验组合结构是否合法。</p>
+<PropsTable component="LayerDialog.Content" />
+
+### LayerDialog.Title
+
+<p>为对话框提供无障碍标签的标题。</p>
+<PropsTable component="LayerDialog.Title" />
+
+### LayerDialog.Description
+
+<p>
+  标题下方的可选补充文案，会作为对话框的无障碍描述。
+</p>
+<PropsTable component="LayerDialog.Description" />
+
+### LayerDialog.Body
+
+<p>可滚动的内容区域。</p>
+<PropsTable component="LayerDialog.Body" />
+
+### LayerDialog.Separator
+
+<p>内容区各小节之间的整幅分隔线。</p>
+<PropsTable component="LayerDialog.Separator" />
+
+### LayerDialog.Actions
+
+<p>
+  底部栏，包含一个自动关闭按钮和恰好一个 `LayerDialog.Action`。
+</p>
+<PropsTable component="LayerDialog.Actions" />
+
+### LayerDialog.Action
+
+<p>
+  主操作。渲染为 Lark `Button`，接受 `onClick`、`disabled`、`type` 等标准按钮属性。通过 `menu` 传入菜单项，即可渲染配套的分裂按钮菜单。
+</p>
+<PropsTable component="LayerDialog.Action" />
+
+</ComponentSection>

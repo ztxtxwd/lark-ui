@@ -1,0 +1,146 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Tooltip 工具提示"
+description: "当元素获得键盘焦点或鼠标悬停在其上时，显示与该元素相关信息的弹出层。"
+sourceFile: "components/tooltip"
+baseUIComponent: "tooltip"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  TooltipHeroDemo,
+  TooltipBasicDemo,
+  TooltipMultipleDemo,
+  TooltipDelayDemo,
+  TooltipOverflowDemo,
+} from "~/components/demos/TooltipDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="TooltipHeroDemo">
+    <TooltipHeroDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Tooltip, TooltipProvider } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Tooltip, TooltipProvider } from "@lark-ui/core/components/tooltip";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Tooltip, Button } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Tooltip content="Tooltip text" render={<Button />}>
+      Hover me
+    </Tooltip>
+  );
+}
+```
+
+如需在多个工具提示（Tooltip）之间共享延迟分组，请参见 [TooltipProvider](#tooltipprovider)。
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础工具提示
+
+<ComponentExample demo="TooltipBasicDemo">
+  <TooltipBasicDemo client:load />
+</ComponentExample>
+
+### 多个工具提示
+
+<ComponentExample demo="TooltipMultipleDemo">
+  <TooltipMultipleDemo client:load />
+</ComponentExample>
+
+### 超长内容 / 溢出
+
+<p>
+  内容较长的工具提示会通过 Base UI 的 Positioner 提供的 `--available-width`，
+  自动把宽度限制在视口的可用空间内。悬停在边缘按钮上，即可看到工具提示换行而不是溢出视口。
+</p>
+<ComponentExample demo="TooltipOverflowDemo">
+  <TooltipOverflowDemo client:load />
+</ComponentExample>
+
+### 延迟控制
+
+<p>
+  使用 `delay` 控制打开前的等待时长（默认 600ms），
+  使用 `closeDelay` 控制关闭前的等待时长（默认 0ms）。
+</p>
+<ComponentExample demo="TooltipDelayDemo">
+  <TooltipDelayDemo client:load />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* TooltipProvider */}
+
+<ComponentSection>
+## TooltipProvider
+
+<p>
+  `TooltipProvider` 会把多个工具提示分组在一起，这样在显示过第一个工具提示之后，
+  切换到其他工具提示时就会跳过打开延迟。请在应用根节点或布局中放置一次即可——不要为每个单独的 `Tooltip` 包裹。
+</p>
+
+```tsx
+// Wrap your app or layout once
+<TooltipProvider>
+  <App />
+</TooltipProvider>
+
+// Then use Tooltip anywhere inside
+<Tooltip content="Add" render={<Button shape="square" icon={PlusIcon} />} />
+```
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Tooltip
+
+<PropsTable component="Tooltip" />
+
+### TooltipProvider
+
+<PropsTable component="Tooltip.Provider" />
+
+</ComponentSection>

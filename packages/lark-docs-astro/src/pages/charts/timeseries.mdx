@@ -1,0 +1,257 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Timeseries Chart 时间序列图表"
+description: "用于展示基于时间的数据的专用图表。"
+sourceFile: "components/chart"
+---
+
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import {
+  BasicLineChartDemo,
+  IntegerYAxisChartDemo,
+  BarChartDemo,
+  ReferenceMarkersChartDemo,
+  ThresholdsChartDemo,
+  CustomAxisLabelFormatDemo,
+  GradientLineChartDemo,
+  IncompleteDataChartDemo,
+  LegendHighlightDemo,
+  LegendOnClickDemo,
+  LoadingChartDemo,
+  LoadingBarChartDemo,
+  TimeRangeSelectionChartDemo,
+  ChartExampleDemo,
+  TooltipFollowCursorDemo,
+  TooltipBoundaryDemo,
+} from "~/components/demos/Chart/ChartDemo";
+
+<p>
+  时间序列图表是用于展示基于时间的数据的专用图表。
+  每个数据点都是一个 <code>[timestamp_in_ms, value]</code> 元组。
+</p>
+
+<ComponentSection>
+
+## 基础折线图
+
+<p>一个简单的折线图，用于展示随时间变化的多条数据系列。</p>
+
+  <ComponentExample demo="BasicLineChartDemo">
+    <BasicLineChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 离散计数数据
+
+<p>
+  对于请求次数等离散值，请设置 <code>yAxisMinInterval={1}</code>。这可以避免
+  y 轴出现小数刻度，同时保持速率等连续值的默认坐标轴行为不变。
+</p>
+
+  <ComponentExample demo="IntegerYAxisChartDemo">
+    <IntegerYAxisChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 参考标记
+
+<p>
+  使用 <code>markers</code> 属性可在特定时间戳处渲染垂直参考线，例如部署、
+  发布或配置变更。标记可以包含简短标签、工具提示（Tooltip）描述、颜色和
+  线条样式。
+</p>
+
+  <ComponentExample demo="ReferenceMarkersChartDemo">
+    <ReferenceMarkersChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 阈值
+
+<p>
+  使用 <code>thresholds</code> 属性可在数值轴上渲染水平参考线，例如内存上限
+  或配额边界。阈值包含数值和颜色，并可选地附带标签。
+</p>
+
+  <ComponentExample demo="ThresholdsChartDemo">
+    <ThresholdsChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 自定义时间戳与数值格式
+
+<p>
+  使用 <code>xAxisTickFormat</code> 自定义 x 轴标签，使用
+  <code>tooltipTimestampFormat</code> 自定义标准工具提示和标记工具提示中的
+  时间戳。两者接收的都是以毫秒为单位的原始时间戳，因此可以统一套用用户
+  所选的时区。未提供格式化函数时，工具提示中的时间戳会使用浏览器的区域
+  设置和时区。
+</p>
+
+  <ComponentExample demo="CustomAxisLabelFormatDemo">
+    <CustomAxisLabelFormatDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 渐变填充
+
+<p>
+  将 <code>gradient</code> 设置为 <code>true</code> 即可在每条折线系列下方
+  渲染垂直渐变填充。填充色从顶部的系列颜色渐变到底部的透明，让图表呈现出
+  精致的面积图效果，同时不失单条折线的清晰度。
+</p>
+
+  <ComponentExample demo="GradientLineChartDemo">
+    <GradientLineChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 不完整数据
+
+<p>
+  使用 <code>incomplete</code> 属性可标记数据可能不完整或仍在采集中的区域。
+</p>
+
+  <ComponentExample demo="IncompleteDataChartDemo">
+    <IncompleteDataChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 时间范围选择
+
+<p>
+  通过提供 <code>onTimeRangeChange</code> 回调即可启用时间范围选择。用户
+  可以在图表上点击并拖动来选择时间范围。
+</p>
+
+  <ComponentExample demo="TimeRangeSelectionChartDemo">
+    <TimeRangeSelectionChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 工具提示页脚
+
+<p>
+  使用 <code>tooltipFooter</code> 属性可在标准系列工具提示的数值下方添加
+  简短的补充说明。它适用于所有的时间序列图表配置，包括折线图、柱状图、
+  渐变图、阈值图和自定义坐标轴图表。
+</p>
+
+  <ComponentExample demo="ChartExampleDemo">
+    <ChartExampleDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 工具提示光标跟随
+
+<p>
+  使用 <code>tooltipFollowCursor</code> 属性可控制工具提示沿哪个坐标轴跟随
+  光标。默认值为 <code>"both"</code>，即自由跟随光标。设为 <code>"x"</code>
+  则可获得类似 Recharts 的轴锁定工具提示，仅沿水平方向移动。
+</p>
+
+  <ComponentExample demo="TooltipFollowCursorDemo">
+    <TooltipFollowCursorDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 工具提示边界
+
+<p>
+  使用 <code>tooltipBoundary</code> 属性可将工具提示限制在指定的容器元素内。
+  默认情况下，工具提示不会溢出任何裁剪祖先元素（滚动容器、视口）。传入
+  一个 DOM 元素可以进一步收窄范围——当图表位于卡片或面板内部、不希望工具
+  提示溢出时非常有用。
+</p>
+
+  <ComponentExample demo="TooltipBoundaryDemo">
+    <TooltipBoundaryDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 柱状图
+
+<p>
+  将 <code>type="bar"</code> 即可将系列渲染为堆叠柱状而非折线。其他所有
+  属性——坐标轴、工具提示、颜色——行为完全一致。
+</p>
+
+  <ComponentExample demo="BarChartDemo">
+    <BarChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 图例高亮
+
+<p>
+  悬停某个图例项时，图表上对应的系列会被高亮，其他系列则淡出。可在{" "}
+  <code>onPointerEnter</code> 和{" "}
+  <code>onPointerLeave</code> 上配合 <code>ChartLegend</code> 项使用，并结合图表 ref 上的{" "}
+  <code>dispatchAction</code> 实现。
+</p>
+
+  <ComponentExample demo="LegendHighlightDemo">
+    <LegendHighlightDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 图例点击
+
+<p>
+  点击 <code>ChartLegend</code> 中的某个项会单独显示该系列，只呈现它并
+  隐藏其余系列。再次点击已单独显示的系列即可恢复全部系列。
+</p>
+
+  <ComponentExample demo="LegendOnClickDemo">
+    <LegendOnClickDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 加载状态
+
+<p>
+  将 <code>loading</code> 设置为 <code>true</code> 即可在数据加载期间显示
+  与图表 <code>type</code> 相匹配的骨架屏。
+</p>
+
+### 折线图
+
+  <ComponentExample demo="LoadingChartDemo">
+    <LoadingChartDemo client:only="react" />
+  </ComponentExample>
+
+### 柱状图
+
+  <ComponentExample demo="LoadingBarChartDemo">
+    <LoadingBarChartDemo client:only="react" />
+  </ComponentExample>
+</ComponentSection>

@@ -1,0 +1,176 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Resource List 资源列表"
+description: "一个用于资源列表页面的布局组件，支持可选的侧边栏内容。"
+sourceFile: "blocks/resource-list"
+---
+
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import Callout from "~/components/docs/Callout.astro";
+import {
+  ResourceListBasicDemo,
+  ResourceListWithUsageDemo,
+  ResourceListCompleteDemo,
+} from "~/components/demos/ResourceListDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="ResourceListCompleteDemo">
+    <ResourceListCompleteDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+  <p>
+    ResourceListPage 是一个<strong>区块（block）</strong>——通过命令行工具（CLI）安装、
+    由你拥有且可自行定制的组件。与常规组件不同，区块会被复制到你的项目中，
+    因此你可以完全掌控代码。
+  </p>
+  <div class="space-y-4">
+    <div>
+      <p>**1. 初始化 Lark 配置（仅首次需要）**</p>
+
+```bash
+npx @lark-ui/core init
+```
+
+</div>
+<div>
+<p>**2. 安装区块**</p>
+
+```bash
+npx @lark-ui/core add ResourceListPage
+```
+
+</div>
+<div>
+<p>**3. 从本地路径导入**</p>
+
+```tsx
+// The path depends on your lark-ui.json blocksDir setting
+// Default: src/components/lark/
+import { ResourceListPage } from "./components/lark/resource-list/resource-list";
+```
+
+    </div>
+
+  </div>
+  <Callout type="info">
+    <strong>为什么要用区块？</strong> 区块让你完全拥有代码，可以按自身需求定制
+    布局。对于经常需要按项目定制的页面级模式，它们非常合适。
+  </Callout>
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { ResourceListPage } from "./components/lark/resource-list/resource-list";
+import { Surface } from "@lark-ui/core";
+import { DatabaseIcon } from "@phosphor-icons/react";
+
+export default function DatabasesPage() {
+  return (
+    <ResourceListPage
+      title="Databases"
+      description="Manage your database instances and configurations"
+      icon={<DatabaseIcon size={32} className="text-lark-strong" />}
+    >
+      <Surface className="p-6">{/* Your resource list content */}</Surface>
+    </ResourceListPage>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础
+
+<p>一个最小的资源列表页面，包含标题、描述和图标。</p>
+<ComponentExample demo="ResourceListBasicDemo">
+  <ResourceListBasicDemo client:visible />
+</ComponentExample>
+
+### 带使用侧边栏
+
+  <p>加入一个包含使用示例或快速入门指南的侧边栏。</p>
+  <ComponentExample demo="ResourceListWithUsageDemo">
+    <ResourceListWithUsageDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-lark-hairline">
+          <th class="px-4 py-3 text-left font-semibold">属性</th>
+          <th class="px-4 py-3 text-left font-semibold">类型</th>
+          <th class="px-4 py-3 text-left font-semibold">描述</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">title</td>
+          <td class="px-4 py-3 font-mono text-xs">string</td>
+          <td class="px-4 py-3">显示在顶部的页面标题</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">description</td>
+          <td class="px-4 py-3 font-mono text-xs">string</td>
+          <td class="px-4 py-3">标题下方的页面描述</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">icon</td>
+          <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+          <td class="px-4 py-3">显示在标题旁的图标</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">usage</td>
+          <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+          <td class="px-4 py-3">
+            用于放置使用示例或快速入门指南的侧边栏内容
+          </td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">additionalContent</td>
+          <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+          <td class="px-4 py-3">
+            额外的侧边栏内容（例如资源、链接）
+          </td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">children</td>
+          <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+          <td class="px-4 py-3">资源列表的主体内容区域</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">className</td>
+          <td class="px-4 py-3 font-mono text-xs">string</td>
+          <td class="px-4 py-3">额外的 CSS 类名</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ComponentSection>

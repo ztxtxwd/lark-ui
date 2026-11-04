@@ -1,0 +1,107 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Sensitive Input 敏感信息输入框"
+description: "用于 API 密钥、密码等敏感值的掩码输入框。点击即可显示明文。"
+sourceFile: "components/sensitive-input"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  SensitiveInputDemo,
+  SensitiveInputSizesDemo,
+  SensitiveInputControlledDemo,
+  SensitiveInputStatesDemo,
+} from "~/components/demos/SensitiveInputDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="SensitiveInputDemo">
+    <SensitiveInputDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { SensitiveInput } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { SensitiveInput } from "@lark-ui/core/components/sensitive-input";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { SensitiveInput } from "@lark-ui/core";
+
+export default function Example() {
+  return <SensitiveInput label="Secret" defaultValue="my-secret-key" />;
+}
+```
+
+</ComponentSection>
+
+{/* 尺寸 */}
+
+<ComponentSection>
+
+## 尺寸
+
+  <p>敏感信息输入框（SensitiveInput）支持多种尺寸，以适应不同的使用场景。</p>
+  <ComponentExample demo="SensitiveInputSizesDemo">
+    <SensitiveInputSizesDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 受控 */}
+
+<ComponentSection>
+
+## 受控
+
+  <p>使用受控模式可以完全控制输入框的值。</p>
+  <ComponentExample demo="SensitiveInputControlledDemo">
+    <SensitiveInputControlledDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 状态 */}
+
+<ComponentSection>
+
+## 状态
+
+  <p>
+    多种输入状态，包括错误、禁用、只读以及带描述。
+  </p>
+  <ComponentExample demo="SensitiveInputStatesDemo">
+    <SensitiveInputStatesDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="SensitiveInput" />
+</ComponentSection>

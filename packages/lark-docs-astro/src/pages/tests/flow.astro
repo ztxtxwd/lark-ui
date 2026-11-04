@@ -1,0 +1,178 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  FlowBasicDemo,
+  FlowVerticalDemo,
+  FlowVerticalParallelDemo,
+  FlowParallelDemo,
+  FlowCustomContentDemo,
+  FlowComplexDemo,
+  FlowAnchorDemo,
+  FlowCenteredDemo,
+  FlowPanningDemo,
+  FlowDisabledDemo,
+  FlowParallelAlignEndDemo,
+  FlowParallelNestedListDemo,
+  FlowSequentialParallelDemo,
+  FlowExpandableDemo,
+  FlowDynamicNodeDemo,
+} from "../../components/demos/FlowDemo";
+---
+
+<BaseLayout title="流程图测试页">
+  <div class="p-16 space-y-12 max-w-[1000px] mx-auto mb-64">
+    <h1 class="text-2xl font-bold text-lark-strong">流程图示例组件</h1>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowBasicDemo</h2>
+      <p class="text-lark-subtle">带顺序节点的基本流程图</p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowBasicDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowVerticalDemo</h2>
+      <p class="text-lark-subtle">
+        带顺序节点的纵向流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowVerticalDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowVerticalParallelDemo
+      </h2>
+      <p class="text-lark-subtle">
+        带并行分支的纵向流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowVerticalParallelDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowParallelDemo</h2>
+      <p class="text-lark-subtle">带并行分支的流程图</p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowParallelDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowCustomContentDemo
+      </h2>
+      <p class="text-lark-subtle">
+        使用 render prop 自定义节点样式的流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowCustomContentDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowComplexDemo</h2>
+      <p class="text-lark-subtle">复杂流程图示例</p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowComplexDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowAnchorDemo</h2>
+      <p class="text-lark-subtle">带自定义锚点的流程图</p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowAnchorDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowCenteredDemo</h2>
+      <p class="text-lark-subtle">
+        节点垂直居中的流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowCenteredDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowPanningDemo</h2>
+      <p class="text-lark-subtle">演示平移操作的大型流程图</p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowPanningDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">FlowDisabledDemo</h2>
+      <p class="text-lark-subtle">带禁用节点的流程图</p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowDisabledDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowParallelAlignEndDemo
+      </h2>
+      <p class="text-lark-subtle">
+        带右对齐并行节点的流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowParallelAlignEndDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowParallelNestedListDemo
+      </h2>
+      <p class="text-lark-subtle">
+        带并行分支（其中包含嵌套节点序列）的流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowParallelNestedListDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowSequentialParallelDemo
+      </h2>
+      <p class="text-lark-subtle">
+        依次排列两个并行组的流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowSequentialParallelDemo client:visible />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowDynamicNodeDemo
+      </h2>
+      <p class="text-lark-subtle">
+        可动态添加和移除节点的流程图
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowDynamicNodeDemo client:load />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold text-lark-default">
+        FlowExpandableDemo
+      </h2>
+      <p class="text-lark-subtle">
+        带可展开节点的并行组流程图——点击节点即可展开更多内容
+      </p>
+      <div class="p-4 rounded-lg border border-lark-hairline bg-lark-base">
+        <FlowExpandableDemo client:visible />
+      </div>
+    </section>
+  </div>
+</BaseLayout>

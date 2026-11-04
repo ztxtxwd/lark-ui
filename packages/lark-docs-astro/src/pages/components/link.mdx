@@ -1,0 +1,389 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Link 链接"
+description: "用于行内文本链接的带样式锚点组件，支持多种变体和组合式用法。"
+sourceFile: "components/link"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import {
+  LinkBasicDemo,
+  LinkInParagraphDemo,
+  LinkExternalDemo,
+  LinkCurrentVariantDemo,
+  LinkRenderDemo,
+} from "~/components/demos/LinkDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="LinkBasicDemo">
+    <LinkBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Link } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Link } from "@lark-ui/core/components/link";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+### 基础链接
+
+  <p>
+    默认的 Link 组件会渲染带下划线、使用主色样式的锚点元素。
+  </p>
+
+```tsx
+import { Link } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <p>
+      Read our <Link href="/docs">documentation</Link> for more details.
+    </p>
+  );
+}
+```
+
+### 外部链接
+
+<p>
+  使用 `Link.ExternalIcon` 子组件来标识会在新标签页打开的链接。
+</p>
+
+```tsx
+import { Link } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Link
+      href="https://cloudflare.com"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Visit Lark <Link.ExternalIcon />
+    </Link>
+  );
+}
+```
+
+### 框架集成（LinkProvider）
+
+<p>
+  如需在全应用范围内接入路由，请在应用根节点配置 `LinkProvider`。你的包装组件会接收到 `href`，并负责把它桥接到路由的 API。这样工程师可以在任何地方使用 `<Link href="...">`，无需关心路由内部实现。
+</p>
+
+```tsx
+import { forwardRef } from "react";
+import { LinkProvider } from "@lark-ui/core";
+import { Link as RouterLink } from "react-router-dom";
+
+// Your app's wrapper maps href to the router's navigation prop
+// and handles external URLs with a plain <a>
+const AppLink = forwardRef(({ href, to, ...rest }, ref) => {
+  const destination = href ?? to;
+  const isExternal =
+    destination?.startsWith("http") &&
+    new URL(destination).origin !== window.location.origin;
+
+  if (isExternal) {
+    return <a ref={ref} href={destination} {...rest} />;
+  }
+  return <RouterLink ref={ref} to={destination} {...rest} />;
+});
+
+// Wrap your app once
+export function App() {
+  return (
+    <LinkProvider component={AppLink}>
+      {/* All <Link href="..."> calls go through AppLink */}
+      <YourApp />
+    </LinkProvider>
+  );
+}
+```
+
+### 使用 render 属性组合
+
+<p>
+  在需要直接控制渲染元素的特殊场景下，请使用 `render` 属性。它会完全绕过 `LinkProvider`——其余所有属性（`href`、`target`、`className` 等）都会自动合并到所提供的元素上。
+</p>
+
+```tsx
+import { Link } from "@lark-ui/core";
+import { Link as RouterLink } from "react-router-dom";
+
+export default function Example() {
+  return (
+    <>
+      {/* Force a specific router link (bypasses LinkProvider) */}
+      <Link render={<RouterLink to="/dashboard" />} variant="inline">
+        Dashboard
+      </Link>
+
+      {/* Force a plain anchor (bypasses LinkProvider) */}
+      <Link render={<a />} href="https://example.com" target="_blank" rel="noopener noreferrer">
+        External Site <Link.ExternalIcon />
+      </Link>
+    </>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 段落中的行内链接
+
+<p>链接在段落文本中自然排版，下划线偏移量处理得当。</p>
+<ComponentExample demo="LinkInParagraphDemo">
+  <LinkInParagraphDemo client:visible />
+</ComponentExample>
+
+### 带图标的外链
+
+<p>
+  使用 `Link.ExternalIcon` 在视觉上标识会跳转到站外的链接。
+</p>
+<ComponentExample demo="LinkExternalDemo">
+  <LinkExternalDemo client:visible />
+</ComponentExample>
+
+### current 变体（颜色继承）
+
+<p>
+  `current` 变体会继承父级的颜色，适合用在告警等带背景色的场景中的链接。
+</p>
+<ComponentExample demo="LinkCurrentVariantDemo">
+  <LinkCurrentVariantDemo client:visible />
+</ComponentExample>
+
+### 使用 render 属性组合
+
+<p>
+  `render` 属性可以把 Link 的样式组合到任意元素上，从而与框架的路由组件集成。
+</p>
+<ComponentExample demo="LinkRenderDemo">
+  <LinkRenderDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Link 属性
+
+<p>继承原生锚点元素的全部属性。</p>
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">默认值</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">variant</td>
+        <td class="px-4 py-3 font-mono text-xs">
+          "inline" | "current" | "plain"
+        </td>
+        <td class="px-4 py-3 font-mono text-xs">"inline"</td>
+        <td class="px-4 py-3 text-xs">视觉样式变体</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">render</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactElement</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">
+          用于渲染并合并 Link 属性的元素
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">href</td>
+        <td class="px-4 py-3 font-mono text-xs">string</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">
+          链接的目标 URL。所有链接（内部和外部）都应使用它。可配置 `LinkProvider` 把 `href` 桥接到你的路由。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">to</td>
+        <td class="px-4 py-3 font-mono text-xs">string</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">
+          <strong>已废弃。</strong>请改用 `href`。该属性将在未来的主版本中移除。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">className</td>
+        <td class="px-4 py-3 font-mono text-xs">string</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">额外的 CSS 类名</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">children</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">链接内容</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### 变体
+
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">变体</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+        <th class="px-4 py-3 text-left font-semibold">使用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">inline</td>
+        <td class="px-4 py-3 text-xs">主色，带下划线</td>
+        <td class="px-4 py-3 text-xs">行内文本链接的默认样式</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">current</td>
+        <td class="px-4 py-3 text-xs">
+          继承父级文字颜色，带下划线
+        </td>
+        <td class="px-4 py-3 text-xs">
+          带背景色的场景中的链接（告警、错误）
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">plain</td>
+        <td class="px-4 py-3 text-xs">主色，不带下划线</td>
+        <td class="px-4 py-3 text-xs">导航链接、菜单、页脚</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Link.ExternalIcon
+
+<p>
+  用于标识外链的 SVG 图标组件。接受所有 SVG 元素属性。
+</p>
+
+```tsx
+<Link href="https://example.com" target="_blank" rel="noopener noreferrer">
+  External Site <Link.ExternalIcon />
+</Link>
+```
+
+</ComponentSection>
+
+{/* Design Guidelines */}
+
+<ComponentSection>
+
+## 设计规范
+
+  <div class="space-y-4 text-sm">
+    <div>
+
+      ### 各变体的适用场景
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>
+          <strong>inline</strong>：正文文本中链接的默认选择
+        </li>
+        <li>
+          <strong>current</strong>：告警栏、通告栏或其他带背景色容器中的链接
+        </li>
+        <li>
+          <strong>plain</strong>：导航菜单、页脚，或不希望出现下划线的场景
+        </li>
+      </ul>
+    </div>
+    <div>
+
+      ### 外链标识
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>对于在新标签页打开的链接，务必使用 `Link.ExternalIcon`</li>
+        <li>
+          出于安全考虑，设置 `target="_blank"` 和 `rel="noopener noreferrer"`
+        </li>
+        <li>
+          该图标能直观提示用户将离开当前站点
+        </li>
+      </ul>
+    </div>
+    <div>
+
+      ### 框架集成
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>
+          在应用根节点配置 `LinkProvider`，以接入客户端路由
+        </li>
+        <li>
+          你的包装组件会接收到 `href`，并将其映射到路由的导航属性（例如 React Router 的 `to`）
+        </li>
+        <li>
+          包装组件应通过渲染普通的 `&lt;a&gt;` 来处理外部 URL，而不是走路由跳转
+        </li>
+        <li>
+          在需要直接控制渲染元素的特殊场景下，可用 `render` 属性作为兜底方案
+        </li>
+        <li>
+          `to` 属性已废弃——所有链接目标都请使用 `href`
+        </li>
+      </ul>
+    </div>
+    <div>
+
+      ### 无障碍
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>链接默认可通过键盘聚焦</li>
+        <li>
+          外链图标带有 `aria-hidden="true"`——请为屏幕阅读器补充说明性文本
+        </li>
+        <li>确保所有变体都有足够的颜色对比度</li>
+        <li>使用描述性的链接文案（避免"点击这里"这类表述）</li>
+      </ul>
+    </div>
+  </div>
+</ComponentSection>

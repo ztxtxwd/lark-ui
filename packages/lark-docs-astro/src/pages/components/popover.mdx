@@ -1,0 +1,321 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Popover 气泡卡片"
+description: "锚定在触发元素上的无障碍弹出层，用于展示菜单、表单或补充信息等富内容。"
+sourceFile: "components/popover"
+baseUIComponent: "popover"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  PopoverHeroDemo,
+  PopoverBasicDemo,
+  PopoverLegacyContentDemo,
+  PopoverOverflowDemo,
+  PopoverCssVariablesDemo,
+  PopoverWithCloseDemo,
+  PopoverPositionDemo,
+  PopoverCustomContentDemo,
+  PopoverOpenOnHoverDemo,
+  PopoverVirtualAnchorDemo,
+} from "~/components/demos/PopoverDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="PopoverHeroDemo">
+    <PopoverHeroDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Popover } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Popover } from "@lark-ui/core/components/popover";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Popover, Button } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Popover.Root>
+      <Popover.Trigger render={<Button />}>Open</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner>
+          <Popover.Popup>
+            <Popover.Arrow />
+            <Popover.Title>Popover Title</Popover.Title>
+            <Popover.Description>Popover content goes here.</Popover.Description>
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 气泡卡片与工具提示 */}
+
+<ComponentSection>
+
+## 气泡卡片与工具提示
+
+  <p>
+    虽然气泡卡片也可以通过悬停触发（使用 `openOnHover`），但它的用途与工具提示不同。
+    了解两者各自的适用场景，对无障碍和用户体验都很重要。
+  </p>
+  <div class="overflow-hidden rounded-lg border border-lark-hairline">
+    <table class="w-full text-sm">
+      <thead class="bg-lark-elevated">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold"></th>
+          <th class="px-4 py-3 text-left font-semibold">工具提示</th>
+          <th class="px-4 py-3 text-left font-semibold">气泡卡片</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-lark-hairline">
+        <tr>
+          <td class="px-4 py-3 font-medium">用途</td>
+          <td class="px-4 py-3 text-lark-subtle">
+            用于标识的简短、非交互式文本标签
+          </td>
+          <td class="px-4 py-3 text-lark-subtle">
+            富内容、可交互的内容容器
+          </td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-medium">内容</td>
+          <td class="px-4 py-3 text-lark-subtle">仅纯文本</td>
+          <td class="px-4 py-3 text-lark-subtle">
+            任意内容：链接、按钮、表单、图片
+          </td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-medium">触发方式</td>
+          <td class="px-4 py-3 text-lark-subtle">悬停或聚焦</td>
+          <td class="px-4 py-3 text-lark-subtle">点击（默认）或悬停</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-medium">ARIA 角色</td>
+          <td class="px-4 py-3">
+            `role="tooltip"`
+          </td>
+          <td class="px-4 py-3">
+            `aria-haspopup`
+          </td>
+        </tr>
+        <tr>
+          <td class="px-4 py-3 font-medium">键盘</td>
+          <td class="px-4 py-3 text-lark-subtle">不可聚焦</td>
+          <td class="px-4 py-3 text-lark-subtle">
+            打开时焦点移入内部并被锁定
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <strong>使用工具提示（Tooltip）</strong>当你需要为图标按钮添加标签或提供简短说明时。
+    <strong>使用气泡卡片（Popover）</strong>当用户需要与内部内容交互时，例如点击链接、填写表单，或通过按钮关闭。
+  </p>
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础气泡卡片
+
+<ComponentExample demo="PopoverBasicDemo">
+  <PopoverBasicDemo client:load />
+</ComponentExample>
+
+### 已弃用的 Popover.Content 兼容性
+
+<p>
+  `Popover.Content` 已被弃用，但仍然保留，以免现有气泡卡片失效。它把 `Portal`、`Positioner`、
+  `Popup` 和 `Arrow` 合并为一个组件，并且仅通过不透明度实现平滑淡入，不带缩放或位移动画。
+  新的气泡卡片应像基础示例中那样组合各个独立部分。
+</p>
+<ComponentExample demo="PopoverLegacyContentDemo">
+  <PopoverLegacyContentDemo client:load />
+</ComponentExample>
+
+### 可滚动内容
+
+<p>
+  当箭头和标题需要保持固定时，请把溢出的内容放在内部滚动容器中。已弃用的 `Popover.Content`
+  上现有的溢出样式仍然受支持，因为它只使用淡入淡出过渡。
+</p>
+<ComponentExample demo="PopoverOverflowDemo">
+  <PopoverOverflowDemo client:load />
+</ComponentExample>
+
+### CSS 变量
+
+<p>
+  Base UI 通过 `--available-height` 暴露触发元素与视口边缘之间的可用空间。此示例先把弹层的
+  首选高度设为 320px，再将该变量用作最大高度，这样空间不足时弹层会收缩，内部内容随之滚动。
+</p>
+<ComponentExample demo="PopoverCssVariablesDemo">
+  <PopoverCssVariablesDemo client:load />
+</ComponentExample>
+
+### 带关闭按钮
+
+<ComponentExample demo="PopoverWithCloseDemo">
+  <PopoverWithCloseDemo client:load />
+</ComponentExample>
+
+### 定位
+
+<p>
+  在 `Popover.Positioner` 上使用 `side` 属性，可以控制气泡卡片相对于触发元素出现的位置。
+</p>
+<ComponentExample demo="PopoverPositionDemo">
+  <PopoverPositionDemo client:load />
+</ComponentExample>
+
+### 自定义内容
+
+<p>
+  气泡卡片可以包含任意内容，包括带头像、按钮等的自定义布局。
+</p>
+<ComponentExample demo="PopoverCustomContentDemo">
+  <PopoverCustomContentDemo client:load />
+</ComponentExample>
+
+### 悬停打开
+
+<p>
+  在触发元素上使用 `openOnHover`，可以在用户悬停时打开气泡卡片。你还可以用 `delay` 指定
+  气泡卡片出现前的延迟毫秒数。
+</p>
+<ComponentExample demo="PopoverOpenOnHoverDemo">
+  <PopoverOpenOnHoverDemo client:load />
+</ComponentExample>
+
+### 虚拟锚点
+
+<p>
+  在 `Popover.Positioner` 上使用 `anchor` 属性，可以让气泡卡片相对触发元素之外的元素定位，
+  或相对一个虚拟点（例如 `getBoundingClientRect()` 返回的 `DOMRect`）定位。当触发元素和期望的
+  锚点位于不同的组件树中时，这会非常有用。
+</p>
+<ComponentExample demo="PopoverVirtualAnchorDemo">
+  <PopoverVirtualAnchorDemo client:load />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Popover.Root
+
+<p>管理气泡卡片打开状态的根组件。</p>
+<PropsTable component="Popover" />
+
+### Popover.Trigger
+
+<p>
+  点击时打开气泡卡片的按钮。使用 `render` 可渲染你自己的元素。
+</p>
+<PropsTable component="Popover.Trigger" />
+
+### Popover.Portal
+
+<p>
+  在应用的 DOM 层级之外渲染气泡卡片。默认使用 `LarkPortalProvider` 提供的容器，也可以通过
+  `container` 属性覆盖。
+</p>
+<PropsTable component="Popover.Portal" />
+
+### Popover.Backdrop
+
+<p>渲染在气泡卡片后方的可选遮罩层。</p>
+<PropsTable component="Popover.Backdrop" />
+
+### Popover.Positioner
+
+<p>
+  相对触发元素或 `anchor` 定位弹层。使用 `side`、`align` 及其偏移量属性来控制位置。
+</p>
+<PropsTable component="Popover.Positioner" />
+
+### Popover.Popup
+
+<p>
+  带样式的弹层容器。请将 `Popover.Arrow` 和气泡卡片内容直接放在其中。
+</p>
+<PropsTable component="Popover.Popup" />
+
+### Popover.Arrow
+
+<p>指向气泡卡片锚点的可选箭头。</p>
+<PropsTable component="Popover.Arrow" />
+
+### Popover.Viewport
+
+<p>
+  当同一个弹层由多个触发元素共享时，用于为内容切换添加动画的视口。普通气泡卡片或滚动内容
+  不需要它。
+</p>
+<PropsTable component="Popover.Viewport" />
+
+### Popover.Content
+
+<p>
+  已弃用的兼容包装组件，合并了 `Portal`、`Positioner`、`Popup` 和 `Arrow`。现有用法仍然
+  受支持，但新代码应组合上面展示的各个独立部分。
+</p>
+<PropsTable component="Popover.Content" />
+
+### Popover.Title
+
+<p>为气泡卡片提供标签的标题，用于无障碍。</p>
+<PropsTable component="Popover.Title" />
+
+### Popover.Description
+
+<p>为气泡卡片内容提供补充说明的段落。</p>
+<PropsTable component="Popover.Description" />
+
+### Popover.Close
+
+<p>
+  点击时关闭气泡卡片的按钮。使用 `render` 可渲染你自己的元素。
+</p>
+<PropsTable component="Popover.Close" />
+
+</ComponentSection>

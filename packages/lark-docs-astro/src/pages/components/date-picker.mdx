@@ -1,0 +1,242 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "DatePicker 日期选择器"
+description: "支持单选、多选和范围选择模式的日期选择日历。"
+sourceFile: "components/date-picker"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  DatePickerSingleDemo,
+  DatePickerMultipleDemo,
+  DatePickerRangeDemo,
+  DatePickerRangeMinMaxDemo,
+  DatePickerDropdownCaptionDemo,
+  DatePickerPopoverDemo,
+  DatePickerRangePopoverDemo,
+  DatePickerRangeWithPresetsDemo,
+  DatePickerDisabledWithFooterDemo,
+} from "~/components/demos/DatePickerDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="DatePickerSingleDemo">
+    <DatePickerSingleDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { DatePicker, type DateRange } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import {
+  DatePicker,
+  type DateRange,
+} from "@lark-ui/core/components/date-picker";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+<p>
+  日期选择器（DatePicker）支持三种选择模式：`single`、`multiple` 和 `range`。
+</p>
+
+```tsx
+import { useState } from "react";
+import { DatePicker } from "@lark-ui/core";
+
+export default function Example() {
+  const [date, setDate] = useState<Date>();
+
+  return <DatePicker mode="single" selected={date} onChange={setDate} />;
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 单选日期
+
+<p>选择单个日期。这是日期选择器最常见的用法。</p>
+<ComponentExample demo="DatePickerSingleDemo">
+  <DatePickerSingleDemo client:load />
+</ComponentExample>
+
+### 多选日期
+
+<p>
+  选择多个独立日期。使用 `max` 限制最多可选择的数量。
+</p>
+<ComponentExample demo="DatePickerMultipleDemo">
+  <DatePickerMultipleDemo client:load />
+</ComponentExample>
+
+### 日期范围选择
+
+<p>
+  选择一段连续的日期范围。搭配 `numberOfMonths={2}` 可获得并排视图，效果更好。多月视图会隐藏各月份之外的日期，避免面板之间出现重复日期。设置 `showOutsideDays` 可以显示这些日期。
+</p>
+<ComponentExample demo="DatePickerRangeDemo">
+  <DatePickerRangeDemo client:load />
+</ComponentExample>
+
+### 带最小/最大值限制的范围选择
+
+<p>使用 `min` 和 `max` 属性限制范围长度（以天/晚为单位）。</p>
+<ComponentExample demo="DatePickerRangeMinMaxDemo">
+  <DatePickerRangeMinMaxDemo client:load />
+</ComponentExample>
+
+### 月份和年份下拉选择
+
+<p>
+  设置 `captionLayout="dropdown"` 可直接跳转到指定月份和年份。使用
+  `startMonth` 和 `endMonth` 限定年份范围。
+</p>
+<ComponentExample demo="DatePickerDropdownCaptionDemo">
+  <DatePickerDropdownCaptionDemo client:load />
+</ComponentExample>
+
+### 搭配气泡卡片使用
+
+<p>
+  与 [Popover](/components/popover) 组件组合，可以创建一个下拉式日期选择器。
+</p>
+<ComponentExample demo="DatePickerPopoverDemo">
+  <DatePickerPopoverDemo client:load />
+</ComponentExample>
+
+### 搭配气泡卡片选择日期范围
+
+<p>在气泡卡片中展示两个月的日期范围选择器。</p>
+<ComponentExample demo="DatePickerRangePopoverDemo">
+  <DatePickerRangePopoverDemo client:load />
+</ComponentExample>
+
+### 带预设的日期范围
+
+<p>将日期选择器与预设选项结合，便于快速选择。</p>
+<ComponentExample demo="DatePickerRangeWithPresetsDemo">
+  <DatePickerRangeWithPresetsDemo client:load />
+</ComponentExample>
+
+### 禁用日期与用量限制
+
+  <p>
+    使用 `disabled` 属性让某些日期不可选择，使用 `footer` 显示用量信息。
+  </p>
+  <ComponentExample demo="DatePickerDisabledWithFooterDemo">
+    <DatePickerDisabledWithFooterDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Full Popover Example */}
+
+<ComponentSection>
+
+## 完整的气泡卡片示例
+
+<p>下面是一个完整示例，演示如何将 DatePicker 与 Popover 组合使用：</p>
+
+```tsx
+import { useState } from "react";
+import { DatePicker, Popover, Button } from "@lark-ui/core";
+import { CalendarDotsIcon } from "@phosphor-icons/react";
+
+export function DatePickerDropdown() {
+  const [date, setDate] = useState<Date>();
+
+  return (
+    <Popover>
+      <Popover.Trigger
+        render={<Button variant="outline" icon={CalendarDotsIcon} />}
+      >
+        {date ? date.toLocaleDateString() : "Pick a date"}
+      </Popover.Trigger>
+      <Popover.Content className="p-3">
+        <DatePicker
+          mode="single"
+          selected={date}
+          onChange={(d) => setDate(d)}
+        />
+      </Popover.Content>
+    </Popover>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+<p>
+  DatePicker 会将所有属性透传给
+  <a
+    href="https://daypicker.dev/api/interfaces/PropsBase"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    react-day-picker
+  </a>
+  。主要属性包括：
+</p>
+<ul class="mt-4 list-disc list-inside space-y-2">
+  <li>
+    `mode` — `"single" | "multiple" | "range"` — 选择模式（必填）
+  </li>
+  <li>`selected` — 当前选中的日期</li>
+  <li>`onChange` — 选择变化时的回调</li>
+  <li>`numberOfMonths` — 展示的月份数量</li>
+  <li>`disabled` — 不可选择的日期</li>
+  <li>`min` / `max` — 最小/最大选择限制</li>
+  <li>`footer` — 渲染在日历下方的内容</li>
+  <li>`locale` — 用于国际化的 date-fns locale</li>
+  <li>`className` — 额外的 CSS 类名</li>
+</ul>
+<p class="mt-4 text-lark-subtle text-sm">
+  完整的 API 请参阅
+  <a
+    href="https://daypicker.dev/docs"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    react-day-picker 文档
+  </a>
+  。
+</p>
+
+### 与 react-day-picker 的差异
+
+  <p>
+    为了与其他 Lark 表单组件保持一致，DatePicker 使用 `onChange` 而不是 react-day-picker 的 `onSelect`。完整的类型推断能力得以保留——TypeScript 会根据 `mode` 属性正确收窄回调签名。
+  </p>
+</ComponentSection>

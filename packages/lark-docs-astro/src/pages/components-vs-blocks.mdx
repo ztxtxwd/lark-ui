@@ -1,0 +1,153 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "组件与区块"
+description: "了解 Lark 如何提供不同类型的构件：你导入的有版本管理的组件，以及你拥有的可复制粘贴的区块。"
+---
+
+import Callout from "~/components/docs/Callout.astro";
+
+## 构件谱系
+
+并非所有东西都适合放进设计系统库。Lark 区分了**组件**（共享、有版本管理的基础元素）和**区块**（你复制走并自行维护的模式）。理解这一区别能帮你更快地构建应用，同时保持恰当的归属关系。
+
+这不只是组织方式上的偏好——它关乎责任归属。组件是由我们维护、测试并做版本管理的基础元素。区块则是有用的起点，由你扩展和调整以满足自身需求。
+
+## 组件
+
+组件是构成应用基础的原子化、可复用 UI 元素。按钮（Button）、输入框（Input）、对话框（Dialog）、徽标（Badge）——它们是与内容无关、与上下文无关的构件，可在任何产品中最大化复用。
+
+#### 特点
+
+- **有版本且持续维护**——API 由我们负责，修复缺陷并持续发布更新
+- **支持 tree-shaking**——只导入你用到的部分，不会造成体积膨胀
+- **默认具备无障碍能力**——基于 Base UI 基础组件构建，并提供正确的 ARIA 支持
+- **符合设计系统规范**——语义化 token、一致的变体、可预期的 API
+- **保持通用**——不含业务逻辑，也不做产品特定的假设
+
+### 使用方式
+
+直接从包中导入：
+
+```tsx
+import { Button, Input, Dialog, Badge } from "@lark-ui/core";
+
+// Or use granular imports for better tree-shaking
+import { Button } from "@lark-ui/core/components/button";
+```
+
+当 Lark 发布新版本时，你会自动获得缺陷修复和功能改进。你的代码无需改动——只需升级版本号。
+
+## 区块
+
+区块是由组件组合而成、用于解决常见模式的实现，但它们不够通用，无法放入核心库。`PageHeader`、`ResourceList`——这些是有价值、可复用的模式，但可能只适用于特定产品，或者需要进行产品特定的定制。
+
+#### 特点
+
+- **归你所有**——代码位于你的项目中，实现由你掌控
+- **完全可定制**——属性之外的内容都可以修改
+- **以组合为先**——由 Lark 组件构建，而非原始 HTML
+- **起点而非限制**——供你扩展的模式，而不是需要绕开的约束
+- **贴近产品**——可以包含业务逻辑、布局假设和特定组合
+
+### 使用方式
+
+通过 CLI 安装，然后从你的项目中导入：
+
+```bash
+
+# Initialize config (first time only)
+
+npx @lark-ui/core init
+
+# List available blocks
+
+npx @lark-ui/core blocks
+
+# Install a block to your project
+
+npx @lark-ui/core add PageHeader
+```
+
+安装完成后，从本地路径导入：
+
+```tsx
+// Path depends on your lark-ui.json blocksDir setting
+// Default: src/components/lark/
+import { PageHeader } from "./components/lark/page-header/page-header";
+```
+
+现在区块代码归你所有。你可以自定义它、扩展它、拆开它——按你的产品需求随意处理。
+
+## 一个实际示例
+
+以 `ProductCard` 为例。它是为特定用例而对组件的一种特定编排：
+
+```tsx
+// This is a "block" or "recipe" - a specific composition
+// of design system components for a particular pattern
+
+<Surface className="rounded-lg p-4">
+  <img src={imgSrc} alt={imgAlt} className="rounded-md" />
+  <div className="mt-3">
+    <Text size="lg" weight="semibold">
+      {title}
+    </Text>
+    <Text className="text-lark-subtle">{description}</Text>
+    <StarRating rating={rating} />
+  </div>
+  <div className="mt-4">
+    <Button variant="primary">Add to cart</Button>
+  </div>
+</Surface>
+```
+
+这些组件（`Surface`、`Text`、`Button`）都来自 Lark。但这种特定的编排方式呢？那是你拥有并自行定制的模式。
+
+## 决策框架
+
+问“这是组件还是区块？”实际上是在问归属和复用：
+
+#### 以下情况请使用组件……
+
+- 它与内容无关（适用于任何数据）
+- 它与上下文无关（适用于任何布局）
+- 多个产品需要完全相同的东西
+- 无障碍能力和一致性最为重要
+- 你希望自动获得更新和维护
+
+#### 以下情况请使用区块……
+
+- 你需要超出属性范围的定制
+- 该模式是产品特定的
+- 它包含业务逻辑或布局假设
+- 你希望完全掌控实现
+- 你更偏好复制粘贴，而不是依赖包
+
+<Callout type="info">
+  **默认先想“组件”。** 即使在构建某个特定的东西时，也要问自己：“我能用现有组件把它搭出来吗？”
+  答案通常是能。组件可以组合成区块，而区块随时都能再拆开。
+</Callout>
+
+## 两个层级之间的流动
+
+事物可以在这些类别之间流动。一个起初只是应用内一次性用法的模式，可能因被广泛使用而值得抽取成区块。而一个被证明普遍有用的区块，也可能晋升为完整组件。
+
+**核心原则：** 事物应当_向下_沉淀进设计系统，而不是用过于具体的模式把它塞满、以后再费力清理。请先让复用情况证明自身价值，再把某个东西提升为共享组件。
+
+这正是区块作为中间层存在的原因。它们是值得分享的模式，但不需要承担维护有版本 API 的承诺。你拿到了起点，进化的所有权归你。
+
+## 总结
+
+|              | 组件                         | 区块                     |
+| ------------ | ---------------------------- | ------------------------ |
+| **交付方式** | NPM 包导入                   | 通过 CLI 复制到你的项目  |
+| **归属**     | 由 Lark 维护                 | 归你所有并自行定制       |
+| **更新**     | 升级版本即可自动获得         | 手动（重新安装或合并）   |
+| **定制**     | 仅限属性和 className         | 可访问完整源码           |
+| **示例**     | Button、Input、Dialog、Badge | PageHeader、ResourceList |
+
+## 相关文档
+
+- [安装](/installation)——开始使用 Lark
+- [命令行工具](/cli)——安装区块并查看文档
+- [贡献指南](/contributing)——添加新的组件和区块

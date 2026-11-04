@@ -1,0 +1,453 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "流式 UI"
+description: "使用 Lark 自动生成的 schema，从 JSON 渲染 AI 生成的界面。随着 LLM 响应流式返回，可进行渐进式渲染。"
+---
+
+import Callout from "~/components/docs/Callout.astro";
+
+## 概览
+
+Lark catalog 模块支持从 JSON 结构渲染界面，专为 AI 生成的界面而设计。它为基于 JSON 的 UI 树提供运行时校验、数据绑定、条件渲染和操作处理。
+
+#### 从你的代码库派生的 schema
+
+不同于需要单独维护 schema 定义的做法，Lark 会自动从你实际使用的组件 TypeScript 类型派生出校验 schema。当你更新组件的属性时，校验 schema 会通过组件注册表的代码生成流程自动更新。无需手动同步——你的 schema 始终与组件保持一致。
+
+<Callout type="info">
+  schema 在 `@lark-ui/core/ai/schemas` 中根据组件的
+  TypeScript 类型自动生成。修改组件属性后，请运行 `pnpm codegen:registry`
+  重新生成。
+</Callout>
+
+## 工作原理
+
+catalog 模块使用一条流水线，从你的 TypeScript 源码中提取组件元数据：
+
+`Component TSX` → `TypeScript Types` → `Codegen Script` → `Zod Schemas`
+
+`ai/schemas.ts` 中生成的 schema 包括：
+
+- 每个组件的属性 schema（例如 `ButtonPropsSchema`）
+- 变体属性的枚举值
+- UI 元素和树结构的 schema
+- 动态值、可见性和操作的 schema
+
+## 安装
+
+```ts
+import {
+  createLarkCatalog,
+  initCatalog,
+  resolveProps,
+  evaluateVisibility,
+} from "@lark-ui/core/catalog";
+```
+
+## 创建 catalog
+
+创建一个 catalog 实例，用自动生成的 schema 校验 AI 生成的 JSON：
+
+```ts
+import { createLarkCatalog, initCatalog } from "@lark-ui/core/catalog";
+
+// Create a catalog with optional actions
+const catalog = createLarkCatalog({
+  actions: {
+    submit_form: { description: "Submit the current form" },
+    delete_item: { description: "Delete the selected item" },
+  },
+});
+
+// Initialize schemas (required before sync validation)
+await initCatalog(catalog);
+
+// Validate AI-generated JSON
+const result = catalog.validateTree(aiGeneratedJson);
+if (result.success) {
+  // Render the validated tree
+  renderTree(result.data);
+}
+```
+
+## UI 树格式
+
+UI 树采用扁平结构，针对 LLM 生成和流式传输进行了优化。元素之间通过 key 相互引用，而不是嵌套，因此可以在元素流式到达时渐进式渲染。
+
+```json
+{
+  "root": "card-1",
+  "elements": {
+    "card-1": {
+      "key": "card-1",
+      "type": "Surface",
+      "props": { "className": "p-4" },
+      "children": ["heading-1", "text-1", "button-1"]
+    },
+    "heading-1": {
+      "key": "heading-1",
+      "type": "Text",
+      "props": {
+        "variant": "heading2",
+        "children": "Welcome"
+      },
+      "parentKey": "card-1"
+    },
+    "text-1": {
+      "key": "text-1",
+      "type": "Text",
+      "props": {
+        "children": { "path": "/user/name" }
+      },
+      "parentKey": "card-1"
+    },
+    "button-1": {
+      "key": "button-1",
+      "type": "Button",
+      "props": {
+        "variant": "primary",
+        "children": "Get Started"
+      },
+      "parentKey": "card-1",
+      "action": {
+        "name": "submit_form"
+      }
+    }
+  }
+}
+```
+
+#### 为什么使用扁平结构？
+
+- 元素一到达就可以被渲染（流式）
+- 更新简单，无需深度遍历树
+- 序列化/反序列化简单
+- 天然契合 LLM 逐 token 生成的方式
+
+## 动态值（数据绑定）
+
+属性可以使用 JSON Pointer 路径引用数据模型中的值。这让 AI 可以声明数据绑定，由你的应用在渲染时解析。
+
+```ts
+import { resolveProps, resolveDynamicValue } from "@lark-ui/core/catalog";
+
+// Data model backing the UI
+const dataModel = {
+  user: {
+    name: "Alice",
+    isAdmin: true,
+  },
+  items: [
+    { id: 1, title: "First Item" },
+    { id: 2, title: "Second Item" },
+  ],
+};
+
+// AI-generated props with dynamic references
+const props = {
+  children: { path: "/user/name" },
+  disabled: false,
+};
+
+// Resolve all dynamic values
+const resolved = resolveProps(props, dataModel);
+// { children: "Alice", disabled: false }
+
+// Or resolve individual values
+const name = resolveDynamicValue({ path: "/user/name" }, dataModel);
+// "Alice"
+```
+
+## 可见性条件
+
+元素可以根据数据值、身份认证状态或复杂的逻辑表达式进行条件渲染。
+
+```ts
+import {
+  evaluateVisibility,
+  createVisibilityContext,
+} from "@lark-ui/core/catalog";
+
+const ctx = createVisibilityContext(
+  // Data model
+  { user: { isAdmin: true, role: "editor" } },
+  // Auth state
+  { isSignedIn: true },
+);
+
+// Simple boolean
+evaluateVisibility(true, ctx); // true
+
+// Path check (truthy test)
+evaluateVisibility({ path: "/user/isAdmin" }, ctx); // true
+
+// Auth check
+evaluateVisibility({ auth: "signedIn" }, ctx); // true
+evaluateVisibility({ auth: "signedOut" }, ctx); // false
+
+// Equality check
+evaluateVisibility(
+  {
+    eq: [{ path: "/user/role" }, "editor"],
+  },
+  ctx,
+); // true
+
+// Complex logic
+evaluateVisibility(
+  {
+    and: [
+      { path: "/user/isAdmin" },
+      { auth: "signedIn" },
+      { gt: [{ path: "/items/length" }, 0] },
+    ],
+  },
+  ctx,
+);
+```
+
+### 可用运算符
+
+| 运算符               | 说明                      |
+| -------------------- | ------------------------- |
+| `path`               | 对数据路径进行真值判断    |
+| `auth`               | "signedIn" 或 "signedOut" |
+| `eq` / `neq`         | 相等 / 不等比较           |
+| `gt` / `gte`         | 大于 / 大于等于           |
+| `lt` / `lte`         | 小于 / 小于等于           |
+| `and` / `or` / `not` | 布尔逻辑组合              |
+
+## 操作
+
+元素可以声明由你的应用处理的操作。AI 描述意图，由你的处理函数执行具体逻辑。
+
+```ts
+// In your UI tree element
+{
+  "key": "delete-btn",
+  "type": "Button",
+  "props": {
+    "variant": "destructive",
+    "children": "Delete"
+  },
+  "action": {
+    "name": "delete_item",
+    "params": {
+      "itemId": { "path": "/selected/id" }
+    },
+    "confirm": {
+      "title": "Delete Item",
+      "message": "Are you sure you want to delete this item?",
+      "variant": "danger",
+      "confirmLabel": "Delete",
+      "cancelLabel": "Cancel"
+    },
+    "onSuccess": {
+      "set": { "/selected": null }
+    }
+  }
+}
+
+// Register actions when creating the catalog
+const catalog = createLarkCatalog({
+  actions: {
+    delete_item: {
+      description: "Delete an item by ID",
+      params: {
+        itemId: { type: "string", description: "Item ID to delete" }
+      }
+    }
+  }
+});
+```
+
+## 校验
+
+catalog 会使用从组件 TypeScript 类型派生的自动生成 Zod schema 来校验 AI 生成的 JSON。
+
+```ts
+// Validate a complete tree
+const result = catalog.validateTree(aiJson);
+
+if (result.success) {
+  console.log("Valid tree:", result.data);
+} else {
+  console.error("Validation errors:", result.error);
+  // [{ message: "Invalid enum value", path: ["elements", "btn-1", "props", "variant"] }]
+}
+
+// Validate a single element
+const elementResult = catalog.validateElement({
+  key: "btn-1",
+  type: "Button",
+  props: { variant: "primary" },
+});
+
+// Check available components
+catalog.hasComponent("Button"); // true
+catalog.hasComponent("Foobar"); // false
+
+// List all component names
+console.log(catalog.componentNames);
+// ["Badge", "Banner", "Button", ...]
+```
+
+## AI 提示词生成
+
+为 AI 模型生成描述 catalog 的提示词：
+
+```ts
+const prompt = catalog.generatePrompt();
+
+// Returns markdown describing:
+// - Available components
+// - Available actions (if any)
+// - Output format (UITree schema)
+// - Dynamic value syntax
+
+// Use in your LLM prompt
+const systemPrompt = `
+You are a UI generation assistant.
+
+${catalog.generatePrompt()}
+
+Generate UI based on the user's request.
+`;
+```
+
+## 类型导出
+
+所有类型都已导出，便于与 TypeScript 集成：
+
+```ts
+import type {
+  // Core types
+  UIElement,
+  UITree,
+  DynamicValue,
+  DynamicString,
+  DynamicNumber,
+  DynamicBoolean,
+
+  // Visibility
+  VisibilityCondition,
+  LogicExpression,
+
+  // Actions
+  Action,
+  ActionConfirm,
+  ActionHandler,
+  ActionHandlers,
+  ActionDefinition,
+
+  // Auth & Data
+  AuthState,
+  DataModel,
+
+  // Catalog
+  LarkCatalog,
+  CatalogConfig,
+  ValidationResult,
+} from "@lark-ui/core/catalog";
+```
+
+## 完整示例
+
+一个展示 catalog 创建、校验和渲染的完整示例：
+
+```tsx
+import {
+  createLarkCatalog,
+  initCatalog,
+  resolveProps,
+  evaluateVisibility,
+  createVisibilityContext,
+} from "@lark-ui/core/catalog";
+import { Button, Text, Surface } from "@lark-ui/core";
+
+// 1. Create and initialize catalog
+const catalog = createLarkCatalog({
+  actions: {
+    greet: { description: "Show a greeting" },
+  },
+});
+await initCatalog(catalog);
+
+// 2. Validate AI-generated JSON
+const aiJson = {
+  root: "container",
+  elements: {
+    container: {
+      key: "container",
+      type: "Surface",
+      props: { className: "p-4 space-y-4" },
+      children: ["greeting", "action-btn"],
+    },
+    greeting: {
+      key: "greeting",
+      type: "Text",
+      props: {
+        variant: "heading2",
+        children: { path: "/user/name" },
+      },
+      parentKey: "container",
+      visible: { auth: "signedIn" },
+    },
+    "action-btn": {
+      key: "action-btn",
+      type: "Button",
+      props: {
+        variant: "primary",
+        children: "Say Hello",
+      },
+      parentKey: "container",
+      action: { name: "greet" },
+    },
+  },
+};
+
+const result = catalog.validateTree(aiJson);
+if (!result.success) {
+  throw new Error("Invalid UI tree");
+}
+
+// 3. Set up rendering context
+const dataModel = {
+  user: { name: "Alice", preferences: { theme: "dark" } },
+};
+const visibilityCtx = createVisibilityContext(dataModel, { isSignedIn: true });
+
+// 4. Render function
+function renderElement(element, elements) {
+  // Check visibility
+  if (!evaluateVisibility(element.visible, visibilityCtx)) {
+    return null;
+  }
+
+  // Resolve dynamic props
+  const props = resolveProps(element.props, dataModel);
+
+  // Render children
+  const children = element.children?.map((key) =>
+    renderElement(elements[key], elements),
+  );
+
+  // Map to components
+  const Component = { Surface, Text, Button }[element.type];
+  return <Component {...props}>{children}</Component>;
+}
+
+// 5. Render the tree
+const tree = result.data;
+const ui = renderElement(tree.elements[tree.root], tree.elements);
+```
+
+## 主要优势
+
+**自动生成的 schema**——校验 schema 直接从组件的 TypeScript 类型派生，无需单独维护 schema 定义。
+
+**始终保持同步**——当你更新组件属性时，schema 会通过组件注册表的代码生成流程自动更新。
+
+**适合流式场景**——扁平树结构让界面可以随着 LLM 响应逐 token 流式返回而渐进式渲染。
+
+**类型安全**——完整的 TypeScript 支持，导出了 UIElement、UITree、DynamicValue 等类型。

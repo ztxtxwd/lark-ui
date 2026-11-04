@@ -7,13 +7,13 @@
 
 import type { Reporter } from "./types";
 import { npmReleaseReporter } from "./npm-release";
-import { kumoDocsPreviewReporter } from "./kumo-docs-preview";
+import { larkDocsPreviewReporter } from "./lark-docs-preview";
 import { visualRegressionReporter } from "./visual-regression";
 import { bundleSizeReporter } from "./bundle-size";
 
 export const reporters: Reporter[] = [
   npmReleaseReporter,
-  kumoDocsPreviewReporter,
+  larkDocsPreviewReporter,
   visualRegressionReporter,
   bundleSizeReporter,
 ];
@@ -26,6 +26,6 @@ export {
   buildContextFromEnv,
 } from "./types";
 export { npmReleaseReporter } from "./npm-release";
-export { kumoDocsPreviewReporter } from "./kumo-docs-preview";
+export { larkDocsPreviewReporter } from "./lark-docs-preview";
 export { visualRegressionReporter } from "./visual-regression";
 export { bundleSizeReporter } from "./bundle-size";

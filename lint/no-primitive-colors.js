@@ -9,9 +9,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const RULE_NAME = "no-primitive-colors";
 const INVALID_TOKEN_RULE = "invalid-color-token";
 
-// We want to enforce use of Kumo semantic color tokens `--color-kumo-*`.
+// We want to enforce use of Lark semantic color tokens `--color-lark-*`.
 // Any Tailwind color utility (e.g. `bg-blue-500`) or legacy semantic
-// utility (e.g. `bg-kumo-hairline`, `text-kumo-default`) in class strings should be
+// utility (e.g. `bg-lark-hairline`, `text-lark-default`) in class strings should be
 // replaced by semantic tokens / component APIs.
 
 // Matches Tailwind-like color utilities in class strings.
@@ -121,10 +121,9 @@ const NON_COLOR_PATTERNS = [
 
 // Parse theme CSS files to extract valid semantic color tokens.
 // This ensures the allowlist stays in sync with the theme files.
-function parseKumoSemanticColors() {
+function parseLarkSemanticColors() {
   const themeFiles = [
-    resolve(__dirname, "../packages/kumo/src/styles/theme-kumo.css"),
-    resolve(__dirname, "../packages/kumo/src/styles/theme-fedramp.css"),
+    resolve(__dirname, "../packages/lark/src/styles/theme-lark.css"),
   ];
 
   const colorTokens = new Set();
@@ -164,16 +163,16 @@ function parseKumoSemanticColors() {
   return { colorTokens, textColorTokens };
 }
 
-// Valid Kumo semantic color tokens derived from theme CSS files.
+// Valid Lark semantic color tokens derived from theme CSS files.
 // colorTokens: map to --color-* (used by bg-*, border-*, ring-*, etc.)
 // textColorTokens: map to --text-color-* (used by text-*)
 const {
   colorTokens: VALID_COLOR_TOKENS,
   textColorTokens: VALID_TEXT_COLOR_TOKENS,
-} = parseKumoSemanticColors();
+} = parseLarkSemanticColors();
 
 // Legacy export for backwards compatibility
-export const VALID_KUMO_SEMANTIC_COLORS = new Set([
+export const VALID_LARK_SEMANTIC_COLORS = new Set([
   ...VALID_COLOR_TOKENS,
   ...VALID_TEXT_COLOR_TOKENS,
 ]);
@@ -289,13 +288,13 @@ function findPrimitiveColor(str) {
 
     if (!fullToken || !colorFamily) continue;
 
-    // Skip valid Kumo semantic color tokens (e.g. bg-surface, text-secondary,
-    // border-kumo-fill). These are backed by theme-kumo.css custom properties.
-    if (VALID_KUMO_SEMANTIC_COLORS.has(colorFamily)) continue;
+    // Skip valid Lark semantic color tokens (e.g. bg-surface, text-secondary,
+    // border-lark-fill). These are backed by theme-lark.css custom properties.
+    if (VALID_LARK_SEMANTIC_COLORS.has(colorFamily)) continue;
 
-    // Flag kumo- prefixed classes (e.g. text-kumo-surface).
-    // These are invalid; use semantic tokens directly (e.g. text-kumo-default).
-    if (colorFamily.startsWith("kumo-"))
+    // Flag lark- prefixed classes (e.g. text-lark-surface).
+    // These are invalid; use semantic tokens directly (e.g. text-lark-default).
+    if (colorFamily.startsWith("lark-"))
       return { type: "primitive", token: fullToken };
 
     // Flag Tailwind primitive color families (e.g. blue, slate, red).
@@ -305,12 +304,12 @@ function findPrimitiveColor(str) {
     // to get the base family name for checking against Tailwind primitives.
     const primitiveFamily = colorFamily.replace(/-\d+$/, "");
 
-    // Only flag if it's a Tailwind primitive AND not a valid Kumo semantic token.
+    // Only flag if it's a Tailwind primitive AND not a valid Lark semantic token.
     // This handles cases like "green-2" where "green" is a Tailwind primitive
-    // but "green-2" is a valid Kumo semantic token.
+    // but "green-2" is a valid Lark semantic token.
     if (
       TAILWIND_COLOR_FAMILIES.has(primitiveFamily) &&
-      !VALID_KUMO_SEMANTIC_COLORS.has(colorFamily)
+      !VALID_LARK_SEMANTIC_COLORS.has(colorFamily)
     )
       return { type: "primitive", token: fullToken };
   }
@@ -401,9 +400,9 @@ export const noPrimitiveColorsRule = defineRule({
     },
     messages: {
       [RULE_NAME]:
-        "Avoid Tailwind color utilities (e.g. `bg-blue-500`, `border-red-500`). Use Kumo semantic tokens instead.",
+        "Avoid Tailwind color utilities (e.g. `bg-blue-500`, `border-red-500`). Use Lark semantic tokens instead.",
       [INVALID_TOKEN_RULE]:
-        "Invalid color token '{{token}}'. Token '{{tokenName}}' is not defined in theme-kumo.css or theme-fedramp.css.",
+        "Invalid color token '{{token}}'. Token '{{tokenName}}' is not defined in theme-lark.css.",
     },
     schema: [],
   },

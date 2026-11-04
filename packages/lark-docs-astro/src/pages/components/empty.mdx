@@ -1,0 +1,133 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Empty 空状态"
+description: "在没有内容或数据可展示时使用的组件，支持可选的命令行和操作按钮。"
+sourceFile: "components/empty"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  EmptyDemo,
+  EmptySizesDemo,
+  EmptyWithCommandDemo,
+  EmptyWithActionsDemo,
+  EmptyMinimalDemo,
+  EmptyBasicDemo,
+} from "~/components/demos/EmptyDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="EmptyDemo">
+    <EmptyDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+```tsx
+import { Empty } from "@lark-ui/core";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Empty } from "@lark-ui/core";
+import { PackageIcon } from "@phosphor-icons/react";
+
+export default function Example() {
+  return (
+    <Empty
+      icon={<PackageIcon size={48} />}
+      title="No packages found"
+      description="Get started by installing your first package."
+      commandLine="npm install @lark/ui"
+    />
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 基础用法
+
+<ComponentExample demo="EmptyBasicDemo">
+  <EmptyBasicDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* Sizes */}
+
+<ComponentSection>
+
+## 尺寸
+
+  <p>空状态提供三种尺寸，以适配不同的容器场景。</p>
+  <ComponentExample demo="EmptySizesDemo">
+    <EmptySizesDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* With Command Line */}
+
+<ComponentSection>
+
+## 搭配命令行
+
+  <p>加入一条可复制的命令，帮助用户快速上手。</p>
+  <ComponentExample demo="EmptyWithCommandDemo">
+    <EmptyWithCommandDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* With Actions */}
+
+<ComponentSection>
+
+## 搭配操作按钮
+
+  <p>通过 contents 属性添加自定义操作按钮。</p>
+  <ComponentExample demo="EmptyWithActionsDemo">
+    <EmptyWithActionsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Minimal */}
+
+<ComponentSection>
+
+## 最简用法
+
+  <p>最少只需要提供标题。</p>
+  <ComponentExample demo="EmptyMinimalDemo">
+    <EmptyMinimalDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Empty" />
+</ComponentSection>

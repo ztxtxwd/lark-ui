@@ -1,0 +1,374 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Combobox 组合框"
+description: "可搜索的选择器组件，允许用户从选项列表中筛选并选择。"
+sourceFile: "components/combobox"
+baseUIComponent: "combobox"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  ComboboxDemo,
+  ComboboxSearchableInsideDemo,
+  ComboboxSearchableSelectDemo,
+  ComboboxGroupedDemo,
+  ComboboxMultipleDemo,
+  ComboboxWithFieldDemo,
+  ComboboxDisabledDemo,
+  ComboboxDisabledItemsDemo,
+  ComboboxErrorDemo,
+  ComboboxSizesDemo,
+  ComboboxSizesSearchableInsideDemo,
+  ComboboxCustomTriggerDemo,
+  ComboboxCreateItemsDemo,
+} from "~/components/demos/ComboboxDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="ComboboxDemo">
+    <ComboboxDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Combobox } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Combobox } from "@lark-ui/core/components/combobox";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { useState } from "react";
+import { Combobox } from "@lark-ui/core";
+
+const fruits = ["Apple", "Banana", "Cherry", "Date", "Elderberry"];
+
+export default function Example() {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <Combobox value={value} onValueChange={setValue} items={fruits}>
+      <Combobox.TriggerInput placeholder="Select a fruit" />
+      <Combobox.Content>
+        <Combobox.Empty />
+        <Combobox.List>
+          {(item) => (
+            <Combobox.Item key={item} value={item}>
+              {item}
+            </Combobox.Item>
+          )}
+        </Combobox.List>
+      </Combobox.Content>
+    </Combobox>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 尺寸
+
+<p>
+  组合框支持四种尺寸变体，与输入框（Input）组件保持一致：`xs`、`sm`、`base`（默认）和 `lg`。
+</p>
+<ComponentExample demo="ComboboxSizesDemo">
+  <ComboboxSizesDemo client:load />
+</ComponentExample>
+
+  <p>
+    尺寸同样适用于 `TriggerValue`（内嵌可搜索变体）：
+  </p>
+  <ComponentExample demo="ComboboxSizesSearchableInsideDemo">
+    <ComboboxSizesSearchableInsideDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 可搜索选项（内嵌）
+
+  <p>
+    位于弹层内部的可搜索选择器组件，允许用户筛选并选择。
+  </p>
+  <ComponentExample demo="ComboboxSearchableInsideDemo">
+    <ComboboxSearchableInsideDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 带占位符的可搜索选择器
+
+  <p>
+    使用带 `placeholder` 属性的 `TriggerValue` 可创建类似选择器（Select）的可搜索字段。
+    在选中某个值之前，显示该占位符。
+  </p>
+  <ComponentExample demo="ComboboxSearchableSelectDemo">
+    <ComboboxSearchableSelectDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 对象选项集合
+
+<p>
+  使用 `Combobox.createItems()` 从应用对象派生稳定的值和标签。
+</p>
+<ComponentExample demo="ComboboxCreateItemsDemo">
+  <ComboboxCreateItemsDemo client:load />
+</ComponentExample>
+
+</ComponentSection>
+
+<ComponentSection>
+
+### 自定义触发器
+
+<p>
+  使用带 <code>render</code> 属性的 <code>Combobox.Trigger</code>，可用你自己的元素替换默认的类输入框触发器。搭配
+  <code>Combobox.Value</code> 可显示所选值。适用于账号切换器、侧边栏导航，或任何默认外观不适用的场景。
+</p>
+<ComponentExample demo="ComboboxCustomTriggerDemo">
+  <ComboboxCustomTriggerDemo client:load />
+</ComponentExample>
+
+</ComponentSection>
+
+<ComponentSection>
+
+### 分组
+
+  <p>使用 Group 和 GroupLabel 组件将选项按类别分组。</p>
+  <ComponentExample demo="ComboboxGroupedDemo">
+    <ComboboxGroupedDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 多选
+
+  <p>允许用户从列表中选择多个选项。</p>
+  <ComponentExample demo="ComboboxMultipleDemo">
+    <ComboboxMultipleDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 搭配 Field 使用
+
+  <p>使用内置的 Field 包装器添加标签和描述。</p>
+  <ComponentExample demo="ComboboxWithFieldDemo">
+    <ComboboxWithFieldDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 禁用
+
+  <p>传入 `disabled` 属性可阻止交互。对 `TriggerInput` 和 `TriggerValue` 均有效。</p>
+  <ComponentExample demo="ComboboxDisabledDemo">
+    <ComboboxDisabledDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 禁用的选项
+
+  <p>为单个 `Combobox.Item` 传入 `disabled` 属性可使其不可选。禁用的行会以弱化样式呈现，并在键盘导航选择时被跳过。</p>
+  <ComponentExample demo="ComboboxDisabledItemsDemo">
+    <ComboboxDisabledItemsDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+### 错误状态
+
+  <p>通过 `error` 属性展示校验错误。</p>
+  <ComponentExample demo="ComboboxErrorDemo">
+    <ComboboxErrorDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 过滤
+
+<p>
+  默认情况下，过滤不区分大小写和重音符号，底层由 `Intl.Collator` 提供支持。对于字符串选项，无需自定义 `filter`。
+</p>
+<p>
+  当需要按对象选项的某个属性进行过滤时，请使用 `Combobox.useFilter()` 以
+  保留内置的不区分重音符号的匹配能力：
+</p>
+
+```tsx
+function LanguagePicker() {
+  const { contains } = Combobox.useFilter();
+
+  const filter = useCallback(
+    (item: Language, query: string) => contains(item.label, query),
+    [contains],
+  );
+
+  return (
+    <Combobox items={languages} filter={filter}>
+      {/* ... */}
+    </Combobox>
+  );
+}
+```
+
+<p>
+  如需完全关闭过滤（例如结果来自服务端），传入 `filter={null}`：
+</p>
+
+```tsx
+<Combobox items={results} filter={null}>
+  ...
+</Combobox>
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 对象选项集合
+
+<p>
+  当选项是应用对象而非基本类型值时，请使用 `Combobox.createItems()`。它能派生稳定的选项值和标签，同时把源对象保留给列表渲染器使用。
+</p>
+
+```tsx
+import { useState } from "react";
+import { Combobox } from "@lark-ui/core";
+
+type Fruit = { id: string; label: string };
+
+const fruits = Combobox.createItems<Fruit>(
+  [
+    { id: "apple", label: "Apple" },
+    { id: "banana", label: "Banana" },
+  ],
+  {
+    getValue: (fruit) => fruit.id,
+    getLabel: (fruit) => fruit.label,
+  },
+);
+
+function FruitPicker() {
+  const [value, setValue] = useState<Fruit | null>(null);
+
+  return (
+    <Combobox items={fruits} value={value} onValueChange={setValue}>
+      <Combobox.TriggerInput placeholder="Select a fruit" />
+      <Combobox.Content>
+        <Combobox.List>
+          {(fruit) => (
+            <Combobox.Item key={fruit.id} value={fruit}>
+              {fruit.label}
+            </Combobox.Item>
+          )}
+        </Combobox.List>
+      </Combobox.Content>
+    </Combobox>
+  );
+}
+```
+
+<p>
+  在模块作用域创建静态集合。对于运行时变化的数据，请把源数据作为依赖来 memoize `Combobox.createItems()`。
+</p>
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 自定义下拉高度
+
+<p>
+  默认情况下，`Combobox.Content` 的最大高度为 `24rem`（384px）或可用视口空间中的较小值。内容超过该高度时，下拉层会自动滚动。
+</p>
+<p>如需自定义最大高度，向 `Combobox.Content` 传入 className：</p>
+
+```tsx
+// Shorter dropdown (200px)
+<Combobox.Content className="max-h-[200px]">
+
+// Taller dropdown (500px)
+<Combobox.Content className="max-h-[500px]">
+
+// Use Tailwind presets
+<Combobox.Content className="max-h-64">  // 256px
+<Combobox.Content className="max-h-96">  // 384px (same as default)
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## API 参考
+
+### Combobox
+
+<p>可搜索选择器的根组件。</p>
+<PropsTable component="Combobox" />
+
+### Combobox.Content
+
+<p>列表的下拉容器。</p>
+<PropsTable component="Combobox.Content" />
+
+### Combobox.Item
+
+<p>单个可选项。</p>
+<PropsTable component="Combobox.Item" />
+
+### 其他子组件
+
+  <ul class="list-disc list-inside space-y-1">
+    <li>`Combobox.TriggerInput` - 单选的输入框触发器</li>
+    <li>`Combobox.TriggerValue` - 显示所选值的按钮触发器</li>
+    <li>`Combobox.TriggerMultipleWithInput` - 带标签的多选</li>
+    <li>`Combobox.Input` - 下拉层内的搜索输入框</li>
+    <li>`Combobox.List` - 支持 render 属性的列表容器</li>
+    <li>`Combobox.Group` - 用于分类选项的分组容器</li>
+    <li>`Combobox.GroupLabel` - 分组的标题标签</li>
+    <li>`Combobox.Collection` - 分组内的选项容器</li>
+    <li>`Combobox.Chip` - 已选项的标签</li>
+    <li>`Combobox.Empty` - 空状态文案</li>
+    <li>`Combobox.createItems` - 面向对象选项的集合辅助函数</li>
+  </ul>
+</ComponentSection>

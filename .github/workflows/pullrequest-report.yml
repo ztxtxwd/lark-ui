@@ -60,7 +60,7 @@ jobs:
       - name: Install trusted reporter dependencies
         uses: ./.github/actions/install-dependencies
         with:
-          filter: kumo-workspace
+          filter: lark-workspace
 
       - name: Post visual-contract gallery
         env:
@@ -118,7 +118,7 @@ jobs:
       - name: Install trusted reporter dependencies
         uses: ./.github/actions/install-dependencies
         with:
-          filter: kumo-workspace
+          filter: lark-workspace
 
       - name: Post bundle size report
         env:

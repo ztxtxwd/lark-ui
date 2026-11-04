@@ -1,0 +1,315 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Input 输入框"
+description: "用于用户输入的文本输入字段，内置标签、描述和错误提示支持。"
+sourceFile: "components/input"
+baseUIComponent: "input"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  InputBasicDemo,
+  InputWithLabelDemo,
+  InputErrorStringDemo,
+  InputErrorObjectDemo,
+  InputSizesDemo,
+  InputDisabledDemo,
+  InputBareDemo,
+  InputErrorWithoutLabelDemo,
+  InputPasswordManagerIgnoreDemo,
+  InputTypesDemo,
+  InputOptionalFieldDemo,
+  InputLabelTooltipDemo,
+  InputReactNodeLabelDemo,
+  InputControlledOnChangeDemo,
+  InputControlledOnValueChangeDemo,
+} from "~/components/demos/InputDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="InputBasicDemo">
+    <InputBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Input } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Input } from "@lark-ui/core/components/input";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+### 使用内置 Field（推荐）
+
+<p>
+  使用 `label` 属性可启用内置的 Field 包装器，获得标签、描述和错误提示支持。
+</p>
+
+```tsx
+import { Input } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <Input
+      label="Email"
+      placeholder="you@example.com"
+      description="We'll never share your email"
+    />
+  );
+}
+```
+
+### 裸用 Input（自定义布局）
+
+<p>
+  在自定义表单布局中，请不要使用 `label`，直接使用 Input。出于无障碍考虑，必须提供 `aria-label` 或 `aria-labelledby`。
+</p>
+
+```tsx
+import { Input } from "@lark-ui/core";
+
+export default function Example() {
+  return <Input placeholder="Search..." aria-label="Search products" />;
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 带标签和描述
+
+<p>
+  `label` 属性可启用内置的 Field 包装器，并自动采用纵向布局（标签位于输入框上方）。
+</p>
+<ComponentExample demo="InputWithLabelDemo">
+  <InputWithLabelDemo client:visible />
+</ComponentExample>
+
+### 带错误（字符串）
+
+<p>
+  简单的错误信息可以直接将 `error` 作为字符串传入。当 `error` 属性为真值时，会自动应用错误样式。
+</p>
+<ComponentExample demo="InputErrorStringDemo">
+  <InputErrorStringDemo client:visible />
+</ComponentExample>
+
+### 带错误（校验对象）
+
+<p>
+  HTML5 校验可将 `error` 作为包含 `message` 和 `match` 的对象传入。当字段有效性匹配时显示错误。
+</p>
+<ComponentExample demo="InputErrorObjectDemo">
+  <InputErrorObjectDemo client:visible />
+</ComponentExample>
+
+### 输入框尺寸
+
+<p>提供四种尺寸：`xs`、`sm`、`base`（默认）、`lg`。</p>
+<ComponentExample demo="InputSizesDemo">
+  <InputSizesDemo client:visible />
+</ComponentExample>
+
+### 禁用
+
+<ComponentExample demo="InputDisabledDemo">
+  <InputDisabledDemo client:visible />
+</ComponentExample>
+
+### 可选字段
+
+<p>设置 `required={false}` 可在标签后显示"(optional)"文本。</p>
+<ComponentExample demo="InputOptionalFieldDemo">
+  <InputOptionalFieldDemo client:visible />
+</ComponentExample>
+
+### 带标签工具提示
+
+<p>使用 `labelTooltip` 可添加一个信息图标，悬停时显示补充说明。</p>
+<ComponentExample demo="InputLabelTooltipDemo">
+  <InputLabelTooltipDemo client:visible />
+</ComponentExample>
+
+### ReactNode 标签
+
+<p>`label` 属性接受 ReactNode，便于富文本格式化。</p>
+<ComponentExample demo="InputReactNodeLabelDemo">
+  <InputReactNodeLabelDemo client:visible />
+</ComponentExample>
+
+### 使用 onChange 的受控用法
+
+<p>
+  标准的 React `onChange` 处理器会接收到完整的事件对象。使用 `e.target.value` 获取值。
+</p>
+<ComponentExample demo="InputControlledOnChangeDemo">
+  <InputControlledOnChangeDemo client:load />
+</ComponentExample>
+
+### 使用 onValueChange 的受控用法
+
+<p>
+  `onValueChange` 是 Base UI 提供的便捷处理器，直接给出字符串值——无需解包事件。它与 `Select`、`Combobox` 和 `Radio.Group` 使用的是同一套模式。
+</p>
+<ComponentExample demo="InputControlledOnValueChangeDemo">
+  <InputControlledOnValueChangeDemo client:load />
+</ComponentExample>
+
+### 裸用 Input（无标签）
+
+<p>
+  不带 `label` 的 Input 会渲染为裸输入框。出于无障碍考虑，必须提供 `aria-label`。
+</p>
+<ComponentExample demo="InputBareDemo">
+  <InputBareDemo client:visible />
+</ComponentExample>
+
+### 无标签时的错误提示
+
+<p>
+  即使没有可见的 `label`，错误信息和描述也会正常渲染——请使用 `aria-label` 保证输入框的无障碍体验。
+</p>
+<ComponentExample demo="InputErrorWithoutLabelDemo">
+  <InputErrorWithoutLabelDemo client:visible />
+</ComponentExample>
+
+### 输入类型
+
+<p>
+  支持所有 HTML input 类型：`text`、`email`、`password`、`number`、`tel`、`url` 等。
+</p>
+<ComponentExample demo="InputTypesDemo">
+  <InputTypesDemo client:visible />
+</ComponentExample>
+
+### 密码管理器浮层
+
+<p>
+  对于密码管理器可能误判为登录字段的非凭据输入框，请设置 `passwordManagerIgnore`。
+</p>
+<ComponentExample demo="InputPasswordManagerIgnoreDemo">
+  <InputPasswordManagerIgnoreDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+<p>Input 接受所有标准 HTML input 属性，以及以下属性：</p>
+<PropsTable component="Input" />
+
+### 校验错误类型
+
+  <p>
+    将 `error` 用作对象时，`match` 属性对应 HTML5 ValidityState 的取值：
+  </p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-lark-hairline">
+          <th class="px-4 py-3 text-left font-semibold">匹配值</th>
+          <th class="px-4 py-3 text-left font-semibold">说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">valueMissing</td>
+          <td class="px-4 py-3 text-xs">必填字段为空</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">typeMismatch</td>
+          <td class="px-4 py-3 text-xs">值与类型不匹配（例如邮箱格式无效）</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">patternMismatch</td>
+          <td class="px-4 py-3 text-xs">值与 pattern 属性不匹配</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">tooShort</td>
+          <td class="px-4 py-3 text-xs">值短于 minLength</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">tooLong</td>
+          <td class="px-4 py-3 text-xs">值长于 maxLength</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">rangeUnderflow</td>
+          <td class="px-4 py-3 text-xs">值小于 min</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">rangeOverflow</td>
+          <td class="px-4 py-3 text-xs">值大于 max</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="px-4 py-3 font-mono text-xs">true</td>
+          <td class="px-4 py-3 text-xs">始终显示错误（用于服务端校验）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ComponentSection>
+
+{/* Accessibility */}
+
+<ComponentSection>
+
+## 无障碍
+
+  <div class="space-y-4 text-sm">
+    <div>
+
+      ### 标签要求
+
+      <p>
+        输入框需要通过以下方式之一获得无障碍名称：
+      </p>
+      <ul class="mt-2 ml-4 list-disc space-y-1">
+        <li>`label` 属性（推荐）</li>
+        <li>裸输入框使用 `placeholder` + `aria-label`</li>
+        <li>自定义标签关联使用 `aria-labelledby`</li>
+      </ul>
+      <p class="mt-2">
+        缺少无障碍名称会在开发模式下触发控制台警告。
+      </p>
+    </div>
+    <div>
+
+      ### 错误关联
+
+      <p>
+        错误信息会通过 ARIA 属性自动与输入框关联，以便屏幕阅读器播报。
+      </p>
+    </div>
+
+  </div>
+</ComponentSection>

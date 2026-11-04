@@ -1,0 +1,206 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Switch 开关"
+description: "可以在开启和关闭两种状态之间切换的按钮。"
+sourceFile: "components/switch"
+baseUIComponent: "switch"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  SwitchBasicDemo,
+  SwitchOffDemo,
+  SwitchOnDemo,
+  SwitchDisabledDemo,
+  SwitchNeutralDemo,
+  SwitchNeutralStatesDemo,
+  SwitchVariantsDemo,
+  SwitchSizesDemo,
+  SwitchCustomIdDemo,
+  SwitchGroupDemo,
+  SwitchLegendSrOnlyDemo,
+  SwitchLegendCustomDemo,
+} from "~/components/demos/SwitchDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="SwitchBasicDemo">
+    <SwitchBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Switch } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Switch } from "@lark-ui/core/components/switch";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Switch } from "@lark-ui/core";
+import { useState } from "react";
+
+export default function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch checked={checked} onCheckedChange={(val) => setChecked(val)} />
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 关闭状态
+
+<ComponentExample demo="SwitchOffDemo">
+  <SwitchOffDemo client:visible />
+</ComponentExample>
+
+### 开启状态
+
+<ComponentExample demo="SwitchOnDemo">
+  <SwitchOnDemo client:visible />
+</ComponentExample>
+
+### 禁用
+
+<ComponentExample demo="SwitchDisabledDemo">
+  <SwitchDisabledDemo client:visible />
+</ComponentExample>
+
+### 变体
+
+<p>
+  开关（Switch）支持两种变体：`default`（开启时为蓝色）和 `neutral`（单色）。两者都使用
+  超椭圆（squircle）形状。
+</p>
+<ComponentExample demo="SwitchVariantsDemo">
+  <SwitchVariantsDemo client:visible />
+</ComponentExample>
+
+### 中性变体
+
+<p>
+  中性变体使用单色配色和超椭圆形状，适合低调、不突出的切换控件。
+</p>
+<ComponentExample demo="SwitchNeutralDemo">
+  <SwitchNeutralDemo client:visible />
+</ComponentExample>
+
+### 中性状态
+
+<ComponentExample demo="SwitchNeutralStatesDemo">
+  <SwitchNeutralStatesDemo client:visible />
+</ComponentExample>
+
+### 尺寸
+
+<p>提供三种尺寸：`sm`、`base`（默认）和 `lg`。</p>
+<ComponentExample demo="SwitchSizesDemo">
+  <SwitchSizesDemo client:visible />
+</ComponentExample>
+
+### 自定义 ID
+
+<p>
+  提供自定义 `id` 后，点击标签仍会切换开关状态。该 `id` 会透传给 Base UI，使标签的
+  `htmlFor` 保持同步。
+</p>
+<ComponentExample demo="SwitchCustomIdDemo">
+  <SwitchCustomIdDemo client:visible />
+</ComponentExample>
+
+### 开关组
+
+<p>
+  使用 `Switch.Group` 可以对相关开关进行分组，并为分组提供共享的图例（legend）、描述和
+  错误信息。
+</p>
+<ComponentExample demo="SwitchGroupDemo">
+  <SwitchGroupDemo client:visible />
+</ComponentExample>
+
+### 视觉隐藏的图例
+
+<p>
+  在 `Switch.Legend` 上使用 `className="sr-only"`，可以让图例对屏幕阅读器保持可访问，同时在
+  视觉上隐藏。当分组已经由父级 `Field` 或标题标注，显示图例会造成标签重复时，这会非常有用。
+</p>
+<ComponentExample demo="SwitchLegendSrOnlyDemo">
+  <SwitchLegendSrOnlyDemo client:visible />
+</ComponentExample>
+
+### 自定义图例样式
+
+<p>
+  `Switch.Legend` 接受 `className`，可完全控制图例的呈现方式。当需要自定义排版、颜色或布局时，
+  请使用它代替 `legend` 字符串属性。
+</p>
+<ComponentExample demo="SwitchLegendCustomDemo">
+  <SwitchLegendCustomDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Switch
+
+<p>带内置标签的单个开关。</p>
+<PropsTable component="Switch" />
+
+### Switch.Group
+
+<p>
+  多个开关的容器，支持图例、描述和错误提示。
+</p>
+<PropsTable component="Switch.Group" />
+
+### Switch.Legend
+
+<p>
+  Switch.Group 的可组合图例子组件。接受 `className`，可完全控制样式（例如用
+  `className="sr-only"` 在视觉上隐藏）。当需要自定义图例样式时，请使用它代替 `legend`
+  字符串属性。
+</p>
+<PropsTable component="Switch.Legend" />
+
+### Switch.Item
+
+<p>Switch.Group 中的单个开关。</p>
+<PropsTable component="Switch.Item" />
+
+</ComponentSection>

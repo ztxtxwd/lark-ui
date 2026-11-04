@@ -1,0 +1,155 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Text 文本"
+description: "提供多种标题和正文样式的排版组件。"
+sourceFile: "components/text"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import { Text } from "@lark-ui/core";
+import {
+  TextVariantsDemo,
+  TextTruncateDemo,
+} from "~/components/demos/TextDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="TextVariantsDemo">
+    <TextVariantsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Text } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Text } from "@lark-ui/core/components/text";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Text } from "@lark-ui/core";
+
+export default function Example() {
+  return <Text>Your content here</Text>;
+}
+```
+
+<section class="mt-8 space-y-4">
+  <Text variant="heading3" as="h3">语义化 HTML</Text>
+  <Text>
+    `variant` 属性只控制视觉样式，不会决定最终渲染的 HTML 元素。
+    标题类变体**必须**提供 `as` 属性，否则真实的章节标题会悄悄从文档大纲中消失。
+    正文和等宽类变体有合理的默认值（分别是 `<p>` 和 `<span>`），也可以选择性地指定 `as`。
+  </Text>
+
+```tsx
+// Heading variants REQUIRE `as` — TypeScript will flag usages missing it
+<Text variant="heading1">Page Title</Text> // Doesn't compile
+
+// Real section headings (contribute to the document outline)
+<Text variant="heading1" as="h1">Page Title</Text>
+<Text variant="heading2" as="h2">Section Title</Text>
+
+// Decorative heading-styled text that is NOT a section heading
+<Text variant="heading1" as="span">Big bold card label</Text>
+
+// Visually one size, semantically another
+<Text variant="heading1" as="h3">Visually large, but semantically h3</Text>
+```
+
+  <Text>
+    `as` 属性接受：`"h1"` 到 `"h6"`、`"p"` 和 `"span"`。
+    正文类变体默认为 `"p"`，等宽类变体默认为 `"span"`，
+    标题类变体没有默认值——你必须显式指定。
+  </Text>
+</section>
+
+<section class="mt-8 space-y-4">
+  <Text variant="heading3" as="h3">限制</Text>
+  <Text>
+    `bold` 和 `size` 属性有意限制为仅在 `base`、`secondary`、`success` 和 `error` 这几种文本变体上使用。
+  </Text>
+
+```tsx
+<Text size="sm" bold>Body</Text>
+<Text variant="secondary" bold>Body secondary</Text>
+<Text variant="success" size="lg">Success</Text>
+<Text variant="error">Error</Text>
+```
+
+<Text>
+  等宽类变体（`mono` 和 `mono-secondary`）只能将 `size` 设为 `lg`，
+  且不能使用 `bold` 属性：
+</Text>
+
+```tsx
+<Text variant="mono">Monospace</Text>
+<Text variant="mono" size="lg">Monospace</Text>
+<Text variant="mono" bold>Monospace</Text> // Doesn't compile
+```
+
+<Text>
+  标题类变体（即 `heading1`、`heading2` 和 `heading3`）完全不能使用
+  这些属性：
+</Text>
+
+```tsx
+<Text variant="heading1" bold>
+  Heading 1
+</Text> // Doesn't compile
+```
+
+</section>
+
+</ComponentSection>
+
+{/* 截断 */}
+
+<ComponentSection>
+
+## 截断
+
+<Text>
+  使用 `truncate` 属性可以用省略号截断溢出的文本。它会添加 `truncate min-w-0` 类，当 `Text` 位于 flex 或 grid 容器中时非常有用。
+</Text>
+
+<ComponentExample demo="TextTruncateDemo">
+  <TextTruncateDemo client:visible />
+</ComponentExample>
+
+```tsx
+<Text truncate>This is a long piece of text that will be truncated...</Text>
+```
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="Text" />
+</ComponentSection>

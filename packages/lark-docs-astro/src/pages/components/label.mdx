@@ -1,0 +1,272 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Label 标签"
+description: "用于表单字段的标签组件，支持必填/可选标识和工具提示。"
+sourceFile: "components/label"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import {
+  LabelBasicDemo,
+  LabelOptionalFieldDemo,
+  LabelWithTooltipDemo,
+  LabelReactNodeDemo,
+  LabelFormMixedDemo,
+  LabelStandaloneDemo,
+} from "~/components/demos/LabelDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="LabelBasicDemo">
+    <LabelBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Label } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Label } from "@lark-ui/core/components/label";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+### 与表单组件搭配使用（推荐）
+
+  <p>
+    通过 `Input`、`Select`、`Checkbox`、`Switch` 等表单组件的 `required` 和 `labelTooltip` 属性，可以直接使用标签（Label）的各项能力。
+  </p>
+
+```tsx
+import { Input } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <>
+      {/* Optional field with "(optional)" text */}
+      <Input label="Phone" required={false} placeholder="+1 555-0000" />
+
+      {/* With tooltip */}
+      <Input
+        label="API Key"
+        labelTooltip="Find this in your dashboard settings"
+      />
+    </>
+  );
+}
+```
+
+### 独立使用 Label
+
+<p>在自定义表单布局中，请直接使用 `Label` 组件。</p>
+
+```tsx
+import { Label } from "@lark-ui/core";
+
+export default function Example() {
+  return <Label tooltip="This field is mandatory">Username</Label>;
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 可选字段
+
+<p>当 `required={false}` 时，显示灰色的"(optional)"文本。</p>
+<ComponentExample demo="LabelOptionalFieldDemo">
+  <LabelOptionalFieldDemo client:visible />
+</ComponentExample>
+
+### 带工具提示
+
+<p>显示一个带工具提示的信息图标，用于提供补充说明。</p>
+<ComponentExample demo="LabelWithTooltipDemo">
+  <LabelWithTooltipDemo client:visible />
+</ComponentExample>
+
+### ReactNode 标签内容
+
+<p>标签支持 ReactNode 内容，便于富文本格式化。</p>
+<ComponentExample demo="LabelReactNodeDemo">
+  <LabelReactNodeDemo client:visible />
+</ComponentExample>
+
+### 混合必填与可选的表单
+
+<p>展示必填字段与可选字段并存的真实示例。</p>
+<ComponentExample demo="LabelFormMixedDemo">
+  <LabelFormMixedDemo client:visible />
+</ComponentExample>
+
+### 独立使用 Label
+
+<p>在自定义布局或非表单场景中，请直接使用 Label。</p>
+<ComponentExample demo="LabelStandaloneDemo">
+  <LabelStandaloneDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Label 属性
+
+<p>独立使用 Label 组件时的属性：</p>
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">默认值</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">children</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">标签内容（必填）</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">showOptional</td>
+        <td class="px-4 py-3 font-mono text-xs">boolean</td>
+        <td class="px-4 py-3 font-mono text-xs">false</td>
+        <td class="px-4 py-3 text-xs">
+          显示灰色的"(optional)"文本（仅当 required 为 false 时）
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">tooltip</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">通过信息图标展示的工具提示内容</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">className</td>
+        <td class="px-4 py-3 font-mono text-xs">string</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">额外的 CSS 类名</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### 表单组件的标签属性
+
+<p>
+  以下属性适用于 Input、InputArea、Select、Checkbox、Switch、SensitiveInput 和 Combobox：
+</p>
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="px-4 py-3 text-left font-semibold">属性</th>
+        <th class="px-4 py-3 text-left font-semibold">类型</th>
+        <th class="px-4 py-3 text-left font-semibold">默认值</th>
+        <th class="px-4 py-3 text-left font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">label</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">标签内容（启用 Field 包装器）</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">required</td>
+        <td class="px-4 py-3 font-mono text-xs">boolean</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">
+          为 false 时：显示"(optional)"文本。同时会设置 HTML required 属性。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="px-4 py-3 font-mono text-xs">labelTooltip</td>
+        <td class="px-4 py-3 font-mono text-xs">ReactNode</td>
+        <td class="px-4 py-3 font-mono text-xs">-</td>
+        <td class="px-4 py-3 text-xs">
+          在标签旁通过信息图标展示的工具提示内容
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</ComponentSection>
+
+{/* Design Guidelines */}
+
+<ComponentSection>
+
+## 设计规范
+
+  <div class="space-y-4 text-sm">
+    <div>
+
+      ### 何时使用可选标识
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>
+          当大多数字段都是必填时，为可选字段标注"(optional)"
+        </li>
+        <li>同一个表单内保持一致</li>
+        <li>默认字段（无标识）会被用户理解为必填</li>
+      </ul>
+    </div>
+    <div>
+
+      ### 何时使用工具提示
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>提供无法放进标签里的补充说明</li>
+        <li>说明格式要求或校验规则</li>
+        <li>为复杂字段提供帮助文档链接</li>
+        <li>工具提示内容要简洁——最多 1-2 句话</li>
+      </ul>
+    </div>
+    <div>
+
+      ### 无障碍
+
+      <ul class="ml-4 list-disc space-y-1">
+        <li>
+          可选标识仅用于视觉提示——校验请使用 `required` 属性
+        </li>
+        <li>工具提示可通过键盘聚焦信息图标来访问</li>
+        <li>聚焦时，屏幕阅读器会播报工具提示内容</li>
+      </ul>
+    </div>
+  </div>
+</ComponentSection>

@@ -1,0 +1,296 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "CommandPalette 命令面板"
+description: "可组合的命令面板组件，适用于搜索和命令弹层。"
+sourceFile: "components/command-palette"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import KeyboardShortcuts from "~/components/docs/KeyboardShortcuts.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  CommandPaletteBasicDemo,
+  CommandPaletteSimpleDemo,
+  CommandPaletteLoadingDemo,
+  CommandPaletteNoAutocompleteDemo,
+  CommandPaletteResultItemDemo,
+} from "~/components/demos/CommandPaletteDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="CommandPaletteBasicDemo">
+    <CommandPaletteBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { CommandPalette } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { CommandPalette } from "@lark-ui/core/components/command-palette";
+```
+
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+  <p>
+    CommandPalette 是基于 Base UI 的 Autocomplete 原语构建的复合组件。它为命令面板界面提供无障碍的键盘导航和可自定义的样式。
+  </p>
+
+```tsx
+import { useState } from "react";
+import { CommandPalette } from "@lark-ui/core";
+
+interface Item {
+  id: string;
+  title: string;
+}
+
+const items: Item[] = [
+  { id: "1", title: "Create Project" },
+  { id: "2", title: "Open Settings" },
+];
+
+export default function Example() {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Open</button>
+      <CommandPalette.Root
+        open={open}
+        onOpenChange={setOpen}
+        items={items}
+        value={search}
+        onValueChange={setSearch}
+        itemToStringValue={(item) => item.title}
+        getSelectableItems={(items) => items}
+      >
+        <CommandPalette.Input placeholder="Search..." />
+        <CommandPalette.List>
+          <CommandPalette.Results>
+            {(item) => (
+              <CommandPalette.Item
+                key={item.id}
+                value={item}
+                onClick={() => setOpen(false)}
+              >
+                {item.title}
+              </CommandPalette.Item>
+            )}
+          </CommandPalette.Results>
+          <CommandPalette.Empty>No results</CommandPalette.Empty>
+        </CommandPalette.List>
+      </CommandPalette.Root>
+    </>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* Keyboard Navigation */}
+
+<ComponentSection>
+
+## 键盘导航
+
+  <p>内置键盘导航，无需额外配置：</p>
+  <KeyboardShortcuts
+    shortcuts={[
+      { keys: ["↑", "↓"], description: "在选项之间移动高亮" },
+      { keys: ["Enter"], description: "选中当前高亮的选项" },
+      { keys: ["⌘/Ctrl", "Enter"], description: "以 newTab: true 方式选中" },
+      { keys: ["Escape"], description: "关闭弹层" },
+    ]}
+  />
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 带分组的选项
+
+<p>用标签把相关命令归为一组。</p>
+<ComponentExample demo="CommandPaletteBasicDemo">
+  <CommandPaletteBasicDemo client:visible />
+</ComponentExample>
+
+### 简单扁平列表
+
+<p>对于较简单的场景，可直接使用不分组的扁平选项数组。</p>
+<ComponentExample demo="CommandPaletteSimpleDemo">
+  <CommandPaletteSimpleDemo client:visible />
+</ComponentExample>
+
+### 加载状态
+
+<p>获取结果期间显示加载动画。</p>
+<ComponentExample demo="CommandPaletteLoadingDemo">
+  <CommandPaletteLoadingDemo client:visible />
+</ComponentExample>
+
+### 禁用浏览器自动填充
+
+<p>传入 `autoComplete`、`autoCorrect`、`spellCheck` 以及 `data-*` 等标准 HTML 输入属性，可抑制浏览器和密码管理器的自动填充浮层。</p>
+<ComponentExample demo="CommandPaletteNoAutocompleteDemo">
+  <CommandPaletteNoAutocompleteDemo client:visible />
+</ComponentExample>
+
+### 带面包屑的 ResultItem
+
+  <p>
+    使用 `ResultItem` 展示包含面包屑、图标以及可选文本高亮的富内容选项。
+  </p>
+  <ComponentExample demo="CommandPaletteResultItemDemo">
+    <CommandPaletteResultItemDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Component Parts */}
+
+<ComponentSection>
+
+## 组件构成
+
+### CommandPalette.Root
+
+<p>
+  组合 Dialog 与 Panel 的主容器。管理打开状态和自动补全（Autocomplete）功能。
+</p>
+
+### CommandPalette.Dialog
+
+<p>
+  模态弹层容器。与 Panel 搭配使用可切换内容（例如逐级下钻导航）。
+</p>
+
+### CommandPalette.Panel
+
+<p>
+  不含弹层的自动补全面板。放在 Dialog 内使用，可切换内容而无需重新挂载。
+</p>
+
+### CommandPalette.Input
+
+<p>带自动聚焦和键盘处理的搜索输入框。</p>
+
+### CommandPalette.List
+
+<p>结果的可滚动容器。</p>
+
+### CommandPalette.Results
+
+<p>用于遍历选项／分组的 render 属性迭代器。</p>
+
+### CommandPalette.Group
+
+<p>按类别分组的容器。</p>
+
+### CommandPalette.GroupLabel
+
+<p>分组内的区块标题文字。</p>
+
+### CommandPalette.Items
+
+<p>用于遍历分组内选项的 render 属性迭代器。</p>
+
+### CommandPalette.Item
+
+<p>基础可选项。</p>
+
+### CommandPalette.ResultItem
+
+<p>包含面包屑、图标和文本高亮的富内容选项。</p>
+
+### CommandPalette.HighlightedText
+
+<p>根据匹配位置渲染带高亮片段的文本。</p>
+
+### CommandPalette.Empty
+
+<p>没有匹配结果时的空状态。</p>
+
+### CommandPalette.Loading
+
+<p>加载动画状态。</p>
+
+### CommandPalette.Footer
+
+  <p>
+    用于放置快捷键提示或其他内容的底部区域。
+  </p>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### CommandPalette.Root 属性
+
+```tsx
+interface CommandPaletteRootProps<TGroup, TItem> {
+  // Dialog state
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onBackdropClick?: (e: React.MouseEvent) => void;
+
+  // Autocomplete
+  items: TGroup[];
+  value?: string;
+  onValueChange?: (value: string) => void;
+  itemToStringValue?: (item: TGroup) => string;
+  filter?: (item: TGroup, query: string) => boolean;
+  onItemHighlighted?: (item: TGroup | undefined, details: {...}) => void;
+
+  // Selection
+  onSelect?: (item: TItem, options: { newTab: boolean }) => void;
+  getSelectableItems?: (items: TGroup[]) => TItem[];
+
+  children: React.ReactNode;
+}
+```
+
+### CommandPalette.ResultItem 属性
+
+```tsx
+interface CommandPaletteResultItemProps<T> {
+  value: T;
+  title: string;
+  breadcrumbs?: string[];
+  titleHighlights?: [number, number][];
+  breadcrumbHighlights?: [number, number][][];
+  description?: string;
+  icon?: React.ReactNode;
+  onClick: (e: React.MouseEvent) => void;
+  showArrow?: boolean; // default: true
+  external?: boolean; // shows external link icon
+  nonInteractive?: boolean;
+}
+```
+
+</ComponentSection>

@@ -1,0 +1,210 @@
+# @lark-ui/core — AI Usage Guide
+
+> Cloudflare's React component library built on [Base UI](https://base-ui.com) + Tailwind CSS v4.
+
+## Quick Start
+
+### CSS setup (required)
+
+In your main CSS file (e.g. `global.css`), add **all three lines in this order**:
+
+```css
+@source "path/to/node_modules/@lark-ui/core/dist/**/*.{js,jsx,ts,tsx}";
+@import "@lark-ui/core/styles";
+@import "tailwindcss";
+```
+
+- **`@source`** — Tells Tailwind to scan lark's compiled JS for class names. Without this, lark component internals will be unstyled. Adjust the relative path so it resolves to your project's `node_modules/`.
+- **Import order matters** — `@lark-ui/core/styles` must come **before** `@import "tailwindcss"` so lark's `@theme` tokens are registered first.
+
+### Component usage
+
+```tsx
+import { Button, Input, Dialog } from "@lark-ui/core";
+```
+
+## Critical Rules
+
+1. **Semantic tokens only** — use `bg-lark-base`, `text-lark-default`, etc. Never use raw Tailwind colors (`bg-blue-500`).
+2. **No `dark:` variant** — light/dark mode is handled automatically via CSS `light-dark()`. Never add `dark:` prefixes.
+3. **Merge classes with `cn()`** — import from `@lark-ui/core` and use it to combine class names.
+4. **Compound components** — many components use a dot-notation API: `<Dialog.Root>`, `<Dialog.Trigger>`, etc.
+
+## Component Quick Reference
+
+| Component          | Category   | Description                           | Key Props                                                                                                                      |
+| ------------------ | ---------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `Badge`            | Display    | Status/label indicator                | `variant`: primary, secondary, destructive, outline, beta                                                                      |
+| `Banner`           | Feedback   | Page-level alert message              | `variant`: default, alert, error; `icon`, `onDismiss`                                                                          |
+| `Breadcrumbs`      | Display    | Navigation breadcrumb trail           | Compound: `.Link` (with `href`), `.Separator`, `.Current`; `size`: sm, base                                                    |
+| `Button`           | Action     | Clickable action trigger              | `variant`: primary, secondary, ghost, destructive, secondary-destructive, outline; `size`, `shape`, `icon`, `loading`          |
+| `Checkbox`         | Input      | Toggle or multi-select control        | `checked`, `onCheckedChange`, `label`, `indeterminate`                                                                         |
+| `Checkbox.Group`   | Input      | Group of checkboxes with fieldset     | `legend`, `orientation`, `allValues`, `value`, `onValueChange`                                                                 |
+| `ClipboardText`    | Action     | Copy-to-clipboard text display        | `value`, `label`                                                                                                               |
+| `Code`             | Display    | Inline code or multi-line code block  | `children`; use `CodeBlock` for multi-line with copy                                                                           |
+| `Collapsible`      | Display    | Expandable/collapsible section        | `title`, `defaultOpen`                                                                                                         |
+| `Combobox`         | Input      | Autocomplete input with dropdown      | `items`, `value`, `onValueChange`, `multiple`, `label`                                                                         |
+| `CommandPalette`   | Navigation | Spotlight-style search overlay        | `.Root`, `.Input`, `.List`, `.Item`, `.ResultItem`                                                                             |
+| `DateRangePicker`  | Input      | Dual-calendar date range selector     | `onStartDateChange`, `onEndDateChange`, `size`, `timezone`                                                                     |
+| `Dialog`           | Overlay    | Modal dialog with backdrop            | `size`: sm, base, lg, xl; uses `.Root`, `.Trigger`, `.Title`, `.Close`                                                         |
+| `DropdownMenu`     | Overlay    | Context/action menu                   | `.Trigger`, `.Content`, `.Item`; item `variant`: default, danger                                                               |
+| `Empty`            | Display    | Empty state placeholder               | `icon`, `title`, `description`, `commandLine`, `contents`                                                                      |
+| `Field`            | Input      | Form field wrapper with label/error   | `label`, `description`, `error`, `required`, `labelTooltip`                                                                    |
+| `Grid`             | Layout     | Responsive CSS grid                   | `variant`: 2up, side-by-side, 2-1, 1-2, 1-3up, 3up, 4up, 1-2-4up; `gap`: none, sm, base, lg                                    |
+| `Input`            | Input      | Text input field                      | `size`: xs, sm, base, lg; `variant`: default, error; `label`, `error`                                                          |
+| `Label`            | Other      | Form label with optional tooltip      | `children`, `tooltip`, `required`                                                                                              |
+| `LayerCard`        | Display    | Card with header and collapsible body | `title`, `tag`, `actions`, `icon`                                                                                              |
+| `Link`             | Other      | Styled anchor/router link             | `variant`: inline, current, plain; `href`, `external`                                                                          |
+| `Loader`           | Feedback   | Animated loading spinner              | `size`: number (default 16)                                                                                                    |
+| `MenuBar`          | Navigation | Horizontal icon toolbar               | `isActive`, `options: { icon, tooltip, onClick }[]`                                                                            |
+| `Meter`            | Display    | Progress/usage meter bar              | `value`, `max`, `label`, `size`                                                                                                |
+| `Pagination`       | Navigation | Page navigation controls              | `page`, `setPage`, `perPage`, `totalCount`; `controls`: full, simple                                                           |
+| `Popover`          | Overlay    | Popup content anchored to trigger     | `.Trigger`, `.Content`, `.Title`, `.Description`, `.Close`; `side`, `align`                                                    |
+| `Radio`            | Input      | Single-select radio group             | `.Group` with `legend`, `.Item` with `label`, `value`                                                                          |
+| `Select`           | Input      | Dropdown select menu                  | `value`, `onValueChange`, `label`, `hideLabel` (default: true); children: `<Select.Option value="…">`                          |
+| `SensitiveInput`   | Input      | Input with show/hide toggle           | `label`, `size`, `variant`                                                                                                     |
+| `Surface`          | Layout     | Themed container panel                | `variant`: flat, raised; `as` for polymorphic rendering                                                                        |
+| `Switch`           | Input      | Toggle switch control                 | `checked`, `onCheckedChange`, `label`, `size`                                                                                  |
+| `Table`            | Display    | Data table with selection             | `.Header`, `.Head`, `.Body`, `.Row`, `.Cell`, `.Footer`, `.CheckCell`, `.CheckHead`, `.ResizeHandle`; `layout`: auto, fixed    |
+| `Tabs`             | Navigation | Tabbed navigation                     | `tabs: { value, label, render? }[]`; `variant`: segmented, underline; `value`, `onValueChange`                                 |
+| `Text`             | Display    | Themed text with semantic variants    | `variant`: heading1, heading2, heading3, body, secondary, success, error, mono, mono-secondary; `size`: xs, sm, base, lg; `as` |
+| `Toast` / `Toasty` | Feedback   | Toast notification system             | Wrap app with `<Toasty>`, use `Toast.useToastManager().notify()`                                                               |
+| `Tooltip`          | Overlay    | Hover/focus tooltip                   | `content`, `side`, `align`, `asChild`                                                                                          |
+
+## Semantic Token Reference
+
+### Surface Hierarchy
+
+| Token              | Purpose                                                                      |
+| ------------------ | ---------------------------------------------------------------------------- |
+| `bg-lark-canvas`   | The outermost page background — sits behind everything                       |
+| `bg-lark-base`     | Default component background                                                 |
+| `bg-lark-elevated` | Slightly elevated surface, e.g. `LayerCard.Secondary`                        |
+| `bg-lark-recessed` | Recessed surface with a subtly darker fill, e.g. segmented `Tabs` background |
+| `bg-lark-tint`     | Subtle tinted background for tables or hover states                          |
+| `bg-lark-contrast` | High-contrast, inverted background                                           |
+
+### Brand
+
+| Token                 | Purpose                           |
+| --------------------- | --------------------------------- |
+| `bg-lark-brand`       | Primary brand background          |
+| `bg-lark-brand-hover` | Hover state for brand backgrounds |
+
+### Semantic Status Colors
+
+| Token             | Purpose                         |
+| ----------------- | ------------------------------- |
+| `bg-lark-info`    | Info indicator (icon, dot, bar) |
+| `bg-lark-success` | Success indicator               |
+| `bg-lark-warning` | Warning indicator               |
+| `bg-lark-danger`  | Error/destructive indicator     |
+
+Use the solid token on icons, status dots, and progress fills. Banners and badges use the solid fills with a reduced opacity.
+
+### Text Colors
+
+| Token                   | Purpose                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| `text-lark-default`     | Primary body text                                              |
+| `text-lark-strong`      | Secondary text with slightly less contrast than default        |
+| `text-lark-subtle`      | Muted text for descriptions, captions, or secondary labels     |
+| `text-lark-inactive`    | Disabled or inactive text                                      |
+| `text-lark-placeholder` | Placeholder text in inputs                                     |
+| `text-lark-inverse`     | Text intended for use on high-contrast or inverted backgrounds |
+| `text-lark-link`        | Link text                                                      |
+| `text-lark-info`        | Info-colored text                                              |
+| `text-lark-success`     | Success-colored text                                           |
+| `text-lark-warning`     | Warning-colored text                                           |
+| `text-lark-danger`      | Error/destructive text                                         |
+
+### Borders & Rings
+
+| Token           | Purpose                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| `lark-hairline` | A border/ring color to distinguish between flat surfaces where no shadow is present (i.e. `LayerCard`). |
+| `lark-line`     | A thicker border/ring color that defines the edge of an elevated surface alongside a shadow.            |
+
+## Icons
+
+Lark uses **[Phosphor Icons](https://phosphoricons.com/)** via `@phosphor-icons/react`:
+
+```tsx
+import { PlusIcon, TrashIcon, GearIcon } from "@phosphor-icons/react";
+
+<Button icon={PlusIcon}>Add Worker</Button>
+<DropdownMenu.Item icon={TrashIcon} variant="danger">Delete</DropdownMenu.Item>
+```
+
+## Controlled State Reference
+
+| Component        | Value Prop | Change Callback   | Default Prop     |
+| ---------------- | ---------- | ----------------- | ---------------- |
+| `Input`          | `value`    | `onChange`        | `defaultValue`   |
+| `Select`         | `value`    | `onValueChange`   | `defaultValue`   |
+| `Combobox`       | `value`    | `onValueChange`   | `defaultValue`   |
+| `Switch`         | `checked`  | `onCheckedChange` | `defaultChecked` |
+| `Checkbox`       | `checked`  | `onCheckedChange` | `defaultChecked` |
+| `Checkbox.Group` | `value`    | `onValueChange`   | `defaultValue`   |
+| `Radio.Group`    | `value`    | `onValueChange`   | `defaultValue`   |
+| `Tabs`           | `value`    | `onValueChange`   | `selectedValue`  |
+
+## Common Patterns
+
+### Field Wrapper (label + description + error)
+
+Most input components accept `label`, `description`, and `error` props that automatically wrap the input in a `<Field>`:
+
+```tsx
+<Input label="Email" description="We'll never share your email" error="Required" variant="error" />
+<Select label="Region" hideLabel={false} error="Please select a region">
+  <Select.Option value="us">US East</Select.Option>
+  <Select.Option value="eu">EU West</Select.Option>
+</Select>
+<Combobox label="Tags" items={tags} multiple />
+```
+
+> **Note:** `Select` defaults to `hideLabel={true}` (label is screen-reader only). Pass `hideLabel={false}` for a visible label.
+
+### Compound Components
+
+Many components use a compound/dot-notation API via `Object.assign`:
+
+```tsx
+<Dialog.Root>
+  <Dialog.Trigger render={(p) => <Button {...p}>Open</Button>} />
+  <Dialog size="lg" className="p-8">
+    <Dialog.Title>Confirm</Dialog.Title>
+    <Dialog.Description>Are you sure?</Dialog.Description>
+    <Dialog.Close render={(p) => <Button {...p}>Cancel</Button>} />
+  </Dialog>
+</Dialog.Root>
+```
+
+### Loading States
+
+Buttons support a `loading` prop that shows a spinner and disables interaction:
+
+```tsx
+<Button loading>Saving...</Button>
+```
+
+### Polymorphic Rendering
+
+Some components accept an `as` prop or Base UI's `render` prop:
+
+```tsx
+<Surface as="section" variant="raised">Content</Surface>
+<Text variant="heading1" as="h2">Custom heading level</Text>
+<Dialog.Trigger render={(p) => <Button {...p}>Open</Button>} />
+```
+
+## Full Registry
+
+For complete prop details, variant values, Tailwind classes, and code examples for every component, see:
+
+```
+@lark-ui/core/ai/component-registry.json
+```
+
+This JSON file contains structured metadata for all components, optimized for AI/agent consumption.

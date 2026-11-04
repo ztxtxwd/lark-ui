@@ -1,0 +1,164 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Grid 栅格"
+description: "用于把内容组织成多列的响应式栅格布局组件。"
+sourceFile: "components/grid"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  GridDemo,
+  GridVariantsDemo,
+  GridAsymmetricDemo,
+  GridGapDemo,
+  GridMobileDividerDemo,
+} from "~/components/demos/GridDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="GridDemo">
+    <GridDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+```tsx
+import { Grid, GridItem } from "@lark-ui/core";
+```
+
+</ComponentSection>
+
+{/* Grid Variants */}
+
+<ComponentSection>
+
+## 栅格变体
+
+  <p>
+    栅格（Grid）组件支持多种列布局，并能响应式地适配各个断点。
+  </p>
+  <ComponentExample demo="GridVariantsDemo">
+    <GridVariantsDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Asymmetric Layouts */}
+
+<ComponentSection>
+
+## 非对称布局
+
+  <p>侧边栏/主体内容等布局请使用非对称变体。</p>
+  <ComponentExample demo="GridAsymmetricDemo">
+    <GridAsymmetricDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Gap Sizes */}
+
+<ComponentSection>
+
+## 间距尺寸
+
+  <p>使用 gap 属性控制栅格项之间的间距。</p>
+  <ComponentExample demo="GridGapDemo">
+    <GridGapDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Mobile Dividers */}
+
+<ComponentSection>
+
+## 移动端分隔线
+
+  <p>
+    使用 mobileDivider 属性在移动端的栅格项之间添加分隔线（仅对 4up 变体有效）。
+  </p>
+  <ComponentExample demo="GridMobileDividerDemo">
+    <GridMobileDividerDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* All Variants */}
+
+<ComponentSection>
+
+## 全部变体
+
+  <p>所有可用栅格变体一览：</p>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead>
+        <tr class="border-b border-lark-hairline">
+          <th class="py-3 pr-4 font-medium">变体</th>
+          <th class="py-3 pr-4 font-medium">说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`2up`</td>
+          <td class="py-3 pr-4">移动端 1 列，中等及以上断点 2 列</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`side-by-side`</td>
+          <td class="py-3 pr-4">始终 2 列</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`2-1`</td>
+          <td class="py-3 pr-4">中等及以上断点按 66%/33% 分配</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`1-2`</td>
+          <td class="py-3 pr-4">中等及以上断点按 33%/66% 分配</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`1-3up`</td>
+          <td class="py-3 pr-4">移动端 1 列，大型及以上断点 3 列</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`3up`</td>
+          <td class="py-3 pr-4">移动端 1 列，中等断点 2 列，大型断点 3 列</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`4up`</td>
+          <td class="py-3 pr-4">渐进式：1 → 2 → 3 → 4 列</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`6up`</td>
+          <td class="py-3 pr-4">移动端 2 列，XL 断点最多 6 列</td>
+        </tr>
+        <tr class="border-b border-lark-hairline">
+          <td class="py-3 pr-4">`1-2-4up`</td>
+          <td class="py-3 pr-4">移动端 1 列，中等断点 2 列，大型断点 4 列</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Grid
+
+  <PropsTable component="Grid" />
+
+### GridItem
+
+<p>
+  GridItem 是栅格子元素的包装组件。它接受标准的 div 属性，包括 `className` 和 `children`。
+</p>
+
+</ComponentSection>

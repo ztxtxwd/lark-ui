@@ -1,0 +1,320 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Toast 轻提示"
+description: "用于向用户展示简短、不打断操作的消息的通知系统。"
+sourceFile: "components/toast"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  ToastBasicDemo,
+  ToastTitleOnlyDemo,
+  ToastDescriptionOnlyDemo,
+  ToastSuccessDemo,
+  ToastMultipleDemo,
+  ToastDeduplicatedDemo,
+  ToastErrorDemo,
+  ToastWarningDemo,
+  ToastInfoDemo,
+  ToastCustomContentDemo,
+  ToastActionsDemo,
+  ToastPromiseDemo,
+  ToastFunctionalUpdateDemo,
+} from "~/components/demos/ToastDemo";
+
+{/* 主视觉演示 */}
+
+<ComponentSection>
+  <ComponentExample demo="ToastBasicDemo">
+    <ToastBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* 安装 */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { Toasty, useLarkToastManager } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { Toasty, useLarkToastManager } from "@lark-ui/core/components/toast";
+```
+
+</ComponentSection>
+
+{/* 用法 */}
+
+<ComponentSection>
+
+## 用法
+
+  <p>
+    轻提示（Toast）系统由两部分组成：`Toasty` provider 组件，以及用于触发轻提示的 `useLarkToastManager()` hook。
+  </p>
+
+```tsx
+import { Toasty, useLarkToastManager, Button } from "@lark-ui/core";
+
+function ToastTrigger() {
+  const toastManager = useLarkToastManager();
+
+  return (
+    <Button
+      onClick={() =>
+        toastManager.add({
+          title: "Success!",
+          description: "Your changes have been saved.",
+        })
+      }
+    >
+      Save changes
+    </Button>
+  );
+}
+
+export default function App() {
+  return (
+    <Toasty>
+      <ToastTrigger />
+      {/* Rest of your app */}
+    </Toasty>
+  );
+}
+```
+
+</ComponentSection>
+
+{/* 初始化 */}
+
+<ComponentSection>
+
+## 初始化
+
+  <p>
+    用 `Toasty` provider 包裹你的应用（或其中的一部分）。它会建立轻提示上下文并渲染轻提示容器。
+  </p>
+
+```tsx
+// In your app root or layout
+import { Toasty } from "@lark-ui/core";
+
+export function Layout({ children }) {
+  return <Toasty>{children}</Toasty>;
+}
+```
+
+</ComponentSection>
+
+{/* 示例 */}
+
+<ComponentSection>
+
+## 示例
+
+### 标题与描述
+
+<p>同时包含标题和描述的完整轻提示。</p>
+<ComponentExample demo="ToastBasicDemo">
+  <ToastBasicDemo client:visible />
+</ComponentExample>
+
+### 仅标题
+
+<p>只有标题的简单轻提示，用于简短消息。</p>
+<ComponentExample demo="ToastTitleOnlyDemo">
+  <ToastTitleOnlyDemo client:visible />
+</ComponentExample>
+
+### 仅描述
+
+<p>只有描述的轻提示，用于更详细的消息。</p>
+<ComponentExample demo="ToastDescriptionOnlyDemo">
+  <ToastDescriptionOnlyDemo client:visible />
+</ComponentExample>
+
+### 成功变体
+
+<p>确认操作和正面结果请使用成功变体。</p>
+<ComponentExample demo="ToastSuccessDemo">
+  <ToastSuccessDemo client:visible />
+</ComponentExample>
+
+### 多个轻提示
+
+<p>
+  多个轻提示会堆叠并呈现平滑的动画。悬停在堆叠上方即可展开。
+</p>
+<ComponentExample demo="ToastMultipleDemo">
+  <ToastMultipleDemo client:visible />
+</ComponentExample>
+
+### 去重轻提示
+
+<p>
+  为重复的通知指定稳定的 <code>id</code>，屏幕上就只会保留一个轻提示。
+  快速连续点击：每次触发都会顶替当前轻提示，而不是再堆叠一份副本。
+</p>
+<ComponentExample demo="ToastDeduplicatedDemo">
+  <ToastDeduplicatedDemo client:visible />
+</ComponentExample>
+
+### 函数式更新
+
+<p>
+  基于轻提示的当前状态就地更新它。此示例会在部署提示创建后将其切换为成功状态。
+</p>
+<ComponentExample demo="ToastFunctionalUpdateDemo">
+  <ToastFunctionalUpdateDemo client:load />
+</ComponentExample>
+
+### 错误变体
+
+<p>需要关注的关键问题请使用错误变体。</p>
+<ComponentExample demo="ToastErrorDemo">
+  <ToastErrorDemo client:visible />
+</ComponentExample>
+
+### 警告变体
+
+<p>警示性消息请使用警告变体。</p>
+<ComponentExample demo="ToastWarningDemo">
+  <ToastWarningDemo client:visible />
+</ComponentExample>
+
+### 信息变体
+
+<p>中性的信息类消息请使用信息变体。</p>
+<ComponentExample demo="ToastInfoDemo">
+  <ToastInfoDemo client:visible />
+</ComponentExample>
+
+### 自定义内容
+
+<p>使用 content 属性可渲染完全自定义的轻提示内容。</p>
+<ComponentExample demo="ToastCustomContentDemo">
+  <ToastCustomContentDemo client:visible />
+</ComponentExample>
+
+### 操作按钮
+
+<p>为轻提示添加操作按钮以支持用户交互。</p>
+<ComponentExample demo="ToastActionsDemo">
+  <ToastActionsDemo client:visible />
+</ComponentExample>
+
+### Promise
+
+<p>
+  使用 promise 方法可以自动展示加载、成功和错误状态。
+</p>
+<ComponentExample demo="ToastPromiseDemo">
+  <ToastPromiseDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API 参考 */}
+
+<ComponentSection>
+
+## API 参考
+
+### Toasty
+
+<p>包裹你的应用并管理轻提示系统的 provider 组件。</p>
+<PropsTable component="Toasty" />
+
+### useLarkToastManager()
+
+<p>返回轻提示管理器、用于创建轻提示的 hook。</p>
+
+```tsx
+const toastManager = useLarkToastManager();
+
+// Add a toast
+toastManager.add(options);
+
+// Update from the current toast state
+toastManager.update(toastId, (toast) => ({
+  description: `Updated after ${toast.timeout ?? 5000}ms`,
+}));
+
+// Promise-based toast
+toastManager.promise(asyncFn(), {
+  loading: options,
+  success: (data) => options,
+  error: (err) => options,
+});
+```
+
+### 轻提示选项
+
+<p>传给 `toastManager.add()` 和 promise 处理器的选项。</p>
+<div class="overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead>
+      <tr class="border-b border-lark-hairline">
+        <th class="py-3 pr-4 font-semibold">属性</th>
+        <th class="py-3 pr-4 font-semibold">类型</th>
+        <th class="py-3 pr-4 font-semibold">默认值</th>
+        <th class="py-3 font-semibold">说明</th>
+      </tr>
+    </thead>
+    <tbody class="text-lark-subtle">
+      <tr class="border-b border-lark-hairline">
+        <td class="py-3 pr-4 font-mono text-lark-default">title</td>
+        <td class="py-3 pr-4 font-mono">string</td>
+        <td class="py-3 pr-4">—</td>
+        <td class="py-3">突出显示的轻提示标题。</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="py-3 pr-4 font-mono text-lark-default">description</td>
+        <td class="py-3 pr-4 font-mono">string</td>
+        <td class="py-3 pr-4">—</td>
+        <td class="py-3">显示在标题下方的次要文本。</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="py-3 pr-4 font-mono text-lark-default">variant</td>
+        <td class="py-3 pr-4 font-mono">
+          "default" | "success" | "error" | "warning" | "info"
+        </td>
+        <td class="py-3 pr-4 font-mono">"default"</td>
+        <td class="py-3">轻提示的视觉样式。</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="py-3 pr-4 font-mono text-lark-default">content</td>
+        <td class="py-3 pr-4 font-mono">ReactNode</td>
+        <td class="py-3 pr-4">—</td>
+        <td class="py-3">
+          渲染在轻提示内部的自定义内容。会覆盖标题和描述。
+        </td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="py-3 pr-4 font-mono text-lark-default">actions</td>
+        <td class="py-3 pr-4 font-mono">ButtonProps[]</td>
+        <td class="py-3 pr-4">—</td>
+        <td class="py-3">要渲染为操作按钮的属性数组。</td>
+      </tr>
+      <tr class="border-b border-lark-hairline">
+        <td class="py-3 pr-4 font-mono text-lark-default">timeout</td>
+        <td class="py-3 pr-4 font-mono">number</td>
+        <td class="py-3 pr-4 font-mono">5000</td>
+        <td class="py-3">
+          轻提示自动消失前的毫秒数。
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</ComponentSection>

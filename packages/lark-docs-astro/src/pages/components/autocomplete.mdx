@@ -1,0 +1,212 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Autocomplete 自动补全"
+description: "可自由输入文本、并可选附带过滤建议列表的输入框。与组合框（Combobox）不同，它的取值不受选项列表限制。"
+sourceFile: "components/autocomplete"
+baseUIComponent: "autocomplete"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  AutocompleteDemo,
+  AutocompleteWithFieldDemo,
+  AutocompleteErrorDemo,
+  AutocompleteGroupedDemo,
+  AutocompleteSizesDemo,
+  AutocompleteControlledDemo,
+} from "~/components/demos/AutocompleteDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="AutocompleteDemo">
+    <AutocompleteDemo client:load />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock
+  code={`import { Autocomplete } from "@lark-ui/core";`}
+  lang="tsx"
+/>
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Autocomplete } from "@lark-ui/core/components/autocomplete";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* When to use */}
+
+<ComponentSection>
+
+## 何时使用
+
+<p>
+  当输入值可以是自由文本、建议项仅作为可选提示时，使用 `Autocomplete`。当所选值必须来自预定义列表时，请改用 `Combobox`。
+</p>
+</ComponentSection>
+
+{/* Controlled */}
+
+<ComponentSection>
+
+## 受控
+
+<p>
+  传入 `value` 和 `onValueChange` 即可使用受控模式。
+</p>
+<ComponentExample demo="AutocompleteControlledDemo">
+  <AutocompleteControlledDemo client:load />
+</ComponentExample>
+</ComponentSection>
+
+{/* With Field */}
+
+<ComponentSection>
+
+## 搭配 Field 使用
+
+<p>
+  添加 `label`、`description` 和 `required` 即可启用内置的 Field 包装器。
+</p>
+<ComponentExample demo="AutocompleteWithFieldDemo">
+  <AutocompleteWithFieldDemo client:load />
+</ComponentExample>
+</ComponentSection>
+
+{/* Error State */}
+
+<ComponentSection>
+
+## 错误状态
+
+<p>
+  通过 `error` 属性展示校验错误。
+</p>
+<ComponentExample demo="AutocompleteErrorDemo">
+  <AutocompleteErrorDemo client:load />
+</ComponentExample>
+</ComponentSection>
+
+{/* Grouped */}
+
+<ComponentSection>
+
+## 分组
+
+<p>
+  使用 `Autocomplete.Group` 和 `Autocomplete.GroupLabel` 将选项按类别分组。
+</p>
+<ComponentExample demo="AutocompleteGroupedDemo">
+  <AutocompleteGroupedDemo client:load />
+</ComponentExample>
+</ComponentSection>
+
+{/* Sizes */}
+
+<ComponentSection>
+
+## 尺寸
+
+<p>
+  `Autocomplete.InputGroup` 上的 `size` 属性支持四种尺寸变体，与输入框（Input）组件保持一致：`xs`、`sm`、`base`（默认）和 `lg`。
+</p>
+<ComponentExample demo="AutocompleteSizesDemo">
+  <AutocompleteSizesDemo client:load />
+</ComponentExample>
+</ComponentSection>
+
+{/* Filtering */}
+
+<ComponentSection>
+
+## 过滤
+
+<p>
+  默认情况下，过滤不区分大小写和重音符号，底层由 `Intl.Collator` 提供支持。对于字符串选项，无需自定义 `filter`。
+</p>
+<p>
+  当需要按对象选项的某个属性进行过滤时，请使用
+  `Autocomplete.useFilter()` 以保留内置的不区分重音符号的匹配能力：
+</p>
+
+```tsx
+function LanguagePicker() {
+  const { contains } = Autocomplete.useFilter();
+
+  const filter = useCallback(
+    (item: Language, query: string) => contains(item.label, query),
+    [contains],
+  );
+
+  return (
+    <Autocomplete items={languages} filter={filter}>
+      {/* ... */}
+    </Autocomplete>
+  );
+}
+```
+
+<p>
+  如需完全关闭过滤（例如结果来自服务端），传入 `filter={null}`：
+</p>
+
+```tsx
+<Autocomplete items={results} filter={null}>
+  ...
+</Autocomplete>
+```
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Autocomplete
+
+<p>根组件。包裹所有子组件并管理状态。</p>
+<PropsTable component="Autocomplete" />
+
+### Autocomplete.InputGroup
+
+<p>
+  自包含的输入容器，同时渲染文本输入框、清除按钮和下拉触发器。
+</p>
+<PropsTable component="Autocomplete.InputGroup" />
+
+### Autocomplete.Content
+
+<p>下拉弹层容器。包裹 Portal、Positioner 和 Popup。</p>
+<PropsTable component="Autocomplete.Content" />
+
+### Autocomplete.Item
+
+<p>列表中的单个建议项。</p>
+<PropsTable component="Autocomplete.Item" />
+
+### 其他子组件
+
+  <ul class="list-disc list-inside space-y-1">
+    <li>`Autocomplete.List` — 支持 render 属性的可滚动列表容器</li>
+    <li>`Autocomplete.Group` — 将选项归入某个标题之下</li>
+    <li>`Autocomplete.GroupLabel` — 分组的标题标签</li>
+    <li>`Autocomplete.Collection` — 分组内的选项容器</li>
+    <li>`Autocomplete.Separator` — 选项之间的水平分隔线</li>
+  </ul>
+</ComponentSection>

@@ -1,0 +1,35 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Custom Chart 自定义图表"
+description: "基于 Chart 组件的示例图表。"
+sourceFile: "components/chart"
+---
+
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import {
+  PieChartDemo,
+  CustomTooltipChartDemo,
+} from "~/components/demos/Chart/ChartDemo";
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+
+<ComponentSection>
+
+## 自定义图表
+
+  <ComponentExample demo="PieChartDemo">
+    <PieChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 使用 HTML 的自定义工具提示
+
+对于需要自定义 HTML 格式的工具提示（Tooltip），请使用 `dangerousHtmlFormatter` 属性而不是标准的 `formatter`。这样可以让安全影响更加明确。
+
+使用 `dangerousHtmlFormatter` 时，**强烈建议**使用 `echarts.format.encodeHTML` 对用户提供的任何内容进行净化处理，以防止 XSS 漏洞。
+
+  <ComponentExample demo="CustomTooltipChartDemo">
+    <CustomTooltipChartDemo client:visible />
+  </ComponentExample>
+</ComponentSection>

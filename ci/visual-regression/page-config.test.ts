@@ -15,7 +15,7 @@ const components: DiscoveredComponent[] = [
 describe("visual regression page selection", () => {
   it("maps homepage files to the homepage capture", () => {
     const homeGrid =
-      "packages/kumo-docs-astro/src/components/demos/HomeGrid.tsx";
+      "packages/lark-docs-astro/src/components/demos/HomeGrid.tsx";
 
     assert.equal(getComponentFromFile(homeGrid), "home");
     assert.deepEqual(getAffectedComponents([homeGrid], components), [
@@ -29,7 +29,7 @@ describe("visual regression page selection", () => {
   });
 
   it("keeps component changes scoped to their docs page", () => {
-    const button = "packages/kumo/src/components/button/button.tsx";
+    const button = "packages/lark/src/components/button/button.tsx";
 
     assert.equal(getComponentFromFile(button), "button");
     assert.deepEqual(getAffectedComponents([button], components), [
@@ -38,7 +38,7 @@ describe("visual regression page selection", () => {
   });
 
   it("classifies shared styles as requiring full coverage", () => {
-    const result = classifyChangedFiles(["packages/kumo/src/styles/kumo.css"]);
+    const result = classifyChangedFiles(["packages/lark/src/styles/lark.css"]);
 
     assert.equal(result.requiresFullRegression, true);
     assert.equal(result.allSkippable, false);

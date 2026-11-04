@@ -1,0 +1,377 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "颜色"
+description: "Lark 使用语义化颜色 token，可自动适配浅色模式和深色模式。请在 Tailwind CSS 中使用这些类，而不是原始颜色值。"
+---
+
+import {
+  TailwindColorTokens,
+  StatusBannerDemo,
+} from "~/components/demos/ColorsDemo";
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import { Badge, Banner } from "@lark-ui/core";
+import { InfoIcon } from "@phosphor-icons/react";
+
+## 用法
+
+请始终使用语义化 token，而不是原始的 Tailwind 颜色。这样可以确保你的 UI 自动适配浅色模式和深色模式，并让组件在各主题之间保持一致。
+
+#### 正确
+
+```tsx
+<div className="bg-lark-base text-lark-default border-lark-hairline">
+  <button className="bg-lark-brand text-white">Primary</button>
+  <button className="bg-lark-control text-lark-default">Secondary</button>
+</div>
+```
+
+#### 错误
+
+```tsx
+{
+  /* Never use raw Tailwind colors */
+}
+<div className="bg-white dark:bg-gray-900 text-black dark:text-white">
+  <button className="bg-blue-500">Primary</button>
+</div>;
+```
+
+> Lint 规则会强制执行这一点：`no-primitive-colors` 规则会标记任何原始 Tailwind 颜色，例如 `bg-blue-500`。
+
+## 模式
+
+在父元素上设置 `data-mode` 即可控制浅色/深色模式。请不要使用 Tailwind 的 `dark:` 变体——语义化 token 已通过 CSS 的 `light-dark()` 自动处理深色模式。
+
+```tsx
+// Set mode on html or body
+<html data-mode="light">  // Light mode
+<html data-mode="dark">   // Dark mode
+
+// Components automatically adapt - no dark: variants needed
+<div className="bg-lark-base text-lark-default" />
+```
+
+## 主题
+
+主题会在保持 token 名称不变的前提下覆盖语义化 token 的值。在父元素上设置 `data-theme` 即可应用主题。
+
+### 可用主题
+
+- `lark`——默认的 Universe Design 主题（无需设置属性）
+
+```tsx
+// The default theme is applied automatically; data-theme is optional
+<div data-theme="lark">
+  <Button>Lark Styled</Button>
+</div>
+
+// Themes work with both light and dark mode
+<html data-mode="dark" data-theme="lark">
+```
+
+### 主题生成器
+
+主题在一个集中配置中定义，并生成为 CSS 文件。主题生成器确保所有主题之间保持一致。
+
+```bash
+
+# List all tokens and their theme overrides
+
+pnpm --filter @lark-ui/core codegen:themes --list
+
+# Generate theme CSS files
+
+pnpm --filter @lark-ui/core codegen:themes
+
+# Preview changes without writing files
+
+pnpm --filter @lark-ui/core codegen:themes --dry-run
+```
+
+主题配置：`packages/lark/scripts/theme-generator/config.ts`
+
+### 创建新主题
+
+在配置文件中添加主题覆盖项。只覆盖需要改动的 token——其他所有 token 都继承自基础的 lark 主题。
+
+```ts
+// In scripts/theme-generator/config.ts
+export const THEME_CONFIG: ThemeConfig = {
+  color: {
+    "lark-base": {
+      newName: "",
+      theme: {
+        lark: {
+          light: "var(--color-white, #fff)",
+          dark: "var(--color-black, #000)",
+        },
+        // Add your theme override
+        myTheme: {
+          light: "#f0f4f8",
+          dark: "#1a1f2e",
+        },
+      },
+    },
+    // ... other tokens
+  },
+};
+
+// Add to available themes
+export const AVAILABLE_THEMES = ["lark", "myTheme"] as const;
+```
+
+然后运行 `pnpm codegen:themes` 生成 CSS。
+
+## 语义化 token
+
+我们使用语义化 token 按用途对颜色进行分组。请选择与元素角色相匹配的 token，而不是你想要达到的具体颜色。
+
+语义化 token 是按**角色**命名的，而不是按色相命名。像 `bg-lark-danger` 这样的 token 传达的是意图——它并不暗指某种特定的红色，其具体数值可以随主题或颜色模式变化，而无需改动你的组件代码。
+
+### 表面层级
+
+表面层级用于在 UI 中建立深度和层次。请从最外层背景开始，按顺序向内使用。
+
+<div style="overflow-x: auto;">
+  <table>
+    <colgroup>
+      <col style="width: 22ch;" />
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>token</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>bg-lark-canvas</code></td>
+        <td>最外层的页面背景——位于所有内容之后</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-base</code></td>
+        <td>组件的默认背景</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-elevated</code></td>
+        <td>略微抬升的表面层级，例如 <code>LayerCard.Secondary</code></td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-recessed</code></td>
+        <td>凹陷的表面层级，填充色略深，例如分段式 <code>Tabs</code> 的背景</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-tint</code></td>
+        <td>用于表格或悬停状态的浅色着色背景</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-contrast</code></td>
+        <td>高对比度的反色背景</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### 品牌色
+
+<div style="overflow-x: auto;">
+  <table>
+    <colgroup>
+      <col style="width: 22ch;" />
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>token</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>bg-lark-brand</code></td>
+        <td>主要品牌色背景</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-brand-hover</code></td>
+        <td>品牌色背景的悬停状态</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-brand-pressed</code></td>
+        <td>品牌色背景的按下状态</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-fill-hover</code></td>
+        <td>中性元素（列表项、菜单项）的悬停填充</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-fill-pressed</code></td>
+        <td>中性元素的按下填充</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-fill-selected</code></td>
+        <td>选中项的品牌色淡填充</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-fill-active</code></td>
+        <td>品牌色元素的激活填充</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-mask</code></td>
+        <td>模态遮罩</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### 语义化状态色
+
+每种状态色都有两个变体：用于图标和指示器的实色，以及用于内容背后背景填充的 `-tint` 变体（即 `Badge` 徽标或 `Banner` 通告栏）。
+
+<div style="overflow-x: auto;">
+  <table>
+    <colgroup>
+      <col style="width: 22ch;" />
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>token</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>bg-lark-info</code></td>
+        <td>信息指示器</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-success</code></td>
+        <td>成功指示器</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-warning</code></td>
+        <td>警告指示器</td>
+      </tr>
+      <tr>
+        <td><code>bg-lark-danger</code></td>
+        <td>错误/危险操作指示器</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+状态圆点使用实色 token `bg-lark-*`，图标使用 `fill-lark-*`，边框和描边使用 `border-lark-*`、`ring-lark-*`。通告栏和徽标使用 `-tint` 变体，并搭配不同的透明度数值。
+
+<ComponentExample demo="StatusBannerDemo">
+  <StatusBannerDemo client:visible />
+</ComponentExample>
+
+### 文字颜色
+
+<div style="overflow-x: auto;">
+  <table>
+    <colgroup>
+      <col style="width: 22ch;" />
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>token</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>text-lark-default</code></td>
+        <td>主要正文文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-strong</code></td>
+        <td>对比度高于默认值的文字，用于标题和重要标签</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-subtle</code></td>
+        <td>弱化文字，用于说明文字、图注或次级标签</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-inactive</code></td>
+        <td>已禁用或非活跃状态的文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-placeholder</code></td>
+        <td>输入框中的占位符文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-inverse</code></td>
+        <td>用于高对比度或反色背景上的文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-link</code></td>
+        <td>链接文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-info</code></td>
+        <td>信息色文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-success</code></td>
+        <td>成功色文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-warning</code></td>
+        <td>警告色文字</td>
+      </tr>
+      <tr>
+        <td><code>text-lark-danger</code></td>
+        <td>错误/危险操作文字</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+> 语义化文字颜色（即 <code>text-lark-success</code>）默认更深，以便在 <code>tint-*</code> 背景上提供更好的对比度和可读性。
+
+### 边框与描边
+
+<div style="overflow-x: auto;">
+  <table>
+    <colgroup>
+      <col style="width: 22ch;" />
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>token</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <span className="inline-flex items-center gap-2">
+            <code>lark-hairline</code>
+          </span>
+        </td>
+        <td>在没有阴影的平面表面之间用于区分的边框/描边颜色（即 <code>LayerCard</code>）。</td>
+      </tr>
+      <tr>
+        <td><code>lark-line</code></td>
+        <td>更粗的边框/描边颜色，配合阴影一起界定抬升表面的边缘。</td>
+      </tr>
+      <tr>
+        <td><code>lark-border</code></td>
+        <td>
+          表单控件（<code>Input</code>、<code>Select</code>、<code>Checkbox</code> 等）的边框颜色。
+          悬停与聚焦时边框会变为品牌色。
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## token 参考
+
+在页头切换主题，即可查看 token 如何适配。标记为「global」的 token 是需要显式启用的类，无论使用哪个主题都可用。
+
+<TailwindColorTokens client:load />

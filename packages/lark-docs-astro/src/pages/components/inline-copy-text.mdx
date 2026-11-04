@@ -1,0 +1,90 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Inline Copy Text 行内复制文本"
+description: "用于短文本值的紧凑无边框复制控件。"
+sourceFile: "components/inline-copy-text"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  InlineCopyTextBasicDemo,
+  InlineCopyTextResourceRowDemo,
+  InlineCopyTextRichContentDemo,
+} from "~/components/demos/InlineCopyTextDemo";
+
+<ComponentSection>
+  <ComponentExample demo="InlineCopyTextBasicDemo">
+    <InlineCopyTextBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+```tsx
+import { InlineCopyText } from "@lark-ui/core";
+```
+
+### 按需导出
+
+```tsx
+import { InlineCopyText } from "@lark-ui/core/components/inline-copy-text";
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 用法
+
+在表格单元格等密集界面中，可用 `InlineCopyText` 展示较短的标识和值。当值需要以只读、类似输入框的形式呈现，并始终显示复制按钮时，请使用 [`ClipboardText`](/components/clipboard-text)。
+
+```tsx
+import { InlineCopyText } from "@lark-ui/core";
+
+export default function Example() {
+  return (
+    <InlineCopyText
+      labels={{ copyAction: "Copy database ID", copied: "Database ID copied" }}
+    >
+      f86b3f10-32e9-4db7-ae95-84a1b2c3d4e5
+    </InlineCopyText>
+  );
+}
+```
+
+</ComponentSection>
+
+<ComponentSection>
+
+## 示例
+
+### 资源行
+
+在外层使用 Tailwind `group`，即可在整个行悬停或获得焦点时显示复制图标。
+
+<ComponentExample demo="InlineCopyTextResourceRowDemo">
+  <InlineCopyTextResourceRowDemo client:visible />
+</ComponentExample>
+
+### 富文本内容
+
+默认复制字符串类型的子元素。当子元素不是字符串时，请通过必填的 `value` 属性提供要复制的值。`InlineCopyText` 还接受 Text 组件的属性，例如 `variant`、`size`、`bold`、`truncate` 和 `as`；不支持标题类变体。
+
+<ComponentExample demo="InlineCopyTextRichContentDemo">
+  <InlineCopyTextRichContentDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="InlineCopyText" />
+</ComponentSection>

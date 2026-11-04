@@ -1,0 +1,145 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Button Group 按钮组"
+description: "把一个主要操作和一个下拉触发器合并为单个分裂按钮。"
+sourceFile: "components/button-group"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  ButtonGroupSplitDemo,
+  ButtonGroupSecondaryDemo,
+  ButtonGroupSizesDemo,
+} from "~/components/demos/ButtonGroupDemo";
+
+{/* Demo */}
+
+<ComponentSection>
+  <ComponentExample
+    demo="ButtonGroupSplitDemo"
+    vrSection="basic"
+    vrTitle="Basic"
+  >
+    <ButtonGroupSplitDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* When to use */}
+
+<ComponentSection>
+
+## 何时使用
+
+<p>
+  `ButtonGroup` 将少量紧密关联的按钮组合为一个整体控件，最常见的形式是**分裂按钮**：一个主要操作，旁边配一个用于承载相关次要操作的下拉触发器。
+</p>
+
+<p>
+  <strong>需要把多个彼此独立的按钮或输入框组合起来？</strong> 请改用{" "}
+  <a href="/components/toolbar">工具栏（Toolbar）</a>。工具栏（例如格式工具条或页面级的一组操作）需要漫游焦点（roaming focus）的键盘语义，而 `ButtonGroup` 有意不提供该能力。
+</p>
+
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock
+  code={`import { ButtonGroup } from "@lark-ui/core";`}
+  lang="tsx"
+/>
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { ButtonGroup } from "@lark-ui/core/components/button-group";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+<p>
+  `ButtonGroup` 是一个布局容器。其子元素仍保留各自的 `variant`、`size` 和 `shape`，按钮组只会把内侧圆角压平并让边框重叠，从而让多个按钮共用一条接缝。请为按钮组添加描述该操作的 `aria-label`，并为下拉触发器添加它自己的 `aria-label`。
+</p>
+
+  <CodeBlock
+    code={`import { Button, ButtonGroup, DropdownMenu } from "@lark-ui/core";
+import { CaretDownIcon } from "@phosphor-icons/react";
+
+export default function Example() {
+  return (
+    <ButtonGroup aria-label="Deploy">
+      <Button variant="primary">Deploy</Button>
+      <DropdownMenu>
+        <DropdownMenu.Trigger
+          render={
+            <Button
+              variant="primary"
+              shape="square"
+              aria-label="More deploy options"
+            >
+              <CaretDownIcon />
+            </Button>
+          }
+        />
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>Deploy to staging</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </ButtonGroup>
+  );
+}`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 分裂按钮
+
+<p>把主要操作与用于次要操作的下拉触发器组合在一起。</p>
+<ComponentExample demo="ButtonGroupSplitDemo">
+  <ButtonGroupSplitDemo client:visible />
+</ComponentExample>
+
+### 次要
+
+<p>分裂按钮适用于任意按钮变体。</p>
+<ComponentExample demo="ButtonGroupSecondaryDemo">
+  <ButtonGroupSecondaryDemo client:visible />
+</ComponentExample>
+
+### 尺寸
+
+<p>让两个按钮的 `size` 保持一致，以使分裂按钮对齐。</p>
+<ComponentExample demo="ButtonGroupSizesDemo">
+  <ButtonGroupSizesDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+  <PropsTable component="ButtonGroup" />
+</ComponentSection>

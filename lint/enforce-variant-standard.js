@@ -1,10 +1,10 @@
 import { defineRule } from "@oxlint/plugins";
 
 /**
- * Enforces the Kumo variant export standard for components:
- * - KUMO_{COMPONENT}_VARIANTS (required)
- * - KUMO_{COMPONENT}_DEFAULT_VARIANTS (required)
- * - KUMO_{COMPONENT}_BASE_STYLES (optional, but must have KUMO_ prefix)
+ * Enforces the Lark variant export standard for components:
+ * - LARK_{COMPONENT}_VARIANTS (required)
+ * - LARK_{COMPONENT}_DEFAULT_VARIANTS (required)
+ * - LARK_{COMPONENT}_BASE_STYLES (optional, but must have LARK_ prefix)
  *
  * Only applies to files in src/components/**\/*.tsx
  */
@@ -24,9 +24,9 @@ function getComponentNameFromPath(filename) {
  * Returns { valid: boolean, expectedName?: string, exportType?: string }
  */
 function validateExportName(exportName, componentName) {
-  const variantsPattern = `KUMO_${componentName}_VARIANTS`;
-  const defaultVariantsPattern = `KUMO_${componentName}_DEFAULT_VARIANTS`;
-  const baseStylesPattern = `KUMO_${componentName}_BASE_STYLES`;
+  const variantsPattern = `LARK_${componentName}_VARIANTS`;
+  const defaultVariantsPattern = `LARK_${componentName}_DEFAULT_VARIANTS`;
+  const baseStylesPattern = `LARK_${componentName}_BASE_STYLES`;
 
   if (exportName === variantsPattern) {
     return { valid: true, exportType: "VARIANTS" };
@@ -39,7 +39,7 @@ function validateExportName(exportName, componentName) {
   }
 
   // Check for incorrect naming patterns
-  if (exportName.endsWith("_VARIANTS") && exportName.startsWith("KUMO_")) {
+  if (exportName.endsWith("_VARIANTS") && exportName.startsWith("LARK_")) {
     return {
       valid: false,
       expectedName: variantsPattern,
@@ -48,7 +48,7 @@ function validateExportName(exportName, componentName) {
   }
   if (
     exportName.endsWith("_DEFAULT_VARIANTS") &&
-    exportName.startsWith("KUMO_")
+    exportName.startsWith("LARK_")
   ) {
     return {
       valid: false,
@@ -57,8 +57,8 @@ function validateExportName(exportName, componentName) {
     };
   }
   if (exportName.endsWith("_BASE_STYLES")) {
-    // BASE_STYLES must have KUMO_ prefix
-    if (!exportName.startsWith("KUMO_")) {
+    // BASE_STYLES must have LARK_ prefix
+    if (!exportName.startsWith("LARK_")) {
       return {
         valid: false,
         expectedName: baseStylesPattern,
@@ -81,15 +81,15 @@ export const enforceVariantStandardRule = defineRule({
     type: "problem",
     docs: {
       description:
-        "Enforce Kumo variant standard: KUMO_{COMPONENT}_VARIANTS, KUMO_{COMPONENT}_DEFAULT_VARIANTS, and optionally KUMO_{COMPONENT}_BASE_STYLES",
+        "Enforce Lark variant standard: LARK_{COMPONENT}_VARIANTS, LARK_{COMPONENT}_DEFAULT_VARIANTS, and optionally LARK_{COMPONENT}_BASE_STYLES",
     },
     messages: {
       incorrectName:
-        "Export name '{{actual}}' should be '{{expected}}' to follow Kumo variant naming convention",
+        "Export name '{{actual}}' should be '{{expected}}' to follow Lark variant naming convention",
       missingVariants:
-        "Component must export KUMO_{{component}}_VARIANTS. Found: {{found}}",
+        "Component must export LARK_{{component}}_VARIANTS. Found: {{found}}",
       missingDefaultVariants:
-        "Component must export KUMO_{{component}}_DEFAULT_VARIANTS. Found: {{found}}",
+        "Component must export LARK_{{component}}_DEFAULT_VARIANTS. Found: {{found}}",
     },
     schema: [],
   },
@@ -146,8 +146,8 @@ export const enforceVariantStandardRule = defineRule({
       "Program:exit"() {
         if (!shouldCheck) return;
 
-        const expectedVariants = `KUMO_${componentName}_VARIANTS`;
-        const expectedDefaultVariants = `KUMO_${componentName}_DEFAULT_VARIANTS`;
+        const expectedVariants = `LARK_${componentName}_VARIANTS`;
+        const expectedDefaultVariants = `LARK_${componentName}_DEFAULT_VARIANTS`;
 
         // Check for required exports at end of file
         const hasVariants = foundExports.has(expectedVariants);

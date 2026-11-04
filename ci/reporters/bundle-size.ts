@@ -23,7 +23,7 @@ import {
 } from "./bundle-size-report";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../..");
-const KUMO_DIR = join(REPO_ROOT, "packages/kumo");
+const LARK_DIR = join(REPO_ROOT, "packages/lark");
 
 interface Fixture {
   readonly id: BundleSizeFixtureId;
@@ -36,21 +36,21 @@ interface Fixture {
  * entries in sync with the fixture IDs used by the artifact contract.
  */
 const FIXTURE_ENTRIES = {
-  "root-button": `export { Button } from "@cloudflare/kumo";`,
-  "subpath-button": `export { Button } from "@cloudflare/kumo/components/button";`,
-  "root-trio": `export { Button, Dialog, Select } from "@cloudflare/kumo";`,
+  "root-button": `export { Button } from "@lark-ui/core";`,
+  "subpath-button": `export { Button } from "@lark-ui/core/components/button";`,
+  "root-trio": `export { Button, Dialog, Select } from "@lark-ui/core";`,
   "subpath-trio": `
-      export { Button } from "@cloudflare/kumo/components/button";
-      export { Dialog } from "@cloudflare/kumo/components/dialog";
-      export { Select } from "@cloudflare/kumo/components/select";
+      export { Button } from "@lark-ui/core/components/button";
+      export { Dialog } from "@lark-ui/core/components/dialog";
+      export { Select } from "@lark-ui/core/components/select";
     `,
-  "root-chart": `export { Chart } from "@cloudflare/kumo";`,
-  "subpath-chart": `export { Chart } from "@cloudflare/kumo/components/chart";`,
-  "subpath-badge": `export { Badge } from "@cloudflare/kumo/components/badge";`,
-  "subpath-flow": `export { Flow } from "@cloudflare/kumo/components/flow";`,
-  "primitive-button": `export * from "@cloudflare/kumo/primitives/button";`,
-  "primitives-barrel": `export * from "@cloudflare/kumo/primitives";`,
-  code: `export { ShikiProvider, CodeHighlighted } from "@cloudflare/kumo/code";`,
+  "root-chart": `export { Chart } from "@lark-ui/core";`,
+  "subpath-chart": `export { Chart } from "@lark-ui/core/components/chart";`,
+  "subpath-badge": `export { Badge } from "@lark-ui/core/components/badge";`,
+  "subpath-flow": `export { Flow } from "@lark-ui/core/components/flow";`,
+  "primitive-button": `export * from "@lark-ui/core/primitives/button";`,
+  "primitives-barrel": `export * from "@lark-ui/core/primitives";`,
+  code: `export { ShikiProvider, CodeHighlighted } from "@lark-ui/core/code";`,
 } satisfies Record<BundleSizeFixtureId, string>;
 
 /** Peer dependencies stay external — consumers always provide these. */
@@ -72,15 +72,15 @@ function isBuildOutput(
 }
 
 async function measureFixture(fixture: Fixture): Promise<FixtureResult> {
-  // A virtual entry addressed inside packages/kumo, so the package.json
-  // self-reference resolves Kumo's public export map
-  const entryPath = join(KUMO_DIR, `__bundle-fixture-${fixture.id}__.ts`);
+  // A virtual entry addressed inside packages/lark, so the package.json
+  // self-reference resolves Lark's public export map
+  const entryPath = join(LARK_DIR, `__bundle-fixture-${fixture.id}__.ts`);
   const warnings: string[] = [];
 
   const result = await build({
     configFile: false,
     envFile: false,
-    root: KUMO_DIR,
+    root: LARK_DIR,
     logLevel: "silent",
     plugins: [
       {
@@ -191,15 +191,15 @@ function collectTarballReport(): TarballReport {
   const output = execFileSync(
     "npm",
     ["pack", "--dry-run", "--json", "--ignore-scripts"],
-    { cwd: KUMO_DIR, encoding: "utf-8", maxBuffer: 32 * 1024 * 1024 },
+    { cwd: LARK_DIR, encoding: "utf-8", maxBuffer: 32 * 1024 * 1024 },
   );
   return parseTarballReport(output);
 }
 
 export async function collectBundleSizeData(): Promise<BundleSizeData> {
-  if (!existsSync(join(KUMO_DIR, "dist"))) {
+  if (!existsSync(join(LARK_DIR, "dist"))) {
     throw new Error(
-      "packages/kumo/dist not found — run `vp run build:kumo` first",
+      "packages/lark/dist not found — run `vp run build:lark` first",
     );
   }
 

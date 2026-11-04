@@ -1,0 +1,244 @@
+---
+layout: ~/layouts/MdxDocLayout.astro
+title: "Checkbox 复选框"
+description: "允许用户在选中与未选中之间切换的控件，内置标签支持并自动采用水平布局。"
+sourceFile: "components/checkbox"
+baseUIComponent: "checkbox"
+---
+
+import ComponentExample from "~/components/docs/ComponentExample.astro";
+import ComponentSection from "~/components/docs/ComponentSection.astro";
+import CodeBlock from "~/components/docs/CodeBlock.astro";
+import PropsTable from "~/components/docs/PropsTable.astro";
+import {
+  CheckboxBasicDemo,
+  CheckboxDefaultDemo,
+  CheckboxCheckedDemo,
+  CheckboxIndeterminateDemo,
+  CheckboxLabelFirstDemo,
+  CheckboxDisabledDemo,
+  CheckboxErrorDemo,
+  CheckboxGroupDemo,
+  CheckboxGroupErrorDemo,
+  CheckboxCardDemo,
+  CheckboxCardHorizontalDemo,
+  CheckboxLegendSrOnlyDemo,
+  CheckboxLegendCustomDemo,
+} from "~/components/demos/CheckboxDemo";
+
+{/* Hero Demo */}
+
+<ComponentSection>
+  <ComponentExample demo="CheckboxBasicDemo">
+    <CheckboxBasicDemo client:visible />
+  </ComponentExample>
+</ComponentSection>
+
+{/* Installation */}
+
+<ComponentSection>
+
+## 安装
+
+### 统一导出
+
+<CodeBlock code={`import { Checkbox } from "@lark-ui/core";`} lang="tsx" />
+
+### 按需导出
+
+  <CodeBlock
+    code={`import { Checkbox } from "@lark-ui/core/components/checkbox";`}
+    lang="tsx"
+  />
+</ComponentSection>
+
+{/* Usage */}
+
+<ComponentSection>
+
+## 用法
+
+```tsx
+import { Checkbox } from "@lark-ui/core";
+
+export default function Example() {
+  return <Checkbox label="Accept terms" />;
+}
+```
+
+</ComponentSection>
+
+{/* Examples */}
+
+<ComponentSection>
+
+## 示例
+
+### 默认
+
+<p>
+  带内置标签的复选框。标签会自动以水平布局展示（复选框在标签之前）。
+</p>
+<ComponentExample demo="CheckboxDefaultDemo">
+  <CheckboxDefaultDemo client:visible />
+</ComponentExample>
+
+### 选中
+
+<ComponentExample demo="CheckboxCheckedDemo">
+  <CheckboxCheckedDemo client:visible />
+</ComponentExample>
+
+### 半选
+
+<p>用于“全选”场景：部分（但不是全部）选项被选中时使用。</p>
+<ComponentExample demo="CheckboxIndeterminateDemo">
+  <CheckboxIndeterminateDemo client:visible />
+</ComponentExample>
+
+### 标签在前布局
+
+<p>使用 `controlFirst={false}` 可将标签放在复选框之前。</p>
+<ComponentExample demo="CheckboxLabelFirstDemo">
+  <CheckboxLabelFirstDemo client:visible />
+</ComponentExample>
+
+### 禁用
+
+<ComponentExample demo="CheckboxDisabledDemo">
+  <CheckboxDisabledDemo client:visible />
+</ComponentExample>
+
+### 错误
+
+<p>
+  错误变体提供视觉样式（红色描边）。如需展示错误信息，请使用 Checkbox.Group。
+</p>
+<ComponentExample demo="CheckboxErrorDemo">
+  <CheckboxErrorDemo client:visible />
+</ComponentExample>
+
+### 复选框组
+
+<p>
+  通过图例、描述和共享的错误信息将多个复选框组织在一起。使用 Checkbox.Group 和 Checkbox.Item。
+</p>
+<ComponentExample demo="CheckboxGroupDemo">
+  <CheckboxGroupDemo client:visible />
+</ComponentExample>
+
+### 带错误的复选框组
+
+<p>
+  在组级别展示校验错误。存在错误信息时，错误会取代描述。
+</p>
+<ComponentExample demo="CheckboxGroupErrorDemo">
+  <CheckboxGroupErrorDemo client:visible />
+</ComponentExample>
+
+### 复选框卡片
+
+<p>
+  在组上使用 `appearance="card"`，可将每个选项显示为同一张卡片中的可选择行，各行之间以分隔线隔开。可为每个选项搭配 `description` 属性以承载更丰富的内容。除非设置了 `controlFirst`，卡片中的选项会将复选框放在标签之后。
+</p>
+<ComponentExample demo="CheckboxCardDemo">
+  <CheckboxCardDemo client:visible />
+</ComponentExample>
+
+### 复选框卡片（横向）
+
+<p>
+  将 `appearance="card"` 与 `orientation="horizontal"` 结合使用，可在同一张卡片内以两列排布选项。
+</p>
+<ComponentExample demo="CheckboxCardHorizontalDemo">
+  <CheckboxCardHorizontalDemo client:visible />
+</ComponentExample>
+
+### 视觉隐藏的图例
+
+<p>
+  为 `Checkbox.Legend` 加上 `className="sr-only"`，可以在视觉上隐藏图例的同时保持屏幕阅读器可访问。当分组已经由上层的 `Field` 或标题标注、显示图例会造成标签重复时，这样处理很合适。
+</p>
+<ComponentExample demo="CheckboxLegendSrOnlyDemo">
+  <CheckboxLegendSrOnlyDemo client:visible />
+</ComponentExample>
+
+### 自定义图例样式
+
+<p>
+  `Checkbox.Legend` 支持 `className`，可完全控制图例的呈现方式。当需要自定义字体、颜色或布局时，请使用它而不是 `legend` 字符串属性。
+</p>
+<ComponentExample demo="CheckboxLegendCustomDemo">
+  <CheckboxLegendCustomDemo client:visible />
+</ComponentExample>
+
+</ComponentSection>
+
+{/* API Reference */}
+
+<ComponentSection>
+
+## API 参考
+
+### Checkbox
+
+<p>单个复选框组件，内置标签并采用水平布局。</p>
+<PropsTable component="Checkbox" />
+
+### Checkbox.Group
+
+<p>
+  用于容纳多个复选框的包装器，支持图例、描述和错误提示。
+</p>
+<PropsTable component="Checkbox.Group" />
+
+### Checkbox.Legend
+
+<p>
+  Checkbox.Group 使用的可组合图例子组件。支持 `className` 以完全控制样式（例如 `className="sr-only"` 可视觉隐藏）。需要自定义图例样式时，请使用它而不是 `legend` 字符串属性。
+</p>
+<PropsTable component="Checkbox.Legend" />
+
+### Checkbox.Item
+
+  <p>Checkbox.Group 中的单个复选框。</p>
+  <PropsTable component="Checkbox.Item" />
+</ComponentSection>
+
+{/* Accessibility */}
+
+<ComponentSection>
+
+## 无障碍
+
+  <div class="space-y-4 text-sm">
+    <div>
+
+      ### 标签要求
+
+      <p>
+        单个复选框必须提供 `label` 属性或 `aria-label` 以满足无障碍要求。缺少标签时，开发环境会输出控制台警告。
+      </p>
+    </div>
+    <div>
+
+      ### 键盘导航
+
+      <p>
+        <kbd class="rounded bg-lark-control px-1.5 py-0.5">Space</kbd> 可切换
+        复选框的选中状态。
+        <kbd class="rounded bg-lark-control px-1.5 py-0.5">Tab</kbd> 可在多个
+        复选框之间移动焦点。
+      </p>
+    </div>
+    <div>
+
+      ### 屏幕阅读器
+
+      <p>
+        Checkbox.Group 使用语义化的 `<fieldset>` 和 `<legend>` 元素，以便正确播报分组信息。
+      </p>
+    </div>
+
+  </div>
+</ComponentSection>
