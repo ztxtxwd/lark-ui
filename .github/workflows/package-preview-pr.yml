@@ -36,5 +36,9 @@ jobs:
       - name: Build @lark-ui/core
         run: vp run build:lark
 
+      # pkg-pr-new needs its GitHub App installed on the repository
+      # (https://github.com/apps/pkg-pr-new/installations/new). Until then this
+      # step cannot run — it is non-fatal so the workflow still passes.
       - name: Publish preview package
+        continue-on-error: true
         run: vp dlx pkg-pr-new publish --pnpm --compact --no-template ./packages/lark

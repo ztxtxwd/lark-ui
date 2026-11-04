@@ -57,6 +57,10 @@ jobs:
 
       # Publish pkg-pr-new preview for Version Packages PR
       # (GITHUB_TOKEN PRs don't trigger workflows, so we do it here)
+      # pkg-pr-new needs its GitHub App installed on the repository
+      # (https://github.com/apps/pkg-pr-new/installations/new). Until then this
+      # step cannot run — it is non-fatal so the release job still passes.
       - name: Publish package preview
         if: ${{ steps.changesets.outputs.pullRequestNumber }}
+        continue-on-error: true
         run: vp dlx pkg-pr-new publish --pnpm --compact --no-template ./packages/lark
