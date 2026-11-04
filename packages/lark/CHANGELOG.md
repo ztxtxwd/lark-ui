@@ -1,5 +1,14 @@
 # @lark-ui/core
 
+## 3.0.2
+
+### Patch Changes
+
+- 6fc23b4: Validate npm trusted publishing from GitHub Actions
+
+  No runtime changes. This release exercises the trusted-publishing (OIDC) release
+  path so the Trusted Publisher configuration is bound to the repository.
+
 ## 3.0.1
 
 ### Patch Changes
