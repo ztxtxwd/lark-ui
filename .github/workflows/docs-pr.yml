@@ -23,13 +23,17 @@ jobs:
 
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
-        with:
-          filter: "@lark-ui/docs-astro..."
+
+      # The docs build imports the built theme config from the library
+      # (astro.config.mjs resolves @lark-ui/core through its dist/ exports in
+      # production builds), so the library has to be built first.
+      - name: Build @lark-ui/core
+        run: vp run --filter @lark-ui/core build
 
       - uses: ./.github/actions/vite-task-cache
 
       - name: Build docs
-        run: vp run build:docs
+        run: vp run --filter @lark-ui/docs-astro build
 
       - name: Test docs
         run: vp run --filter @lark-ui/docs-astro test

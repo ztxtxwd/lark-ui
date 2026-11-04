@@ -42,9 +42,7 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 ```
 
 ```tsx
-<Text as="h2" DANGEROUS_className="uppercase">
-  Recent requests
-</Text>
+<Text as="h2" DANGEROUS_className="uppercase">Recent requests</Text>
 ```
 
 ### `font-tracking` 不要改变字体的字间距
@@ -90,9 +88,7 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 ```tsx
 <div className="grid gap-6">
   <div className="grid gap-1.5">
-    <Text as="h3" variant="heading">
-      Web Analytics
-    </Text>
+    <Text as="h3" variant="heading">Web Analytics</Text>
     <Text>无需改动代码即可衡量站点流量。</Text>
   </div>
   <Button>配置</Button>
@@ -103,9 +99,7 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 
 ```tsx
 <div className="grid gap-4">
-  <Text as="h3" variant="heading">
-    Web Analytics
-  </Text>
+  <Text as="h3" variant="heading">Web Analytics</Text>
   <Text>无需改动代码即可衡量站点流量。</Text>
   <Button>配置</Button>
 </div>
@@ -140,9 +134,7 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 **避免**
 
 ```tsx
-<button className="transition-colors duration-300 hover:bg-lark-tint">
-  ...
-</button>
+<button className="transition-colors duration-300 hover:bg-lark-tint">...</button>
 ```
 
 ### `shadow-borders` 不要同时使用边框和投影
@@ -189,9 +181,7 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 
 ```tsx
 <div className="flex items-start gap-2">
-  <span className="h-lh flex items-center">
-    <Icon />
-  </span>
+  <span className="h-lh flex items-center"><Icon /></span>
   <Text>可能换行成多行的文字</Text>
 </div>
 ```
@@ -200,9 +190,7 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 
 ```tsx
 <div className="flex items-start gap-2">
-  <span className="flex items-center">
-    <Icon />
-  </span>
+  <span className="flex items-center"><Icon /></span>
   <Text>可能换行成多行的文字</Text>
 </div>
 ```
@@ -222,7 +210,8 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 
 ```tsx
 <Text size="lg">
-  编辑 <span className="font-mono text-[0.9em]">cloudflare.config.ts</span>{" "}
+  编辑{" "}
+  <span className="font-mono text-[0.9em]">cloudflare.config.ts</span>{" "}
   后继续。
 </Text>
 ```
@@ -231,7 +220,8 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 
 ```tsx
 <Text size="lg">
-  编辑 <span className="font-mono">cloudflare.config.ts</span> 后继续。
+  编辑 <span className="font-mono">cloudflare.config.ts</span>{" "}
+  后继续。
 </Text>
 ```
 
@@ -307,13 +297,11 @@ description: Cloudflare 产品设计规范。在设计、实现或评审 Cloudfl
 **避免**
 
 ```tsx
-{
-  open && (
-    <Dialog.Root open>
-      <Dialog>
-        <Dialog.Title>编辑 Worker</Dialog.Title>
-      </Dialog>
-    </Dialog.Root>
-  );
-}
+{open && (
+  <Dialog.Root open>
+    <Dialog>
+      <Dialog.Title>编辑 Worker</Dialog.Title>
+    </Dialog>
+  </Dialog.Root>
+)}
 ```
