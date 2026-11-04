@@ -1,6 +1,6 @@
 {
   "name": "@lark-ui/figma",
-  "version": "0.3.57",
+  "version": "0.3.58",
   "private": true,
   "description": "Figma plugin for generating Lark UI Kit components",
   "license": "MIT",
