@@ -1,5 +1,12 @@
 # @cloudflare/figma-plugin
 
+## 0.3.59
+
+### Patch Changes
+
+- Updated dependencies [ec4a350]
+  - @lark-ui/core@3.0.3
+
 ## 0.3.58
 
 ### Patch Changes

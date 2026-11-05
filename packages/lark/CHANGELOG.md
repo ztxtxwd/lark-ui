@@ -1,5 +1,11 @@
 # @lark-ui/core
 
+## 3.0.3
+
+### Patch Changes
+
+- ec4a350: ClipboardText: size the copy and reveal icon buttons to the Figma spec (32 / 40 / 48px) instead of inheriting the text button's 48–96px minimum width.
+
 ## 3.0.2
 
 ### Patch Changes
