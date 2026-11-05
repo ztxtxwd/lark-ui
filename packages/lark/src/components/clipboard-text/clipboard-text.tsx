@@ -98,6 +98,17 @@ const CLIPBOARD_TEXT_PADDING: Record<
   lg: "ps-[11px]",
 };
 
+/**
+ * Icon button width from Feishu's Figma spec (`paddingX * 2 + 16px` icon →
+ * 32 / 40 / 48px). The button keeps the field's control height; only the icon
+ * is centred inside the fixed width.
+ */
+const CLIPBOARD_TEXT_BUTTON_WIDTH: Record<LarkClipboardTextSize, string> = {
+  sm: "w-8",
+  base: "w-10",
+  lg: "w-12",
+};
+
 // Legacy type alias for backwards compatibility
 export type ClipboardTextSize = LarkClipboardTextSize;
 
@@ -230,6 +241,9 @@ export const ClipboardText = forwardRef<HTMLDivElement, ClipboardTextProps>(
       size,
       LARK_CLIPBOARD_TEXT_DEFAULT_VARIANTS.size,
     );
+    const buttonWidth =
+      CLIPBOARD_TEXT_BUTTON_WIDTH[size] ??
+      CLIPBOARD_TEXT_BUTTON_WIDTH[LARK_CLIPBOARD_TEXT_DEFAULT_VARIANTS.size];
 
     // Destructure tooltip config with defaults
     const {
@@ -331,7 +345,8 @@ export const ClipboardText = forwardRef<HTMLDivElement, ClipboardTextProps>(
         size={sizeConfig.buttonSize}
         variant="ghost"
         className={cn(
-          "relative isolate overflow-hidden rounded-l-none rounded-r-[inherit] border-l! border-lark-line! px-3 transition-colors duration-100",
+          "relative isolate overflow-hidden rounded-l-none rounded-r-[inherit] border-l! border-lark-line! min-w-0 px-0 transition-colors duration-100",
+          buttonWidth,
         )}
         onClick={copyToClipboard}
         aria-label={copyAction}
@@ -364,7 +379,8 @@ export const ClipboardText = forwardRef<HTMLDivElement, ClipboardTextProps>(
         size={sizeConfig.buttonSize}
         variant="ghost"
         className={cn(
-          "rounded-none border-l! border-lark-line! px-3 transition-colors duration-100",
+          "rounded-none border-l! border-lark-line! min-w-0 px-0 transition-colors duration-100",
+          buttonWidth,
         )}
         onClick={() => setRevealed((value) => !value)}
         aria-label={revealed ? hideAction : revealAction}
