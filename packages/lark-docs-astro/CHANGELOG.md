@@ -1,5 +1,12 @@
 # @lark-ui/docs-astro
 
+## 1.5.29
+
+### Patch Changes
+
+- Updated dependencies [ec4a350]
+  - @lark-ui/core@3.0.3
+
 ## 1.5.28
 
 ### Patch Changes
