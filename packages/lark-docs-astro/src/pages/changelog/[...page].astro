@@ -6,97 +6,19 @@ import { ChangelogPagination } from "~/components/docs/ChangelogPagination";
 import { ChangelogEntry } from "~/components/docs/ChangelogEntry";
 import fs from "node:fs";
 import path from "node:path";
-
-interface ParsedEntry {
-  hash: string;
-  text: string;
-}
-
-interface ParsedSection {
-  type: "major" | "minor" | "patch";
-  entries: ParsedEntry[];
-}
-
-interface ParsedVersion {
-  version: string;
-  bump: "major" | "minor" | "patch";
-  sections: ParsedSection[];
-}
+import {
+  parseChangelog,
+  type ParsedEntry,
+  type ParsedSection,
+  type ParsedVersion,
+} from "~/lib/changelog";
 
 export function getStaticPaths() {
   const PER_PAGE = 10;
-  type BumpType = "major" | "minor" | "patch";
-  interface Section { type: BumpType; entries: { hash: string; text: string }[] }
-
-  // Bump priority: a version with both minor and patch sections is "minor"
-  const bumpPriority: BumpType[] = ["major", "minor", "patch"];
 
   const changelogPath = path.resolve(process.cwd(), "../lark/CHANGELOG.md");
   const raw = fs.readFileSync(changelogPath, "utf-8");
-
-  const versions: ParsedVersion[] = [];
-  let curVer: { version: string; sections: Section[] } | null = null;
-  let curSec: Section | null = null;
-  let curLines: string[] = [];
-  let curHash = "";
-
-  function flushEntry() {
-    if (curSec && curHash && curLines.length > 0) {
-      curSec.entries.push({ hash: curHash, text: curLines.join("\n").trimEnd() });
-    }
-    curLines = [];
-    curHash = "";
-  }
-
-  function flushSection() {
-    flushEntry();
-    if (curVer && curSec && curSec.entries.length > 0) {
-      curVer.sections.push(curSec);
-    }
-    curSec = null;
-  }
-
-  function flushVersion() {
-    flushSection();
-    if (curVer && curVer.sections.length > 0) {
-      const types = new Set(curVer.sections.map((s) => s.type));
-      const bump = bumpPriority.find((b) => types.has(b)) ?? "patch";
-      versions.push({ ...curVer, bump });
-    }
-    curVer = null;
-  }
-
-  // Parse: ## version → ### Section Changes → - hash: description
-  for (const line of raw.split("\n")) {
-    const versionMatch = line.match(/^## (\d+\.\d+\.\d+)/);
-    if (versionMatch) {
-      flushVersion();
-      curVer = { version: versionMatch[1], sections: [] };
-      continue;
-    }
-
-    const sectionMatch = line.match(/^### (Major|Minor|Patch) Changes/);
-    if (sectionMatch && curVer) {
-      flushSection();
-      curSec = { type: sectionMatch[1].toLowerCase() as BumpType, entries: [] };
-      continue;
-    }
-
-    const entryMatch = line.match(/^- ([a-f0-9]{7}): (.+)/);
-    if (entryMatch && curSec) {
-      flushEntry();
-      curHash = entryMatch[1];
-      curLines.push(entryMatch[2]);
-      continue;
-    }
-
-    // Continuation lines belong to the current entry (code blocks, lists, etc.)
-    if (curHash && curSec) {
-      curLines.push(line);
-    }
-  }
-
-  flushVersion();
+  const versions = parseChangelog(raw);
 
   const totalPages = Math.ceil(versions.length / PER_PAGE);
   const paths = Array.from({ length: totalPages }, (_, i) => ({

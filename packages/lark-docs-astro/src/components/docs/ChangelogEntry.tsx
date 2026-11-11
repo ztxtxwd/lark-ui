@@ -15,23 +15,26 @@ const proseStyles = cn(
 );
 
 interface ChangelogEntryProps {
-  hash: string;
+  /** Short commit hash, or `null` when the changeset had no hash prefix. */
+  hash: string | null;
   text: string;
 }
 
 export function ChangelogEntry({ hash, text }: ChangelogEntryProps) {
   return (
     <li className="mb-3 flex flex-col gap-1 last:mb-0 md:mb-0 md:flex-row md:items-baseline md:gap-3.5">
-      <a
-        href={`${GITHUB_COMMIT_URL}${hash}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="shrink-0 text-xs text-lark-subtle transition-colors hover:text-lark-default"
-      >
-        <Text as="span" variant="mono-secondary">
-          {hash}
-        </Text>
-      </a>
+      {hash ? (
+        <a
+          href={`${GITHUB_COMMIT_URL}${hash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 text-xs text-lark-subtle transition-colors hover:text-lark-default"
+        >
+          <Text as="span" variant="mono-secondary">
+            {hash}
+          </Text>
+        </a>
+      ) : null}
       <div className={proseStyles}>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
       </div>

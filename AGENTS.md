@@ -81,6 +81,7 @@ lark/
 - **Optional for `lark-docs-astro`**: Version appears in `/api/version` endpoint (debugging) but nothing depends on it
 - **Not needed for `lark-figma`**: Figma plugin, not published to npm
 - **Pre-push hook**: `.vite-hooks/pre-push` validates before push. Bypass: `git push --no-verify` (or `VITE_GIT_HOOKS=0`)
+- **Prefix the summary with the short commit hash** (`- 58a1626: Tabs: …`). `changesets version` copies the summary into `packages/lark/CHANGELOG.md` verbatim, and `/changelog` renders that hash as a link to the commit. A summary without it still ships, but loses the link.
 
 ### Releasing
 
