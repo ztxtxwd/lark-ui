@@ -20,7 +20,7 @@ const PortalContainerContext = createContext<PortalContainer>(null);
  * Use this to render Lark overlays (Dialog, Tooltip, DropdownMenu, Select, Combobox,
  * Popover, CommandPalette, Toast) inside a Shadow DOM or custom container.
  *
- * When not provided, overlays portal to a zero-size host element that Lark
+ * When not provided, overlays portal to an out-of-flow host element that Lark
  * keeps at the document origin (see `getPortalHost`). This behaves like
  * `document.body` for consumers — overlay stacking, `fixed` backdrops and
  * viewport-relative positioning are unchanged — but the popups no longer add
@@ -80,7 +80,7 @@ export function LarkPortalProvider({
 const PORTAL_HOST_ATTRIBUTE = "data-lark-portal-host";
 
 /**
- * The default portal host is a zero-size box pinned to the document origin.
+ * The default portal host is an out-of-flow anchor at the document origin.
  *
  * Portals used to be created straight into `<body>`, which put an empty block
  * element after the app root. The positioner inside it is `position: absolute`
@@ -94,11 +94,16 @@ const PORTAL_HOST_ATTRIBUTE = "data-lark-portal-host";
  *    shift as the pointer leaving the trigger and closed themselves.
  * 2. The popup jumped from the wrong place to the right one on the next frame.
  *
- * A zero-size anchor at the origin is out of flow (no scroll height added) and
- * is already at the offset parent's origin, so the first computed position is
- * the final one.
+ * An out-of-flow anchor at the origin adds no scroll height and is already at
+ * the offset parent's origin, so the first computed position is the final one.
+ *
+ * The anchor must span the viewport, not be a 0×0 box: it is the containing
+ * block for Base UI's absolutely positioned positioners, and an auto-width
+ * popup inside a zero-width containing block collapses to its min-content
+ * width — a Chinese tooltip ends up one character per line.
  */
-const PORTAL_HOST_STYLE = "position:absolute;top:0;left:0;width:0;height:0;";
+const PORTAL_HOST_STYLE =
+  "position:absolute;top:0;left:0;width:100%;height:0;";
 
 let portalHost: HTMLElement | null = null;
 
@@ -139,8 +144,8 @@ export function getPortalHost(): HTMLElement | null {
 
 /**
  * Hook to get the portal container from context.
- * Falls back to Lark's portal host (a zero-size anchor at the document origin)
- * when no `LarkPortalProvider` is present.
+ * Falls back to Lark's portal host (an out-of-flow anchor at the document
+ * origin) when no `LarkPortalProvider` is present.
  *
  * @internal Used by overlay components to resolve their portal container.
  */

@@ -15,7 +15,7 @@ describe("getPortalHost", () => {
     });
   });
 
-  it("creates a zero-size anchor at the document origin", () => {
+  it("creates an out-of-flow anchor at the document origin with the viewport width", () => {
     const host = getPortalHost();
 
     expect(host).not.toBeNull();
@@ -26,7 +26,9 @@ describe("getPortalHost", () => {
     expect(host?.style.position).toBe("absolute");
     expect(host?.style.top).toBe("0px");
     expect(host?.style.left).toBe("0px");
-    expect(host?.style.width).toBe("0px");
+    // 浮层的 positioner 是 absolute，宿主就是它的包含块；宽度为 0 会让
+    // auto 宽度的浮层按 min-content 压缩，中文 Tooltip 会一字一行。
+    expect(host?.style.width).toBe("100%");
     expect(host?.style.height).toBe("0px");
   });
 
@@ -68,7 +70,9 @@ describe("usePortalContainer", () => {
 
     const { result } = renderHook(() => usePortalContainer(), {
       wrapper: ({ children }: { children: ReactNode }) => (
-        <LarkPortalProvider container={container}>{children}</LarkPortalProvider>
+        <LarkPortalProvider container={container}>
+          {children}
+        </LarkPortalProvider>
       ),
     });
 
