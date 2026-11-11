@@ -184,7 +184,7 @@ export type DialogProps = LarkDialogVariantsProps & {
   /**
    * Container element for the portal. Use this to render the dialog inside
    * a Shadow DOM or custom container. Overrides `LarkPortalProvider` context.
-   * @default document.body (or LarkPortalProvider container if set)
+   * @default LarkPortalProvider container, or Lark's portal host in `<body>`
    */
   container?: PortalContainer;
 };

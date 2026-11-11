@@ -52,9 +52,14 @@ lark/
 
 ### Portal stacking (CRITICAL)
 
-- Lark floating components portal to `document.body`. Consumers should create an
-  app-root stacking context with `isolation: isolate` (Tailwind:
-  `className="isolate"`).
+- Lark floating components portal to a shared zero-size host element
+  (`[data-lark-portal-host]`) that `getPortalHost()` pins to the document origin
+  in `<body>` — not directly into `<body>`. Keep it out of flow: an in-flow
+  portal container at the end of the document makes Base UI's absolutely
+  positioned popups grow the document scroll height on their first frame (a
+  scrollbar flashes in, the viewport narrows, right-aligned controls shift and
+  hover-opened popups close themselves). Consumers should create an app-root
+  stacking context with `isolation: isolate` (Tailwind: `className="isolate"`).
 - Do **not** fix a popup that appears below consumer content by adding `z-index`
   to Lark popup components, targeting Base UI internal data attributes, or
   applying `isolation` to `<body>`.

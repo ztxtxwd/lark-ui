@@ -196,7 +196,7 @@ export interface LayerDialogContentProps {
   children: ReactNode;
   /**
    * Container element for the portal. Overrides `LarkPortalProvider` context.
-   * @default document.body (or LarkPortalProvider container if set)
+   * @default LarkPortalProvider container, or Lark's portal host in `<body>`
    */
   container?: PortalContainer;
   /** Desktop-only width. Mobile dialogs always remain full-width. */

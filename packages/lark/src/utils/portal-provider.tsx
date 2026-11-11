@@ -20,7 +20,13 @@ const PortalContainerContext = createContext<PortalContainer>(null);
  * Use this to render Lark overlays (Dialog, Tooltip, DropdownMenu, Select, Combobox,
  * Popover, CommandPalette, Toast) inside a Shadow DOM or custom container.
  *
- * When not provided, overlays portal to `document.body` (default browser behavior).
+ * When not provided, overlays portal to a zero-size host element that Lark
+ * keeps at the document origin (see `getPortalHost`). This behaves like
+ * `document.body` for consumers — overlay stacking, `fixed` backdrops and
+ * viewport-relative positioning are unchanged — but the popups no longer add
+ * scroll height to the document or get positioned against a container sitting
+ * at the end of `<body>`.
+ *
  * Individual components can override this via their own `container` prop.
  *
  * For app-wide portal stacking, consumers should set `isolation: isolate` on
@@ -70,12 +76,75 @@ export function LarkPortalProvider({
   );
 }
 
+/** Marks the generated portal host so it can be reused after HMR. */
+const PORTAL_HOST_ATTRIBUTE = "data-lark-portal-host";
+
+/**
+ * The default portal host is a zero-size box pinned to the document origin.
+ *
+ * Portals used to be created straight into `<body>`, which put an empty block
+ * element after the app root. The positioner inside it is `position: absolute`
+ * and is measured one frame later, so on the first paint its coordinates were
+ * resolved against a container sitting at the *end of the document*. Two things
+ * went wrong because of that:
+ *
+ * 1. The popup was painted below the fold and grew the document scroll height,
+ *    so a vertical scrollbar flashed in, the viewport got narrower and every
+ *    right-aligned control shifted sideways. Hover-opened popups read that
+ *    shift as the pointer leaving the trigger and closed themselves.
+ * 2. The popup jumped from the wrong place to the right one on the next frame.
+ *
+ * A zero-size anchor at the origin is out of flow (no scroll height added) and
+ * is already at the offset parent's origin, so the first computed position is
+ * the final one.
+ */
+const PORTAL_HOST_STYLE = "position:absolute;top:0;left:0;width:0;height:0;";
+
+let portalHost: HTMLElement | null = null;
+
+/**
+ * Returns the shared portal host, creating it on first use.
+ *
+ * Returns `null` outside the browser so overlays can fall back to Base UI's
+ * default (`document.body`) during SSR.
+ *
+ * @internal
+ */
+export function getPortalHost(): HTMLElement | null {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  if (portalHost?.isConnected) {
+    return portalHost;
+  }
+
+  const existing = document.querySelector<HTMLElement>(
+    `[${PORTAL_HOST_ATTRIBUTE}]`,
+  );
+
+  if (existing) {
+    portalHost = existing;
+    return existing;
+  }
+
+  const host = document.createElement("div");
+  host.setAttribute(PORTAL_HOST_ATTRIBUTE, "");
+  host.style.cssText = PORTAL_HOST_STYLE;
+  document.body.appendChild(host);
+  portalHost = host;
+
+  return host;
+}
+
 /**
  * Hook to get the portal container from context.
- * Returns null if no provider is present (defaults to document.body).
+ * Falls back to Lark's portal host (a zero-size anchor at the document origin)
+ * when no `LarkPortalProvider` is present.
  *
  * @internal Used by overlay components to resolve their portal container.
  */
 export function usePortalContainer(): PortalContainer {
-  return useContext(PortalContainerContext);
+  const container = useContext(PortalContainerContext);
+  return container ?? getPortalHost();
 }
