@@ -13,6 +13,7 @@ import {
   TabsSegmentedDemo,
   TabsUnderlineDemo,
   TabsSmDemo,
+  TabsFillDemo,
   TabsControlledDemo,
   TabsManyDemo,
   TabsOverflowDemo,
@@ -81,7 +82,11 @@ export default function Example() {
 
 #### 分段式（默认）
 
-<p>胶囊形状的指示器在浅色背景上于各标签页之间滑动。</p>
+<p>
+  胶囊形状的指示器在浅色背景上于各标签页之间滑动。轨道默认贴合标签文字宽度；
+  需要让控件填满固定宽度的容器（表单行、气泡卡片、工具栏）时，加上 `fill`，
+  各标签页会等分整条轨道。
+</p>
 <ComponentExample demo="TabsSegmentedDemo">
   <TabsSegmentedDemo client:visible />
 </ComponentExample>
@@ -103,6 +108,17 @@ export default function Example() {
 </p>
 <ComponentExample demo="TabsSmDemo">
   <TabsSmDemo client:visible />
+</ComponentExample>
+
+### 撑满轨道（fill）
+
+<p>
+  默认状态下分段式轨道只占标签文字所需的宽度——否则在块级容器里会拉出一条
+  右侧留空的灰色轨道。`fill` 让轨道撑满父容器，并让每个标签页等分宽度；
+  标签文字过长时不会挤压，而是由标签栏横向滚动。
+</p>
+<ComponentExample demo="TabsFillDemo">
+  <TabsFillDemo client:visible />
 </ComponentExample>
 
 ### 受控

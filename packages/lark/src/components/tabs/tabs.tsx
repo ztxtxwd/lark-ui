@@ -142,6 +142,17 @@ export type TabsProps = LarkTabsVariantsProps & {
   indicatorClassName?: string;
   /** Labels for internationalization of aria-labels. All labels have English defaults. */
   labels?: TabsLabels;
+  /**
+   * Segmented tabs share the track equally and stretch to the parent width
+   * instead of hugging their labels. Use it for form rows, popovers and
+   * toolbars where the control has a fixed width to fill.
+   *
+   * Long labels keep their intrinsic width (flex items never shrink below
+   * their content) and the list scrolls horizontally instead of squashing.
+   * Has no effect on `variant="underline"`.
+   * @default false
+   */
+  fill?: boolean;
 };
 
 /**
@@ -170,6 +181,7 @@ export function Tabs({
   labels: labelsProp,
   variant = LARK_TABS_DEFAULT_VARIANTS.variant,
   size = LARK_TABS_DEFAULT_VARIANTS.size,
+  fill = false,
 }: TabsProps) {
   const items: TabsItem[] = tabs ?? [];
 
@@ -204,6 +216,12 @@ export function Tabs({
         "relative isolate min-w-0 font-medium",
         isSegmented &&
           (isSm ? "rounded-md" : "rounded-lg") + " ring ring-lark-hairline/70",
+        // A segmented group is a control, not a layout band: by default the
+        // track hugs its labels. Leaving it block-level made the track span the
+        // parent and paint a dead grey rail after the last tab, which reads as
+        // a broken control. `fill` opts into the full-width track instead — and
+        // then the tabs share it equally (see the tab classes below).
+        isSegmented && (fill ? "w-full" : "w-fit max-w-full"),
         className,
       )}
       onValueChange={(nextValue) => {
@@ -257,6 +275,9 @@ export function Tabs({
               isSegmented &&
                 "my-0.5 text-lark-subtle hover:text-lark-default focus-visible:text-lark-default aria-selected:text-lark-default",
               isSegmented && (isSm ? "rounded-sm px-2" : "rounded-md px-2.5"),
+              // `fill`: every segment takes an equal share of the full-width
+              // track. The label stays centred inside its share.
+              isSegmented && fill && "flex-1 justify-center",
               // Feishu line tabs: the active tab and its hover state are brand
               // blue, there is no hover background.
               isUnderline &&

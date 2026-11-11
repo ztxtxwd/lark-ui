@@ -19,6 +19,75 @@ const extraTabs = [
 ];
 
 describe("Tabs", () => {
+  it("hugs its labels by default instead of painting a full-width track", () => {
+    render(
+      <Tabs
+        variant="segmented"
+        selectedValue="overview"
+        tabs={[
+          { value: "overview", label: "Overview" },
+          { value: "metrics", label: "Metrics" },
+          { value: "settings", label: "Settings" },
+        ]}
+      />,
+    );
+
+    const root = screen.getByRole("tablist").parentElement as HTMLElement;
+
+    expect(root.classList.contains("w-fit")).toBe(true);
+    expect(root.classList.contains("max-w-full")).toBe(true);
+    expect(root.classList.contains("w-full")).toBe(false);
+    for (const tab of screen.getAllByRole("tab")) {
+      expect(tab.classList.contains("flex-1")).toBe(false);
+    }
+  });
+
+  it("fill stretches the track and splits it evenly across the tabs", () => {
+    render(
+      <Tabs
+        variant="segmented"
+        fill
+        selectedValue="overview"
+        tabs={[
+          { value: "overview", label: "Overview" },
+          { value: "metrics", label: "Metrics" },
+          { value: "settings", label: "Settings" },
+        ]}
+      />,
+    );
+
+    const root = screen.getByRole("tablist").parentElement as HTMLElement;
+
+    expect(root.classList.contains("w-full")).toBe(true);
+    expect(root.classList.contains("w-fit")).toBe(false);
+    for (const tab of screen.getAllByRole("tab")) {
+      expect(tab.classList.contains("flex-1")).toBe(true);
+      expect(tab.classList.contains("justify-center")).toBe(true);
+    }
+  });
+
+  it("keeps the underline bar full width when fill is set", () => {
+    render(
+      <Tabs
+        variant="underline"
+        fill
+        selectedValue="overview"
+        tabs={[
+          { value: "overview", label: "Overview" },
+          { value: "settings", label: "Settings" },
+        ]}
+      />,
+    );
+
+    const root = screen.getByRole("tablist").parentElement as HTMLElement;
+
+    expect(root.classList.contains("w-fit")).toBe(false);
+    expect(root.classList.contains("w-full")).toBe(false);
+    for (const tab of screen.getAllByRole("tab")) {
+      expect(tab.classList.contains("flex-1")).toBe(false);
+    }
+  });
+
   it("forwards nativeButton=false for link-rendered tabs", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
