@@ -1,5 +1,19 @@
 # @lark-ui/core
 
+## 3.1.0
+
+### Minor Changes
+
+- Tabs: segmented tracks now hug their labels instead of spanning the parent, and a new `fill` prop stretches the track to the parent width with equally shared tabs.
+
+  The segmented root was block-level, so in any block container (a form row, a popover, a panel) the track painted a full-width grey rail with dead space after the last tab — the control read as broken. The default now matches Feishu and `Radio.Group appearance="segmented"`: the track sizes to its labels, capped at the parent width, and still scrolls horizontally (plus the overflow buttons) when the tabs do not fit. Pass `fill` where the control should fill a fixed-width container; the tabs then split the track evenly and keep their label centred. Coming from `className="w-full"` on a segmented Tabs: use `fill` instead — `w-full` alone only widened the rail. `variant="underline"` is unchanged.
+
+### Patch Changes
+
+- Fix popups being positioned against the end of the document on their first frame. Overlays used to portal into an empty block element appended to `<body>`, and Base UI's positioner is `position: absolute` measured one frame later — so the first paint resolved the popup against a container sitting at the end of the document. The popup was drawn below the fold and grew the document scroll height, which flashed a vertical scrollbar in, narrowed the viewport and shifted every right-aligned control sideways. Hover-opened menus read that shift as the pointer leaving the trigger and closed right after opening.
+
+  Overlays now default to a shared zero-size portal host pinned to the document origin: out of flow (no scroll height added), already at the offset parent's origin (the first computed position is the final one), and still reachable by `fixed` backdrops and viewport-relative positioning. `LarkPortalProvider` and per-component `container` props behave exactly as before.
+
 ## 3.0.3
 
 ### Patch Changes
