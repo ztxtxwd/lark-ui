@@ -93,17 +93,30 @@ normal workflow, not something to hand off.
 
 | Command                               | What it does                                               |
 | ------------------------------------- | ---------------------------------------------------------- |
-| `pnpm version`                        | Apply changesets: bump versions, rewrite CHANGELOGs        |
-| `pnpm release:npm`                    | Publish to npm (this is what CI runs)                      |
-| `NPM_TAG=beta pnpm release:npm`       | Publish on the `beta` dist-tag                             |
+| `pnpm run version`                    | Apply changesets: bump versions, rewrite CHANGELOGs        |
+| `pnpm run release:npm`                | Publish to npm (this is what CI runs; needs npm auth)      |
+| `NPM_TAG=beta pnpm run release:npm`   | Publish on the `beta` dist-tag                             |
 | `ci/versioning/release-production.sh` | Manual production release: branch, tag, publish, open a PR |
 
-Publishing goes through the **npm CLI**, not `changeset publish`: the npm CLI
-is the only client that implements npm's trusted publishing (OIDC). With a
-Trusted Publisher configured on npmjs.com for the package (GitHub Actions →
-this repo → `release.yml`), CI publishes with the job's OIDC token and needs
-no `NPM_TOKEN` secret. `pnpm release` still exists, but it shells out to pnpm,
-which cannot do the OIDC exchange.
+The normal release is **push-driven**, not a local publish:
+
+- **CI-driven**: commit the code + changeset, push `main`, then merge the
+  "Version Packages" PR that CI opens. The publish step runs on `main` after
+  the merge.
+- **Local versioning**: add the changeset, run `pnpm run version`, commit the
+  bump (`chore: release X.Y.Z`), and push `main`. CI sees no changesets and
+  publishes the unpublished version.
+
+Verify with `npm view @lark-ui/core@X.Y.Z version`; the registry can take a
+minute or two to show a new version.
+
+Don't run `pnpm run release:npm` locally for a production release unless the
+machine has working npm credentials. Publishing goes through the **npm CLI**,
+not `changeset publish`: the npm CLI is the only client that implements npm's
+trusted publishing (OIDC). With a Trusted Publisher configured on npmjs.com
+for the package (GitHub Actions → this repo → `release.yml`), CI publishes
+with the job's OIDC token and needs no `NPM_TOKEN` secret. `pnpm release` still
+exists, but it shells out to pnpm, which cannot do the OIDC exchange.
 
 ### Pull Request Descriptions
 
