@@ -53,6 +53,128 @@ describe("Button", () => {
     expect(button.hasAttribute("disabled")).toBe(true);
   });
 
+  describe("loading state styling", () => {
+    it("keeps a loading primary button in the brand family", () => {
+      // Feishu swaps in `--primary-fill-loading` instead of the grey disabled
+      // fill, and keeps the label and spinner white on top of it.
+      render(
+        <Button variant="primary" loading>
+          Save
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+
+      expect(button.hasAttribute("disabled")).toBe(true);
+      expect(button.className).toContain("disabled:bg-lark-brand-loading");
+      expect(button.className).not.toContain("disabled:bg-lark-disabled");
+      expect(button.className).toContain("disabled:text-white");
+      expect(screen.getByRole("status").className).toContain("text-white");
+    });
+
+    it("uses the danger loading tint for destructive buttons", () => {
+      render(
+        <Button variant="destructive" loading>
+          Delete
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+
+      expect(button.className).toContain("disabled:bg-lark-danger-loading");
+      expect(button.className).not.toContain("disabled:bg-lark-disabled");
+      expect(screen.getByRole("status").className).toContain("text-white");
+    });
+
+    it("keeps the grey fill and muted label for a disabled button", () => {
+      render(
+        <Button variant="primary" disabled>
+          Save
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+
+      expect(button.className).toContain("disabled:bg-lark-disabled");
+      expect(button.className).not.toContain("disabled:bg-lark-brand-loading");
+      expect(button.className).not.toContain("disabled:text-lark-placeholder");
+    });
+
+    it("greys a button that is both loading and disabled", () => {
+      render(
+        <Button variant="primary" loading disabled>
+          Save
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+
+      expect(button.className).toContain("disabled:bg-lark-disabled");
+      expect(button.className).not.toContain("disabled:bg-lark-brand-loading");
+      expect(button.className).not.toContain("disabled:text-lark-placeholder");
+    });
+
+    it("uses the default cursor while loading", () => {
+      // Feishu's `.ud__button--loading` sets `cursor: default`, not the
+      // not-allowed cursor of a disabled button.
+      render(
+        <Button variant="primary" loading>
+          Save
+        </Button>,
+      );
+      expect(screen.getByRole("button").className).toContain(
+        "disabled:cursor-default",
+      );
+    });
+
+    it.each(["secondary", "outline", "ghost"] as const)(
+      "mutes a loading %s label to the disabled-loading grey",
+      (variant) => {
+        // Feishu `.ud__button--outlined-default-loading` /
+        // `--text-default-loading`: the surface stays, only the label drops to
+        // `--udtoken-component-text-disabled-loading` (N500).
+        render(
+          <Button variant={variant} loading>
+            Save
+          </Button>,
+        );
+        const button = screen.getByRole("button");
+
+        expect(button.className).toContain("disabled:text-lark-placeholder");
+        expect(button.className).not.toContain("disabled:text-lark-inactive");
+        // The spinner keeps the Loader's brand default.
+        expect(screen.getByRole("status").className).not.toContain(
+          "text-white",
+        );
+      },
+    );
+
+    it("keeps the surface of a loading outlined button", () => {
+      render(
+        <Button variant="secondary" loading>
+          Save
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+
+      expect(button.className).not.toContain("disabled:bg-lark-brand-loading");
+      expect(button.className).toContain("disabled:bg-lark-base");
+      expect(button.className).toContain("disabled:ring-lark-border");
+    });
+
+    it("keeps a loading outlined-destructive button in the danger family", () => {
+      // Feishu `.ud__button--outlined-danger-loading`.
+      render(
+        <Button variant="secondary-destructive" loading>
+          Delete
+        </Button>,
+      );
+      const button = screen.getByRole("button");
+
+      expect(button.className).toContain("disabled:text-lark-danger-loading");
+      expect(button.className).toContain("disabled:ring-lark-danger-loading");
+      expect(screen.getByRole("status").className).toContain(
+        "text-lark-danger",
+      );
+    });
+  });
+
   it("disabled prop sets disabled attribute", () => {
     render(<Button disabled>Save</Button>);
     const button = screen.getByRole("button");

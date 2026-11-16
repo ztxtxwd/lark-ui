@@ -57,7 +57,7 @@ export const LARK_BUTTON_VARIANTS = {
     },
     secondary: {
       classes:
-        "bg-lark-base !text-lark-default ring ring-lark-border not-disabled:hover:bg-lark-fill not-disabled:focus-visible:bg-lark-fill not-disabled:active:bg-lark-recessed disabled:bg-lark-base disabled:text-lark-inactive disabled:ring-lark-border data-[state=open]:bg-lark-fill",
+        "bg-lark-base text-lark-default ring ring-lark-border not-disabled:hover:bg-lark-fill not-disabled:focus-visible:bg-lark-fill not-disabled:active:bg-lark-recessed disabled:bg-lark-base disabled:text-lark-inactive disabled:ring-lark-border data-[state=open]:bg-lark-fill",
       description: "Default button style for most actions",
     },
     ghost: {
@@ -72,7 +72,7 @@ export const LARK_BUTTON_VARIANTS = {
     },
     "secondary-destructive": {
       classes:
-        "bg-lark-base !text-lark-danger ring ring-lark-border not-disabled:hover:bg-lark-danger-tint not-disabled:focus-visible:bg-lark-danger-tint not-disabled:active:bg-lark-danger-tint not-disabled:hover:!text-lark-danger disabled:bg-lark-base disabled:text-lark-inactive disabled:ring-lark-border data-[state=open]:bg-lark-danger-tint",
+        "bg-lark-base text-lark-danger ring ring-lark-border not-disabled:hover:bg-lark-danger-tint not-disabled:focus-visible:bg-lark-danger-tint not-disabled:active:bg-lark-danger-tint not-disabled:hover:text-lark-danger disabled:bg-lark-base disabled:text-lark-inactive disabled:ring-lark-border data-[state=open]:bg-lark-danger-tint",
       description:
         "Secondary button with destructive text for less prominent dangerous actions",
     },
@@ -235,6 +235,41 @@ const getEmphasisStyle = (variant: LarkButtonVariant) => {
     };
   }
   return undefined;
+};
+
+/**
+ * Classes of a button that is inert because it is loading.
+ *
+ * Feishu never greys a loading button out the way it greys a disabled one: a
+ * filled button steps the fill one ramp back inside its own colour family
+ * (`--primary-fill-loading` / `--function-danger-fill-loading`) and keeps the
+ * label white, while an outlined or text button keeps its surface and only
+ * mutes the label to `--udtoken-component-text-disabled-loading` (N500).
+ *
+ * `cn()` keeps whichever `disabled:` utility comes last, so appending one of
+ * these replaces the variant's `disabled:bg-lark-disabled` /
+ * `disabled:text-lark-inactive`.
+ */
+const LOADING_CLASSES: Record<LarkButtonVariant, string> = {
+  primary: "disabled:bg-lark-brand-loading",
+  destructive: "disabled:bg-lark-danger-loading",
+  secondary: "disabled:text-lark-placeholder",
+  outline: "disabled:text-lark-placeholder",
+  ghost: "disabled:text-lark-placeholder",
+  "secondary-destructive":
+    "disabled:text-lark-danger-loading disabled:ring-lark-danger-loading",
+};
+
+/**
+ * Spinner colour while loading (Feishu `.ud__button__loading-icon`).
+ *
+ * Filled buttons paint it in the label colour, the outlined-danger button keeps
+ * the danger hue, and everything else falls back to the Loader's brand default.
+ */
+const LOADING_SPINNER: Partial<Record<LarkButtonVariant, string>> = {
+  primary: "text-white",
+  destructive: "text-white",
+  "secondary-destructive": "text-lark-danger",
 };
 
 const ANCHOR_ONLY_PROPS = new Set([
@@ -402,6 +437,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const { type, ...restProps } = props;
     const emphasisStyle = getEmphasisStyle(variant);
+    // Loading is the only case where a button is `disabled` without looking
+    // disabled; an explicitly `disabled` button keeps its disabled styling.
+    const loadingClasses =
+      loading && !disabled
+        ? cn("disabled:cursor-default", LOADING_CLASSES[variant])
+        : undefined;
     const titleLabel = getTitleLabel(title);
     const buttonProps = {
       ...restProps,
@@ -411,7 +452,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         titleLabel && { "aria-label": titleLabel }),
     };
     const iconNode = loading ? (
-      <Loader size={size === "lg" ? 16 : 14} />
+      <Loader
+        className={LOADING_SPINNER[variant]}
+        size={size === "lg" ? 16 : 14}
+      />
     ) : (
       renderIconNode(IconComponent)
     );
@@ -424,6 +468,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ variant, size, shape }),
           getTextClasses(shape, size, iconNode, children),
           disabled && "cursor-not-allowed",
+          loadingClasses,
           className,
         )}
         disabled={loading || disabled}

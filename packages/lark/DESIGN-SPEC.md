@@ -126,6 +126,30 @@ So: `disabled:bg-lark-disabled disabled:text-white` for the solid variants,
 `disabled:text-lark-inactive` for the outlined and text ones — never
 `disabled:opacity-50`.
 
+## Loading buttons
+
+A loading button is inert, but it is **not** visually disabled, and the
+variants differ:
+
+- **Filled** (`primary` / `destructive`) stay inside their own colour family
+  and only step the fill one ramp back (`--primary-fill-loading` /
+  `--function-danger-fill-loading`) while the label and spinner stay white.
+  That is `bg-lark-brand-loading` (`#94b4ff` light, `#2655b6` dark) and
+  `bg-lark-danger-loading`.
+- **Outlined and text** (`secondary` / `outline` / `ghost`) keep their surface
+  and border, and only mute the label to
+  `--udtoken-component-text-disabled-loading` (Feishu N500 →
+  `text-lark-placeholder`, `#8f959e` light / `#757575` dark) while the spinner
+  stays brand-coloured. `secondary-destructive` mutes to
+  `text-lark-danger-loading` and tints its border to match.
+
+The grey fill above is reserved for `disabled`. The component still renders
+`disabled` so the click cannot fire, but while `loading` is set (and `disabled`
+is not) it appends the `LOADING_CLASSES` entry for the variant plus
+`disabled:cursor-default`; `cn()` merges those over the variant's
+`disabled:bg-lark-disabled` / `disabled:text-lark-inactive`. An explicitly
+`disabled` button keeps the disabled styling even when `loading` is also set.
+
 ## Overlays
 
 Every floating surface — select list, menu, popover, tooltip, modal — uses the

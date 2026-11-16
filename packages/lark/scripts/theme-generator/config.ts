@@ -167,6 +167,13 @@ export const THEME_CONFIG: ThemeConfig = {
     "lark-focus": pair("#3370ff", "#4c88ff"),
     /** Brand color under press. */
     "lark-brand-pressed": pair("#245bdb", "#75a4ff"),
+    /**
+     * Brand fill while a spinner is showing (Feishu `--primary-fill-loading`,
+     * one ramp back from `--primary-fill-default`). A loading solid button is
+     * inert but is _not_ the grey `disabled` fill — the label and spinner stay
+     * white on top of this tint.
+     */
+    "lark-brand-loading": pair("#94b4ff", "#2655b6"),
     /** Tight shadow edge for thumbs/knobs. */
     "lark-shadow-edge": pair(
       "rgba(31, 35, 41, 0.12)",
@@ -219,6 +226,13 @@ export const THEME_CONFIG: ThemeConfig = {
     "lark-danger-hover": pair("#f76964", "#f6827e"),
     /** Danger pressed color (Lark international `--R600`). */
     "lark-danger-pressed": pair("#d83931", "#d14642"),
+    /**
+     * Danger fill while a spinner is showing (Feishu
+     * `--function-danger-fill-loading`, `--function-danger-300`). Mirrors
+     * `lark-brand-loading`: the loading state keeps white text, the disabled
+     * state is grey.
+     */
+    "lark-danger-loading": pair("#f89e9b", "#a03331"),
     /** Danger outline color (Feishu `--R600`). */
     "lark-danger-outline": pair("#c02a26", "#f6827e"),
     /** Success tint background. */

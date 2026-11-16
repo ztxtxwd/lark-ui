@@ -135,6 +135,8 @@
 
   --color-lark-brand-pressed: light-dark(#245bdb, #75a4ff);
 
+  --color-lark-brand-loading: light-dark(#94b4ff, #2655b6);
+
   --color-lark-shadow-edge: light-dark(
     rgba(31, 35, 41, 0.12),
     rgba(255, 255, 255, 0.1)
@@ -181,6 +183,8 @@
   --color-lark-danger-hover: light-dark(#f76964, #f6827e);
 
   --color-lark-danger-pressed: light-dark(#d83931, #d14642);
+
+  --color-lark-danger-loading: light-dark(#f89e9b, #a03331);
 
   --color-lark-danger-outline: light-dark(#c02a26, #f6827e);
 
@@ -317,6 +321,7 @@
     --color-lark-hairline: #e4e6eb;
     --color-lark-focus: #3370ff;
     --color-lark-brand-pressed: #245bdb;
+    --color-lark-brand-loading: #94b4ff;
     --color-lark-shadow-edge: rgba(31, 35, 41, 0.12);
     --color-lark-shadow-drop: rgba(31, 35, 41, 0.08);
     --color-lark-arrow-edge: #dee0e3;
@@ -333,6 +338,7 @@
     --color-lark-danger: #f54a45;
     --color-lark-danger-hover: #f76964;
     --color-lark-danger-pressed: #d83931;
+    --color-lark-danger-loading: #f89e9b;
     --color-lark-danger-outline: #c02a26;
     --color-lark-success-tint: rgba(52, 199, 36, 0.1);
     --color-lark-success: #34c724;
@@ -422,6 +428,7 @@
     --color-lark-hairline: #2e3033;
     --color-lark-focus: #4c88ff;
     --color-lark-brand-pressed: #75a4ff;
+    --color-lark-brand-loading: #2655b6;
     --color-lark-shadow-edge: rgba(255, 255, 255, 0.1);
     --color-lark-shadow-drop: rgba(0, 0, 0, 0.3);
     --color-lark-arrow-edge: transparent;
@@ -438,6 +445,7 @@
     --color-lark-danger: #f05b56;
     --color-lark-danger-hover: #f6827e;
     --color-lark-danger-pressed: #d14642;
+    --color-lark-danger-loading: #a03331;
     --color-lark-danger-outline: #f6827e;
     --color-lark-success-tint: rgba(81, 186, 67, 0.18);
     --color-lark-success: #51ba43;
