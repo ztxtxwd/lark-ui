@@ -56,47 +56,21 @@ describe("Banner", () => {
     expect(className).toContain("wrap-anywhere");
   });
 
-  it("keeps the filled theme free of the outlined frame", () => {
-    const className = bannerVariants({ theme: "filled" });
+  it("keeps every variant on a flat, borderless filled surface", () => {
+    for (const variant of ["default", "alert", "error", "secondary"] as const) {
+      const className = bannerVariants({ variant });
 
-    expect(className.split(" ")).not.toContain("border");
-    // The outlined overrides stay in the variant/size classes but only apply
-    // when the root carries `data-banner-theme="outlined"`.
-    expect(className).toContain(
-      "data-[banner-theme=outlined]:bg-lark-banner-info-outlined",
-    );
+      // Feishu `ud__notice--filled` draws a status tint, not a frame.
+      expect(className.split(" ")).not.toContain("border");
+      expect(className).not.toContain("data-[banner-theme=");
+    }
   });
 
-  it("renders the outlined theme as a bordered, pale surface", () => {
-    render(
-      <Banner
-        theme="outlined"
-        variant="error"
-        data-testid="banner"
-        title="Save failed"
-      />,
-    );
+  it("does not expose a theme attribute on the root", () => {
+    render(<Banner data-testid="banner" title="System status" />);
 
     const banner = screen.getByTestId("banner");
-    expect(banner.getAttribute("data-banner-theme")).toBe("outlined");
-    // `ud__notice--outlined` -> 1px border in the status colour over the
-    // `--function-danger-50` tint.
-    expect(banner.className.split(" ")).toContain("border");
-    expect(banner.className).toContain(
-      "data-[banner-theme=outlined]:bg-lark-banner-danger-outlined",
-    );
-    expect(banner.className).toContain(
-      "data-[banner-theme=outlined]:border-lark-danger-outline",
-    );
-  });
-
-  it("pads the outlined theme like ud__notice--outlined", () => {
-    const className = bannerVariants({ theme: "outlined" });
-
-    // `ud__notice--outlined` -> `padding: 15px 3px 15px 19px`.
-    expect(className).toContain("data-[banner-theme=outlined]:py-[15px]");
-    expect(className).toContain("data-[banner-theme=outlined]:pl-[19px]");
-    expect(className).toContain("data-[banner-theme=outlined]:pr-[3px]");
+    expect(banner.hasAttribute("data-banner-theme")).toBe(false);
   });
 
   it("reserves Feishu's 32px gutter after the copy and the action", () => {

@@ -61,6 +61,9 @@ import { Toasty, useLarkToastManager } from "@lark-ui/core/components/toast";
   <p>
     轻提示（Toast）系统由两部分组成：`Toasty` provider 组件，以及用于触发轻提示的 `useLarkToastManager()` hook。
   </p>
+  <p>
+    轻提示悬浮在页面顶部居中位置，采用飞书客户端的描边样式：浅色状态底 + 1px 状态色描边，配以状态图标和加粗标题。它与行内通告栏（Banner）是两种不同的组件：Banner 使用平铺的填充底色，Toast 使用浮动的描边样式。
+  </p>
 
 ```tsx
 import { Toasty, useLarkToastManager, Button } from "@lark-ui/core";
@@ -152,7 +155,7 @@ export function Layout({ children }) {
 ### 多个轻提示
 
 <p>
-  多个轻提示会堆叠并呈现平滑的动画。悬停在堆叠上方即可展开。
+  多个轻提示会在页面顶部依次向下排列，彼此间隔 16px，并呈现平滑的进入与退出动画。
 </p>
 <ComponentExample demo="ToastMultipleDemo">
   <ToastMultipleDemo client:visible />
@@ -289,7 +292,9 @@ toastManager.promise(asyncFn(), {
           "default" | "success" | "error" | "warning" | "info"
         </td>
         <td class="py-3 pr-4 font-mono">"default"</td>
-        <td class="py-3">轻提示的视觉样式。</td>
+        <td class="py-3">
+          轻提示的视觉样式。状态变体使用浅色状态底 + 1px 状态色描边。
+        </td>
       </tr>
       <tr class="border-b border-lark-hairline">
         <td class="py-3 pr-4 font-mono text-lark-default">content</td>

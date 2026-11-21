@@ -276,15 +276,15 @@ export const THEME_CONFIG: ThemeConfig = {
     /** Solid success banner background (Feishu notice filled). */
     "lark-banner-success-solid": pair("#d9f5d6", "#0e2b0a"),
     /**
-     * Outlined banner backgrounds (Feishu `ud__notice--outlined`).
-     * The outlined theme tints the surface one step lighter than the filled
-     * theme and adds a 1px border in the status colour:
+     * Outlined toast backgrounds (Feishu `ud__notice--outlined`).
+     * Toast tints the surface one step lighter than Banner's filled surface
+     * and adds a 1px border in the status colour:
      * `--function-{info,success,warning,danger}-50`.
      */
-    "lark-banner-info-outlined": pair("#f0f4ff", "#152340"),
-    "lark-banner-success-outlined": pair("#e4fae1", "#0e2b0a"),
-    "lark-banner-warning-outlined": pair("#fff3e5", "#33230b"),
-    "lark-banner-danger-outlined": pair("#fef0f0", "#3d1a19"),
+    "lark-toast-info-outlined": pair("#f0f4ff", "#152340"),
+    "lark-toast-success-outlined": pair("#e4fae1", "#0e2b0a"),
+    "lark-toast-warning-outlined": pair("#fff3e5", "#33230b"),
+    "lark-toast-danger-outlined": pair("#fef0f0", "#3d1a19"),
 
     /*
      * Badge solid backgrounds.

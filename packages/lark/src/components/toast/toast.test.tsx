@@ -1,7 +1,12 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vite-plus/test";
 import { useEffect } from "react";
-import { Toasty, createLarkToastManager, useLarkToastManager } from "./toast";
+import {
+  Toasty,
+  createLarkToastManager,
+  toastVariants,
+  useLarkToastManager,
+} from "./toast";
 
 const surfaceOf = (text: string) =>
   screen
@@ -12,7 +17,81 @@ const surfaceOf = (text: string) =>
 const isBumping = (text: string) =>
   /animate-toast-bump/.test(surfaceOf(text)?.className ?? "");
 
+describe("toastVariants", () => {
+  it("paints the surface with the Feishu toast geometry", () => {
+    const className = toastVariants();
+
+    expect(className).toContain("rounded-lg");
+    expect(className).toContain("border");
+    expect(className).toContain("px-5");
+    expect(className).toContain("py-4");
+    expect(className).toContain("shadow-lark-popover");
+  });
+
+  it("uses a pale status tint with a 1px status border per variant", () => {
+    for (const [variant, border, background] of [
+      [
+        "success",
+        "border-lark-success-outline",
+        "bg-lark-toast-success-outlined",
+      ],
+      ["error", "border-lark-danger-outline", "bg-lark-toast-danger-outlined"],
+      [
+        "warning",
+        "border-lark-warning-outline",
+        "bg-lark-toast-warning-outlined",
+      ],
+      ["info", "border-lark-info-outline", "bg-lark-toast-info-outlined"],
+    ] as const) {
+      const className = toastVariants({ variant });
+      expect(className).toContain(border);
+      expect(className).toContain(background);
+    }
+
+    // The neutral variant keeps the elevated surface with a hairline border.
+    const neutral = toastVariants();
+    expect(neutral).toContain("border-lark-line");
+    expect(neutral).toContain("bg-lark-elevated");
+  });
+
+  it("drops the legacy notification accent bar and card surface", () => {
+    const className = toastVariants({ variant: "error" });
+
+    expect(className).not.toContain("bg-lark-notice-error");
+    expect(className).not.toContain("ring-lark-line");
+    expect(className).not.toContain("p-6");
+  });
+});
+
 describe("Toasty", () => {
+  it("renders status toasts as bordered banners with a status icon", async () => {
+    const mgr = createLarkToastManager();
+
+    render(
+      <Toasty toastManager={mgr}>
+        <div />
+      </Toasty>,
+    );
+
+    act(() => {
+      mgr.add({
+        title: "Deploy failed",
+        description: "Could not connect to the server.",
+        variant: "error",
+      });
+    });
+
+    const title = await screen.findByText("Deploy failed");
+    const surface = title.closest('[data-lark-part="surface"]');
+    expect(surface?.className).toContain("border-lark-danger-outline");
+    expect(surface?.className).toContain("bg-lark-toast-danger-outlined");
+    expect(title.className).toContain("font-semibold");
+    expect(document.querySelector("[data-toast-icon]")).toBeTruthy();
+    // The old leading accent bar and default close control are gone.
+    expect(document.querySelector('[data-lark-part="accent-bar"]')).toBeNull();
+    expect(screen.queryByRole("button", { name: "Close" })).toBeNull();
+  });
+
   // Regression guard: existing callers that don't pass `toastManager`
   // must continue to work via the in-tree `useLarkToastManager` hook.
   it("renders without a toastManager prop and accepts in-tree dispatch", async () => {

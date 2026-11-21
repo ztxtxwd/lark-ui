@@ -227,13 +227,13 @@
 
   --color-lark-banner-success-solid: light-dark(#d9f5d6, #0e2b0a);
 
-  --color-lark-banner-info-outlined: light-dark(#f0f4ff, #152340);
+  --color-lark-toast-info-outlined: light-dark(#f0f4ff, #152340);
 
-  --color-lark-banner-success-outlined: light-dark(#e4fae1, #0e2b0a);
+  --color-lark-toast-success-outlined: light-dark(#e4fae1, #0e2b0a);
 
-  --color-lark-banner-warning-outlined: light-dark(#fff3e5, #33230b);
+  --color-lark-toast-warning-outlined: light-dark(#fff3e5, #33230b);
 
-  --color-lark-banner-danger-outlined: light-dark(#fef0f0, #3d1a19);
+  --color-lark-toast-danger-outlined: light-dark(#fef0f0, #3d1a19);
 
   --color-lark-badge-red: light-dark(#f54a45, #e22e28);
 
@@ -355,10 +355,10 @@
     --color-lark-banner-warning-solid: #feead2;
     --color-lark-banner-danger-solid: #fde2e2;
     --color-lark-banner-success-solid: #d9f5d6;
-    --color-lark-banner-info-outlined: #f0f4ff;
-    --color-lark-banner-success-outlined: #e4fae1;
-    --color-lark-banner-warning-outlined: #fff3e5;
-    --color-lark-banner-danger-outlined: #fef0f0;
+    --color-lark-toast-info-outlined: #f0f4ff;
+    --color-lark-toast-success-outlined: #e4fae1;
+    --color-lark-toast-warning-outlined: #fff3e5;
+    --color-lark-toast-danger-outlined: #fef0f0;
     --color-lark-badge-red: #f54a45;
     --color-lark-badge-green: #34c724;
     --color-lark-badge-orange: #ff8800;
@@ -462,10 +462,10 @@
     --color-lark-banner-warning-solid: #331b0b;
     --color-lark-banner-danger-solid: #3d1a19;
     --color-lark-banner-success-solid: #0e2b0a;
-    --color-lark-banner-info-outlined: #152340;
-    --color-lark-banner-success-outlined: #0e2b0a;
-    --color-lark-banner-warning-outlined: #33230b;
-    --color-lark-banner-danger-outlined: #3d1a19;
+    --color-lark-toast-info-outlined: #152340;
+    --color-lark-toast-success-outlined: #0e2b0a;
+    --color-lark-toast-warning-outlined: #33230b;
+    --color-lark-toast-danger-outlined: #3d1a19;
     --color-lark-badge-red: #e22e28;
     --color-lark-badge-green: #32a645;
     --color-lark-badge-orange: #ed6d0c;

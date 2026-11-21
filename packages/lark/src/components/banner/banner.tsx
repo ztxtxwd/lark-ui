@@ -19,39 +19,31 @@ export const LARK_BANNER_BASE_STYLES = "flex w-full";
 /**
  * Banner variant definitions mapping style options to their Tailwind classes and descriptions.
  *
- * The `theme` axis mirrors Feishu's Universe Design notice: `filled` is a flat
- * tint (`ud__notice--filled`), `outlined` is a pale tint with a 1px border in
- * the status colour (`ud__notice--outlined`). Because the surface colour
- * depends on both axes, the outlined overrides are gated on a
- * `data-banner-theme` attribute the component sets on its root.
+ * The surface is always Feishu's `ud__notice--filled`: a flat status tint with
+ * no border. Banner is an inline, full-width notice; the floating, bordered
+ * treatment lives on `Toast` instead.
  */
 export const LARK_BANNER_VARIANTS = {
   variant: {
     default: {
       // Feishu `ud__notice` colours only the status icon — the title and
       // description stay on `--text-title` (`text-lark-default`).
-      // The outlined theme swaps the tint for `--function-info-50` and adds a
-      // 1px border one step stronger than the icon (Feishu `--B600`).
-      classes:
-        "bg-lark-banner-info-solid text-lark-default data-[banner-theme=outlined]:bg-lark-banner-info-outlined data-[banner-theme=outlined]:border-lark-info-outline",
+      classes: "bg-lark-banner-info-solid text-lark-default",
       iconClasses: "text-lark-info fill-lark-info",
       description: "Informational banner for general messages",
     },
     alert: {
-      classes:
-        "bg-lark-banner-warning-solid text-lark-default data-[banner-theme=outlined]:bg-lark-banner-warning-outlined data-[banner-theme=outlined]:border-lark-warning-outline",
+      classes: "bg-lark-banner-warning-solid text-lark-default",
       iconClasses: "text-lark-warning fill-lark-warning",
       description: "Warning banner for cautionary messages",
     },
     error: {
-      classes:
-        "bg-lark-banner-danger-solid text-lark-default data-[banner-theme=outlined]:bg-lark-banner-danger-outlined data-[banner-theme=outlined]:border-lark-danger-outline",
+      classes: "bg-lark-banner-danger-solid text-lark-default",
       iconClasses: "text-lark-danger fill-lark-danger",
       description: "Error banner for critical issues",
     },
     secondary: {
-      classes:
-        "bg-lark-contrast/5 text-lark-default data-[banner-theme=outlined]:border-lark-line",
+      classes: "bg-lark-contrast/5 text-lark-default",
       iconClasses: "text-lark-subtle",
       description: "Neutral banner for secondary messages",
     },
@@ -60,9 +52,8 @@ export const LARK_BANNER_VARIANTS = {
     base: {
       // Feishu `ud__notice--filled`: `padding: 9px 0 9px 16px`, 6px radius,
       // 14px/1.5715 type, and an 8px gap between the status icon and the text.
-      // `ud__notice--outlined` pads `15px 3px 15px 19px` instead.
       classes:
-        "items-start gap-2 rounded-md py-[9px] pl-4 text-base leading-[1.5715] overflow-hidden wrap-anywhere data-[banner-theme=outlined]:py-[15px] data-[banner-theme=outlined]:pl-[19px] data-[banner-theme=outlined]:pr-[3px]",
+        "items-start gap-2 rounded-md py-[9px] pl-4 text-base leading-[1.5715] overflow-hidden wrap-anywhere",
       description: "Default banner size",
     },
     sm: {
@@ -71,30 +62,16 @@ export const LARK_BANNER_VARIANTS = {
       description: "Compact banner for dialogs and tight spaces",
     },
   },
-  theme: {
-    filled: {
-      classes: "",
-      description: "Flat tinted surface (Feishu `ud__notice--filled`)",
-    },
-    outlined: {
-      // The 1px frame itself; the status colour comes from the variant axis.
-      classes: "border",
-      description:
-        "Pale tint with a 1px status border (Feishu `ud__notice--outlined`)",
-    },
-  },
 } as const;
 
 export const LARK_BANNER_DEFAULT_VARIANTS = {
   variant: "default",
   size: "base",
-  theme: "filled",
 } as const;
 
 // Derived types from LARK_BANNER_VARIANTS
 export type LarkBannerVariant = keyof typeof LARK_BANNER_VARIANTS.variant;
 export type LarkBannerSize = keyof typeof LARK_BANNER_VARIANTS.size;
-export type LarkBannerTheme = keyof typeof LARK_BANNER_VARIANTS.theme;
 
 /**
  * Per-size render-site classes not carried by `bannerVariants` (which only emits
@@ -146,19 +123,11 @@ export interface LarkBannerVariantsProps {
    * @default "base"
    */
   size?: LarkBannerSize;
-  /**
-   * Surface treatment.
-   * - `"filled"` — Flat tinted surface
-   * - `"outlined"` — Pale tint with a 1px status border
-   * @default "filled"
-   */
-  theme?: LarkBannerTheme;
 }
 
 export function bannerVariants({
   variant = LARK_BANNER_DEFAULT_VARIANTS.variant,
   size = LARK_BANNER_DEFAULT_VARIANTS.size,
-  theme = LARK_BANNER_DEFAULT_VARIANTS.theme,
 }: LarkBannerVariantsProps = {}) {
   const resolvedVariant = resolveVariant(
     LARK_BANNER_VARIANTS.variant,
@@ -170,11 +139,6 @@ export function bannerVariants({
     size,
     LARK_BANNER_DEFAULT_VARIANTS.size,
   );
-  const resolvedTheme = resolveVariant(
-    LARK_BANNER_VARIANTS.theme,
-    theme,
-    LARK_BANNER_DEFAULT_VARIANTS.theme,
-  );
 
   return cn(
     // Structural base styles (exported as LARK_BANNER_BASE_STYLES for Figma plugin)
@@ -183,8 +147,6 @@ export function bannerVariants({
     resolvedVariant.classes,
     // Apply size styles (spacing / radius / text) from LARK_BANNER_VARIANTS
     resolvedSize.classes,
-    // Apply theme styles (the outlined frame) from LARK_BANNER_VARIANTS
-    resolvedTheme.classes,
   );
 }
 
@@ -244,13 +206,6 @@ export interface BannerProps extends Omit<
    * @default "base"
    */
   size?: LarkBannerSize;
-  /**
-   * Surface treatment.
-   * - `"filled"` — Flat tinted surface
-   * - `"outlined"` — Pale tint with a 1px border in the status colour
-   * @default "filled"
-   */
-  theme?: LarkBannerTheme;
   /** Additional CSS classes merged via `cn()`. */
   className?: string;
 }
@@ -285,7 +240,6 @@ const BannerRoot = forwardRef<HTMLDivElement, BannerProps>(function BannerRoot(
     text,
     variant = LARK_BANNER_DEFAULT_VARIANTS.variant,
     size = LARK_BANNER_DEFAULT_VARIANTS.size,
-    theme = LARK_BANNER_DEFAULT_VARIANTS.theme,
     className,
     ...props
   },
@@ -313,8 +267,7 @@ const BannerRoot = forwardRef<HTMLDivElement, BannerProps>(function BannerRoot(
       <BannerActionContext.Provider value={{ variant, size: sizeParts.action }}>
         <div
           ref={ref}
-          className={cn(bannerVariants({ variant, size, theme }), className)}
-          data-banner-theme={theme}
+          className={cn(bannerVariants({ variant, size }), className)}
           {...props}
         >
           {icon && (
@@ -399,13 +352,12 @@ const BannerRoot = forwardRef<HTMLDivElement, BannerProps>(function BannerRoot(
       <div
         ref={ref}
         className={cn(
-          bannerVariants({ variant, size, theme }),
+          bannerVariants({ variant, size }),
           // The legacy copy is a direct child, so the trailing gutter lives on
           // the container instead of on the text block.
           trailingGutter,
           className,
         )}
-        data-banner-theme={theme}
         {...props}
       >
         {icon && (

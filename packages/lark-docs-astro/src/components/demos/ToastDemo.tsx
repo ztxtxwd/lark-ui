@@ -111,7 +111,7 @@ export function ToastDescriptionOnlyDemo() {
   );
 }
 
-/** Success toast with green accent border and check icon. */
+/** 成功轻提示：浅绿底 + 绿色描边 + 对勾图标。 */
 function ToastSuccessButton() {
   const toastManager = useLarkToastManager();
 
@@ -255,7 +255,7 @@ export function ToastWarningDemo() {
   );
 }
 
-/** Info toast with blue accent border and info icon. */
+/** 信息轻提示：浅蓝底 + 蓝色描边 + 信息图标。 */
 function ToastInfoButton() {
   const toastManager = useLarkToastManager();
 

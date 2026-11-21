@@ -22,7 +22,6 @@ import {
   BannerCompactWithCtaDemo,
   BannerCompactWithoutActionDemo,
   BannerCustomContentDemo,
-  BannerOutlinedDemo,
 } from "~/components/demos/BannerDemo";
 
 {/* Hero Demo */}
@@ -56,6 +55,10 @@ import {
 <ComponentSection>
 
 ## 用法
+
+<p>
+  通告栏始终使用平铺的状态色底，不提供描边主题。需要带描边的浮层提示时，请使用 Toast。
+</p>
 
 ```tsx
 import { Banner } from "@lark-ui/core";
@@ -110,14 +113,6 @@ export default function Example() {
 
 <ComponentExample demo="BannerWithIconDemo">
   <BannerWithIconDemo client:visible />
-</ComponentExample>
-
-### 描边主题
-
-`theme="outlined"` 对应飞书 Universe Design 的 `ud__notice--outlined`：浅色底 + 1px 状态色描边，常用于需要更轻量提示的场合。
-
-<ComponentExample demo="BannerOutlinedDemo">
-  <BannerOutlinedDemo client:visible />
 </ComponentExample>
 
 ### 带操作

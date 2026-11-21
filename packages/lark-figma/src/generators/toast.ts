@@ -1,18 +1,12 @@
 /**
  * Toast Component Generator
  *
- * Generates a Toast ComponentSet in Figma that matches
- * the Toast component styling:
+ * Generates a Toast ComponentSet that matches the React component:
  *
- * - Static visual representation of an open toast notification
- * - Title + Description + Close button layout
- * - No variants (single appearance)
- *
- * The Toast has:
- * - Container with bg-secondary, border-color, rounded-lg, shadow-lg
- * - Title text (text-surface, font-medium)
- * - Description text (text-lark-subtle)
- * - Close button with X icon (text-lark-subtle)
+ * - Floating status notice at the top of the viewport
+ * - Pale status tint with a 1px border in the status colour
+ * - Filled 16px status icon + semibold title + description
+ * - One variant per status (default / success / error / warning / info)
  *
  * Reads styles from component-registry.json (the source of truth).
  * Uses real icons from the Icon Library page.
@@ -24,13 +18,17 @@ import {
   createTextNode,
   getVariableByName,
   createModeSection,
+  createRowLabel,
   bindFillToVariable,
+  bindFillToVariableWithOpacity,
   bindTextColorToVariable,
   bindStrokeToVariable,
   BORDER_RADIUS,
   SECTION_PADDING,
   SECTION_GAP,
+  SECTION_TITLE,
   SECTION_LAYOUT,
+  GRID_LAYOUT,
   LARK_SHADOWS,
   createShadowEffects,
   SPACING,
@@ -38,46 +36,61 @@ import {
   VAR_NAMES,
 } from "./shared";
 import themeData from "../generated/theme-data.json";
-import { getButtonIcon, bindIconColor } from "./icon-utils";
+import { createIconInstance, bindIconColor } from "./icon-utils";
+import { parseTailwindClasses } from "../parsers/tailwind-to-figma";
 import { logComplete } from "../logger";
 
 // Import registry as source of truth
 import registry from "@lark-ui/core/ai/component-registry.json";
 
-// Type for registry styling
-const toastStyling = (registry.components as any).Toasty?.styling;
+const toastData = (registry.components as any).Toasty;
+const toastStyling = toastData?.styling;
+const variantProp = toastData?.props?.variant as
+  | {
+      values: string[];
+      classes: Record<string, string>;
+      descriptions: Record<string, string>;
+      default: string;
+    }
+  | undefined;
 
 /**
- * Fallback config using theme-data.json values to prevent drift
- * Typography uses Tailwind fontSize values
- * Spacing uses Tailwind spacing scale
+ * Fallback config using theme-data.json values to prevent drift.
+ * Typography uses Tailwind fontSize values; spacing uses the Tailwind scale.
  */
 const FALLBACK_TOAST_CONFIG = {
-  // FIGMA-SPECIFIC: Fixed width for Figma canvas rendering
-  // React component uses sm:w-[300px] which is viewport-responsive
-  // This is intentionally hardcoded as there's no Tailwind token for arbitrary values
-  width: 300,
-  titleFontSize: themeData.tailwind.fontSize.base, // text-base = 16px
-  titleFontWeight: FALLBACK_VALUES.fontWeight.medium, // font-medium = 500
-  // COMPONENT-SPECIFIC: text-[0.925rem] = ~14.8px is a custom arbitrary value in toast.tsx
-  // Using 15px as closest integer approximation (0.925 * 16 = 14.8)
-  // This cannot be derived from Tailwind tokens as it's an arbitrary value
-  descriptionFontSize: 15,
+  // FIGMA-SPECIFIC: Fixed width for Figma canvas rendering.
+  // The React component sizes to its content up to a 600px max width.
+  width: 420,
+  padding: themeData.tailwind.spacing.scale["5"], // px-5 = 20px
+  paddingY: themeData.tailwind.spacing.scale["4"], // py-4 = 16px
+  borderRadius: BORDER_RADIUS.lg, // rounded-lg = 8px
+  gap: 10, // gap-2.5 = 10px
+  titleFontSize: themeData.tailwind.fontSize.base, // text-base = 14px (Lark)
+  titleFontWeight: FALLBACK_VALUES.fontWeight.semiBold, // font-semibold = 600
+  descriptionFontSize: themeData.tailwind.fontSize.base,
   descriptionFontWeight: FALLBACK_VALUES.fontWeight.normal, // font-normal = 400
-  closeButtonSize: themeData.tailwind.spacing.scale["5"], // h-5 w-5 = 20px
-  closeButtonIconSize: themeData.tailwind.spacing.scale["4"], // size-4 = 16px
+  iconSize: FALLBACK_VALUES.iconSize.sm, // size-4 = 16px
+  textGap: SPACING.xs, // gap-1 = 4px
 };
 
 /**
- * Read Toast configuration from registry with fallback
+ * Read Toast configuration from the registry with fallback.
  */
-function getToastConfigFromRegistry() {
+function getToastConfig() {
   if (!toastStyling) {
     return FALLBACK_TOAST_CONFIG;
   }
 
   return {
     width: toastStyling.container?.width ?? FALLBACK_TOAST_CONFIG.width,
+    padding: toastStyling.container?.padding ?? FALLBACK_TOAST_CONFIG.padding,
+    paddingY:
+      toastStyling.container?.paddingY ?? FALLBACK_TOAST_CONFIG.paddingY,
+    borderRadius:
+      toastStyling.container?.borderRadius ??
+      FALLBACK_TOAST_CONFIG.borderRadius,
+    gap: toastStyling.container?.gap ?? FALLBACK_TOAST_CONFIG.gap,
     titleFontSize:
       toastStyling.title?.fontSize ?? FALLBACK_TOAST_CONFIG.titleFontSize,
     titleFontWeight:
@@ -88,126 +101,217 @@ function getToastConfigFromRegistry() {
     descriptionFontWeight:
       toastStyling.description?.fontWeight ??
       FALLBACK_TOAST_CONFIG.descriptionFontWeight,
-    closeButtonSize:
-      toastStyling.closeButton?.size ?? FALLBACK_TOAST_CONFIG.closeButtonSize,
-    closeButtonIconSize:
-      toastStyling.closeButton?.iconSize ??
-      FALLBACK_TOAST_CONFIG.closeButtonIconSize,
+    iconSize: toastStyling.icon?.size ?? FALLBACK_TOAST_CONFIG.iconSize,
+    textGap: FALLBACK_TOAST_CONFIG.textGap,
   };
 }
 
-const TOAST_CONFIG = getToastConfigFromRegistry();
+const TOAST_CONFIG = getToastConfig();
 
 /**
- * Toast dimensions (matches sm:w-[300px] from viewport)
- * Now reads from registry via TOAST_CONFIG
+ * Filled status icon per variant (Phosphor ids available to the Figma plugin)
+ * and the icon colour token. The React component uses the same semantic
+ * colours through `iconClasses` in `LARK_TOAST_VARIANTS`.
  */
-const TOAST_WIDTH = TOAST_CONFIG.width;
+const TOAST_ICONS: Record<
+  string,
+  { iconId: string | undefined; color: string | undefined }
+> = {
+  default: { iconId: undefined, color: undefined },
+  success: { iconId: "ph-check", color: "text-lark-success" },
+  error: { iconId: "ph-x", color: "text-lark-danger" },
+  warning: { iconId: "ph-warning", color: "text-lark-warning" },
+  info: { iconId: "ph-info", color: "text-lark-info" },
+};
 
 /**
- * Create a single Toast component
+ * TESTABLE EXPORTS - Pure functions that return intermediate data
+ * These functions compute data without calling Figma APIs, enabling snapshot tests.
+ */
+
+/** Get variant configuration from registry. */
+export function getToastVariantConfig() {
+  if (!variantProp) {
+    return {
+      values: [] as string[],
+      classes: {} as Record<string, string>,
+      descriptions: {} as Record<string, string>,
+      default: "",
+    };
+  }
+
+  return {
+    values: variantProp.values,
+    classes: variantProp.classes,
+    descriptions: variantProp.descriptions,
+    default: variantProp.default,
+  };
+}
+
+/** Get parsed styles for a specific variant. */
+export function getToastParsedVariantStyles(variant: string) {
+  const classes = variantProp?.classes?.[variant] || "";
+  return {
+    variant,
+    classes,
+    description: variantProp?.descriptions?.[variant] || "",
+    parsed: parseTailwindClasses(classes),
+  };
+}
+
+/** Get container styling configuration from registry. */
+export function getContainerConfig() {
+  return {
+    raw: toastStyling?.container,
+    width: TOAST_CONFIG.width,
+    padding: TOAST_CONFIG.padding,
+    paddingY: TOAST_CONFIG.paddingY,
+    borderRadius: TOAST_CONFIG.borderRadius,
+    background: toastStyling?.container?.background,
+    border: toastStyling?.container?.border,
+    shadow: toastStyling?.container?.shadow,
+    gap: TOAST_CONFIG.gap,
+  };
+}
+
+/** Get title styling configuration from registry. */
+export function getTitleConfig() {
+  return {
+    raw: toastStyling?.title,
+    fontSize: TOAST_CONFIG.titleFontSize,
+    fontWeight: TOAST_CONFIG.titleFontWeight,
+    color: toastStyling?.title?.color,
+  };
+}
+
+/** Get description styling configuration from registry. */
+export function getDescriptionConfig() {
+  return {
+    raw: toastStyling?.description,
+    fontSize: TOAST_CONFIG.descriptionFontSize,
+    fontWeight: TOAST_CONFIG.descriptionFontWeight,
+    color: toastStyling?.description?.color,
+  };
+}
+
+/** Get icon configuration from registry. */
+export function getIconConfig() {
+  return {
+    raw: toastStyling?.icon,
+    size: TOAST_CONFIG.iconSize,
+  };
+}
+
+/** Get complete variant data for all Toast styling (golden-path test). */
+export function getAllVariantData() {
+  return {
+    styling: toastStyling,
+    container: getContainerConfig(),
+    title: getTitleConfig(),
+    description: getDescriptionConfig(),
+    icon: getIconConfig(),
+    variants: getToastVariantConfig().values.map((variant) => ({
+      ...getToastParsedVariantStyles(variant),
+      icon: TOAST_ICONS[variant] || TOAST_ICONS.default,
+    })),
+  };
+}
+
+/**
+ * Create a single Toast component for a variant.
  *
  * Layout structure:
- * - Component (vertical auto-layout)
- *   - Header (horizontal: title + spacer + close button)
- *   - Description
- *
- * @returns ComponentNode for the toast
+ * - Component (horizontal auto-layout)
+ *   - Status icon
+ *   - Text column (vertical: title + description)
  */
-async function createToastComponent(): Promise<ComponentNode> {
-  // Create component
+async function createToastComponent(variant: string): Promise<ComponentNode> {
+  const styles = getToastParsedVariantStyles(variant);
+  const parsed = styles.parsed;
+
   const component = figma.createComponent();
-  component.name = "Toast";
-  component.description = "Toast notification component for transient messages";
+  component.name = "variant=" + variant;
+  component.description =
+    styles.description || "Toast notification for transient messages";
 
-  // Set up vertical auto-layout
-  component.layoutMode = "VERTICAL";
-  component.primaryAxisSizingMode = "AUTO";
-  component.counterAxisSizingMode = "FIXED";
-  component.resize(TOAST_WIDTH, 100); // Height will auto-adjust
-  component.itemSpacing = SPACING.xs; // gap-1 = 4px, small gap between header and description
-  component.paddingLeft = themeData.tailwind.spacing.scale["4"]; // p-4 = 16px
-  component.paddingRight = themeData.tailwind.spacing.scale["4"];
-  component.paddingTop = themeData.tailwind.spacing.scale["4"];
-  component.paddingBottom = themeData.tailwind.spacing.scale["4"];
-  component.cornerRadius = BORDER_RADIUS.lg; // rounded-lg = 8px
+  // Horizontal auto-layout, fixed to the representative toast width.
+  component.layoutMode = "HORIZONTAL";
+  component.primaryAxisAlignItems = "MIN";
+  component.counterAxisAlignItems = "MIN";
+  component.itemSpacing = TOAST_CONFIG.gap;
+  component.paddingLeft = TOAST_CONFIG.padding;
+  component.paddingRight = TOAST_CONFIG.padding;
+  component.paddingTop = TOAST_CONFIG.paddingY;
+  component.paddingBottom = TOAST_CONFIG.paddingY;
+  component.primaryAxisSizingMode = "FIXED";
+  component.counterAxisSizingMode = "AUTO";
+  component.resize(TOAST_CONFIG.width, 100);
+  component.cornerRadius = TOAST_CONFIG.borderRadius;
 
-  // Apply background fill (bg-lark-control)
-  const bgVar = getVariableByName(VAR_NAMES.color.elevated);
-  if (bgVar) {
-    bindFillToVariable(component, bgVar.id);
+  // Pale status tint
+  if (parsed.fillVariable) {
+    bindFillToVariableWithOpacity(component, parsed.fillVariable);
+  } else {
+    const bgVar = getVariableByName(VAR_NAMES.color.elevated);
+    if (bgVar) {
+      bindFillToVariable(component, bgVar.id);
+    }
   }
 
-  // Apply border (ring ring-lark-line)
-  const borderVar = getVariableByName(VAR_NAMES.color.line);
-  if (borderVar) {
-    bindStrokeToVariable(component, borderVar.id, 1);
+  // 1px status border
+  if (parsed.strokeVariable) {
+    const strokeVar = getVariableByName(parsed.strokeVariable);
+    if (strokeVar) {
+      bindStrokeToVariable(component, strokeVar.id, 1);
+    }
+  } else {
+    const borderVar = getVariableByName(VAR_NAMES.color.line);
+    if (borderVar) {
+      bindStrokeToVariable(component, borderVar.id, 1);
+    }
   }
 
-  // Apply the Feishu notification elevation (shadow-lark-notification → --shadow-s5-down)
-  component.effects = createShadowEffects(LARK_SHADOWS.notification);
+  // Feishu's toast elevation (`ud__toast` uses --shadow-s4-down)
+  component.effects = createShadowEffects(LARK_SHADOWS.popover);
 
-  // Create header frame (title + close button with SPACE_BETWEEN)
-  const header = figma.createFrame();
-  header.name = "Header";
-  header.layoutMode = "HORIZONTAL";
-  header.primaryAxisAlignItems = "SPACE_BETWEEN";
-  header.counterAxisAlignItems = "CENTER";
-  header.primaryAxisSizingMode = "FIXED";
-  header.counterAxisSizingMode = "AUTO";
-  header.resize(TOAST_WIDTH - 32, 20); // Full width minus padding
-  header.layoutAlign = "STRETCH";
-  header.fills = [];
-  header.itemSpacing = SPACING.base; // gap-2 = 8px
+  // Status icon
+  const iconConfig = TOAST_ICONS[variant] || TOAST_ICONS.default;
+  if (iconConfig.iconId) {
+    const icon = createIconInstance(iconConfig.iconId, TOAST_CONFIG.iconSize);
+    if (icon) {
+      icon.name = "Icon";
+      if (iconConfig.color) {
+        bindIconColor(icon, iconConfig.color);
+      }
+      component.appendChild(icon);
+    }
+  }
 
-  // Create title text
-  // text-[0.975rem] = ~15.6px, font-medium = 500
+  // Text column
+  const textColumn = figma.createFrame();
+  textColumn.name = "Text";
+  textColumn.layoutMode = "VERTICAL";
+  textColumn.primaryAxisSizingMode = "AUTO";
+  textColumn.counterAxisSizingMode = "AUTO";
+  textColumn.itemSpacing = TOAST_CONFIG.textGap;
+  textColumn.fills = [];
+  textColumn.layoutGrow = 1;
+
   const title = await createTextNode(
     "Toast created",
     TOAST_CONFIG.titleFontSize,
     TOAST_CONFIG.titleFontWeight,
   );
   title.name = "Title";
-  title.textAutoResize = "WIDTH_AND_HEIGHT";
-  title.layoutGrow = 1; // Take remaining space
+  title.textAutoResize = "HEIGHT";
+  title.layoutAlign = "STRETCH";
 
-  // Apply title text color (text-lark-default)
   const titleVar = getVariableByName(VAR_NAMES.text.default);
   if (titleVar) {
     bindTextColorToVariable(title, titleVar.id);
   }
+  textColumn.appendChild(title);
 
-  header.appendChild(title);
-
-  // Create close button
-  // h-5 w-5 = 20x20px
-  const closeButton = figma.createFrame();
-  closeButton.name = "Close Button";
-  closeButton.layoutMode = "HORIZONTAL";
-  closeButton.primaryAxisAlignItems = "CENTER";
-  closeButton.counterAxisAlignItems = "CENTER";
-  closeButton.resize(
-    TOAST_CONFIG.closeButtonSize,
-    TOAST_CONFIG.closeButtonSize,
-  );
-  closeButton.cornerRadius = BORDER_RADIUS.sm; // rounded = 4px
-  closeButton.fills = []; // bg-transparent
-
-  // Create close icon (ph-x) - 16x16 inside 20x20 button
-  const closeIconName = "ph-x";
-  const closeIcon = getButtonIcon(closeIconName, "sm"); // sm = 16px (TOAST_CONFIG.closeButtonIconSize)
-  closeIcon.name = "Icon";
-
-  // Apply icon color (text-lark-subtle)
-  bindIconColor(closeIcon, "text-lark-subtle");
-
-  closeButton.appendChild(closeIcon);
-  header.appendChild(closeButton);
-
-  component.appendChild(header);
-
-  // Create description text
-  // text-[0.925rem] = ~14.8px, normal weight
   const description = await createTextNode(
     "This is a toast notification.",
     TOAST_CONFIG.descriptionFontSize,
@@ -216,100 +320,117 @@ async function createToastComponent(): Promise<ComponentNode> {
   description.name = "Description";
   description.textAutoResize = "HEIGHT";
   description.layoutAlign = "STRETCH";
-  description.resize(TOAST_WIDTH - 32, description.height); // Full width minus padding
 
-  // Apply description text color (text-lark-subtle)
   const descVar = getVariableByName(VAR_NAMES.text.subtle);
   if (descVar) {
     bindTextColorToVariable(description, descVar.id);
   }
+  textColumn.appendChild(description);
 
-  component.appendChild(description);
+  component.appendChild(textColumn);
 
   return component;
 }
 
 /**
- * Generate Toast ComponentSet
- *
- * Creates a "Toast" ComponentSet with a single variant (no variants).
+ * Generate Toast ComponentSet with one component per status variant.
  * Creates both light and dark mode sections.
  *
- * @param page - The page to add components to
  * @param startY - Y position to start placing the section
  * @returns The Y position after this section (for next section placement)
  */
-export async function generateToastComponents(
-  page: PageNode,
-  startY: number,
-): Promise<number> {
+export async function generateToastComponents(startY: number): Promise<number> {
   if (startY === undefined) startY = 100;
 
-  figma.currentPage = page;
-
-  // Generate the toast component
+  const variants = getToastVariantConfig().values;
   const components: ComponentNode[] = [];
 
-  // Create the toast component
-  const component = await createToastComponent();
+  const columnGap = GRID_LAYOUT.componentGapX.standard;
+  const headerOffset = GRID_LAYOUT.headerRowHeight;
 
-  // Position component
-  component.x = 0;
-  component.y = 0;
+  for (const variant of variants) {
+    components.push(await createToastComponent(variant));
+  }
 
-  components.push(component);
+  // Column x positions
+  const columnX: number[] = [];
+  let currentX = 0;
+  for (const component of components) {
+    columnX.push(currentX);
+    currentX += component.width + columnGap;
+  }
 
-  // Combine into ComponentSet (even with single variant for consistency)
+  for (let columnIndex = 0; columnIndex < components.length; columnIndex++) {
+    components[columnIndex].x = columnX[columnIndex];
+    components[columnIndex].y = 0;
+  }
+
+  const columnHeaders: { x: number; text: string }[] = variants.map(
+    (variant, columnIndex) => ({
+      x: columnX[columnIndex],
+      text: "variant=" + variant,
+    }),
+  );
+
   // @ts-ignore - combineAsVariants works at runtime
-  const componentSet = figma.combineAsVariants(components, page);
+  const componentSet = figma.combineAsVariants(components, figma.currentPage);
   componentSet.name = "Toast";
   componentSet.description =
     "Toast notification component. " +
     "Use for transient messages, confirmations, and alerts.";
-  componentSet.layoutMode = "NONE";
 
-  // Calculate content dimensions
   const contentWidth = componentSet.width;
   const contentHeight = componentSet.height;
+  const contentYOffset = SECTION_TITLE.height;
 
-  // Create light mode section
-  const lightSection = createModeSection(page, "Toast", "light");
+  const lightSection = createModeSection(figma.currentPage, "Toast", "light");
   lightSection.frame.resize(
     contentWidth + SECTION_PADDING * 2,
-    contentHeight + SECTION_PADDING * 2,
+    contentHeight + SECTION_PADDING * 2 + contentYOffset + headerOffset,
   );
 
-  // Create dark mode section
-  const darkSection = createModeSection(page, "Toast", "dark");
+  const darkSection = createModeSection(figma.currentPage, "Toast", "dark");
   darkSection.frame.resize(
     contentWidth + SECTION_PADDING * 2,
-    contentHeight + SECTION_PADDING * 2,
+    contentHeight + SECTION_PADDING * 2 + contentYOffset + headerOffset,
   );
 
-  // Move ComponentSet into light section frame
   lightSection.frame.appendChild(componentSet);
   componentSet.x = SECTION_PADDING;
-  componentSet.y = SECTION_PADDING;
+  componentSet.y = SECTION_PADDING + headerOffset + contentYOffset;
 
-  // Create instances for dark section
-  for (let k = 0; k < components.length; k++) {
-    const origComp = components[k];
-    const instance = origComp.createInstance();
-    instance.x = origComp.x + SECTION_PADDING;
-    instance.y = origComp.y + SECTION_PADDING;
+  for (const header of columnHeaders) {
+    const headerNode = await createRowLabel(
+      header.text,
+      SECTION_PADDING + header.x,
+      SECTION_PADDING + contentYOffset,
+    );
+    lightSection.frame.appendChild(headerNode);
+  }
+
+  for (const component of components) {
+    const instance = component.createInstance();
+    instance.x = component.x + SECTION_PADDING;
+    instance.y = component.y + SECTION_PADDING + headerOffset + contentYOffset;
     darkSection.frame.appendChild(instance);
   }
 
-  // Resize sections to fit content with padding
+  for (const header of columnHeaders) {
+    const headerNode = await createRowLabel(
+      header.text,
+      SECTION_PADDING + header.x,
+      SECTION_PADDING + contentYOffset,
+    );
+    darkSection.frame.appendChild(headerNode);
+  }
+
   const totalWidth = contentWidth + SECTION_PADDING * 2;
-  const totalHeight = contentHeight + SECTION_PADDING * 2;
+  const totalHeight =
+    contentHeight + SECTION_PADDING * 2 + contentYOffset + headerOffset;
 
-  lightSection.frame.resize(totalWidth, totalHeight);
-  darkSection.frame.resize(totalWidth, totalHeight);
+  lightSection.section.resizeWithoutConstraints(totalWidth, totalHeight);
+  darkSection.section.resizeWithoutConstraints(totalWidth, totalHeight);
 
-  // Add title inside each frame
-
-  // Position sections side by side
   lightSection.frame.x = SECTION_LAYOUT.startX;
   lightSection.frame.y = startY;
 
@@ -320,116 +441,4 @@ export async function generateToastComponents(
   logComplete("Generated Toast ComponentSet (light + dark)");
 
   return startY + totalHeight + SECTION_GAP;
-}
-
-/**
- * ============================================================
- * TESTABLE EXPORT FUNCTIONS
- * ============================================================
- *
- * These functions extract intermediate data from the registry
- * to enable testing without Figma plugin runtime.
- *
- * Source of truth chain:
- * toast.tsx (LARK_TOAST_STYLING) → component-registry.json → toast.ts
- */
-
-/**
- * Get container styling configuration from registry
- */
-export function getContainerConfig() {
-  const toastComponent = (registry.components as any).Toasty;
-  const styling = toastComponent.styling;
-
-  if (!styling || !styling.container) {
-    throw new Error("Toast styling metadata not found in registry");
-  }
-
-  return {
-    raw: styling.container,
-    width: styling.container.width,
-    padding: styling.container.padding,
-    borderRadius: styling.container.borderRadius,
-    background: styling.container.background,
-    border: styling.container.border,
-    shadow: styling.container.shadow,
-    gap: styling.container.gap,
-  };
-}
-
-/**
- * Get title styling configuration from registry
- */
-export function getTitleConfig() {
-  const toastComponent = (registry.components as any).Toasty;
-  const styling = toastComponent.styling;
-
-  if (!styling || !styling.title) {
-    throw new Error("Toast styling metadata not found in registry");
-  }
-
-  return {
-    raw: styling.title,
-    fontSize: styling.title.fontSize,
-    fontWeight: styling.title.fontWeight,
-    color: styling.title.color,
-  };
-}
-
-/**
- * Get description styling configuration from registry
- */
-export function getDescriptionConfig() {
-  const toastComponent = (registry.components as any).Toasty;
-  const styling = toastComponent.styling;
-
-  if (!styling || !styling.description) {
-    throw new Error("Toast styling metadata not found in registry");
-  }
-
-  return {
-    raw: styling.description,
-    fontSize: styling.description.fontSize,
-    fontWeight: styling.description.fontWeight,
-    color: styling.description.color,
-  };
-}
-
-/**
- * Get close button styling configuration from registry
- */
-export function getCloseButtonConfig() {
-  const toastComponent = (registry.components as any).Toasty;
-  const styling = toastComponent.styling;
-
-  if (!styling || !styling.closeButton) {
-    throw new Error("Toast styling metadata not found in registry");
-  }
-
-  return {
-    raw: styling.closeButton,
-    size: styling.closeButton.size,
-    iconSize: styling.closeButton.iconSize,
-    iconName: styling.closeButton.iconName,
-    iconColor: styling.closeButton.iconColor,
-    hoverBackground: styling.closeButton.hoverBackground,
-    hoverColor: styling.closeButton.hoverColor,
-    borderRadius: styling.closeButton.borderRadius,
-  };
-}
-
-/**
- * Get complete variant data for all Toast styling
- * This is the golden path test - captures all intermediate data
- */
-export function getAllVariantData() {
-  const toastComponent = (registry.components as any).Toasty;
-
-  return {
-    styling: toastComponent.styling,
-    container: getContainerConfig(),
-    title: getTitleConfig(),
-    description: getDescriptionConfig(),
-    closeButton: getCloseButtonConfig(),
-  };
 }

@@ -109,10 +109,10 @@ const COLOR_TO_VARIABLE: Record<string, string> = {
   "bg-lark-banner-warning-solid": "color-lark-banner-warning-solid",
   "bg-lark-banner-danger-solid": "color-lark-banner-danger-solid",
   "bg-lark-banner-success-solid": "color-lark-banner-success-solid",
-  "bg-lark-banner-info-outlined": "color-lark-banner-info-outlined",
-  "bg-lark-banner-warning-outlined": "color-lark-banner-warning-outlined",
-  "bg-lark-banner-danger-outlined": "color-lark-banner-danger-outlined",
-  "bg-lark-banner-success-outlined": "color-lark-banner-success-outlined",
+  "bg-lark-toast-info-outlined": "color-lark-toast-info-outlined",
+  "bg-lark-toast-warning-outlined": "color-lark-toast-warning-outlined",
+  "bg-lark-toast-danger-outlined": "color-lark-toast-danger-outlined",
+  "bg-lark-toast-success-outlined": "color-lark-toast-success-outlined",
   "bg-lark-fill-hover": "color-lark-fill-hover",
   "bg-lark-fill-pressed": "color-lark-fill-pressed",
   "bg-lark-fill-selected": "color-lark-fill-selected",
@@ -281,8 +281,7 @@ export type ParsedStyles = {
 
   /**
    * Data-attribute variants, keyed by `attribute=value`
-   * (e.g. `data-[banner-theme=outlined]:bg-lark-banner-danger-outlined`
-   * lands in `data["banner-theme=outlined"]`).
+   * (e.g. `data-[state=open]:bg-lark-elevated` lands in `data["state=open"]`).
    */
   data?: Record<string, ParsedStyles>;
 };
@@ -320,7 +319,7 @@ export function parseTailwindClasses(classes: string): ParsedStyles {
 
     // Parse data-attribute variants (data-[attr=value]:class-name).
     // These drive alternative surfaces a component swaps in at runtime
-    // (e.g. the Banner's outlined theme).
+    // (e.g. state-driven fills).
     const dataMatch = cls.match(/^data-\[([\w-]+)=([^\]]+)\]:(.+)$/);
     if (dataMatch) {
       const key = `${dataMatch[1]}=${dataMatch[2]}`;

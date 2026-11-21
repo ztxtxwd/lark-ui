@@ -18,7 +18,6 @@ import {
   getBannerVariantConfig,
   getBannerParsedBaseStyles,
   getBannerParsedVariantStyles,
-  getBannerThemeConfig,
   getBannerEffectiveStyles,
   getAllBannerVariantData,
 } from "./banner";
@@ -41,7 +40,6 @@ const bannerComponent = registry.components
 const bannerProps = bannerComponent.props;
 const variantProp = bannerProps.variant as VariantProp;
 const sizeProp = bannerProps.size as VariantProp;
-const themeProp = bannerProps.theme as VariantProp;
 
 /**
  * Base styles from component-registry.json
@@ -70,44 +68,15 @@ describe("Banner Generator - Config Functions", () => {
     const config = getBannerVariantConfig();
     expectGetterMatchesRegistry(config, variantProp, "getBannerVariantConfig");
   });
-
-  it("getBannerThemeConfig should return registry data", () => {
-    const config = getBannerThemeConfig();
-    expectGetterMatchesRegistry(config, themeProp, "getBannerThemeConfig");
-  });
 });
 
-describe("Banner Generator - Theme Axis", () => {
-  it("resolves a distinct surface per theme", () => {
-    const filled = getBannerEffectiveStyles(
-      "error",
-      sizeProp.default,
-      themeProp.default,
-    );
-    const outlined = getBannerEffectiveStyles(
-      "error",
-      sizeProp.default,
-      "outlined",
-    );
+describe("Banner Generator - Filled Surface", () => {
+  it("resolves a flat status tint with no border for every variant", () => {
+    for (const variant of variantProp.values) {
+      const styles = getBannerEffectiveStyles(variant, sizeProp.default);
 
-    // The filled theme is a flat tint; the outlined theme swaps the tint and
-    // draws a border in the status colour.
-    expect(filled.fillVariable).toBeDefined();
-    expect(outlined.fillVariable).toBeDefined();
-    expect(outlined.fillVariable).not.toBe(filled.fillVariable);
-    expect(outlined.strokeVariable).toBeDefined();
-    expect(filled.strokeVariable).toBeUndefined();
-  });
-
-  it("covers every theme for every variant", () => {
-    const data = getAllBannerVariantData();
-
-    expect(data.themes.length).toBe(themeProp.values.length);
-    for (const variant of data.variants) {
-      expect(variant.themes.length).toBe(themeProp.values.length);
-      for (const theme of variant.themes) {
-        expect(themeProp.values).toContain(theme.theme);
-      }
+      expect(styles.fillVariable).toBeDefined();
+      expect(styles.strokeVariable).toBeUndefined();
     }
   });
 });

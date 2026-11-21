@@ -492,7 +492,7 @@ figma.ui.onmessage = async (msg: { type: string }) => {
         {
           name: "Toast",
           execute: async (page, y) => {
-            const result = await generateToastComponents(page, y);
+            const result = await generateToastComponents(y);
             return { nextY: result };
           },
         },

@@ -84,43 +84,6 @@ export function BannerTitleOnlyDemo() {
   return <Banner icon={<Info weight="fill" />} title="您的更改已保存。" />;
 }
 
-/**
- * 描边主题：浅色底 + 1px 状态色描边，对应飞书 `ud__notice--outlined`。
- */
-export function BannerOutlinedDemo() {
-  return (
-    <div className="w-full space-y-3">
-      <Banner
-        theme="outlined"
-        icon={<Info weight="fill" />}
-        title="有可用更新"
-        description="新版本已可安装。"
-      />
-      <Banner
-        theme="outlined"
-        variant="alert"
-        icon={<Warning weight="fill" />}
-        title="会话即将过期"
-        description="您的会话将在 5 分钟后过期。"
-      />
-      <Banner
-        theme="outlined"
-        variant="error"
-        icon={<WarningCircle weight="fill" />}
-        title="保存失败"
-        description="无法保存您的更改，请重试。"
-      />
-      <Banner
-        theme="outlined"
-        variant="secondary"
-        icon={<Info weight="fill" />}
-        title="已安排维护"
-        description="此服务将中断 10 分钟。"
-      />
-    </div>
-  );
-}
-
 /** 带自定义图标和结构化内容的通告栏。 */
 export function BannerWithIconDemo() {
   return (

@@ -16,55 +16,60 @@ import {
   CheckCircleIcon,
   InfoIcon,
   WarningIcon,
-  WarningOctagonIcon,
-  XIcon,
+  XCircleIcon,
 } from "../../icons/phosphor";
 
 /**
  * Toast styling configuration for Figma plugin consumption.
- * Toast has no user-facing variants but documents the styling structure.
+ *
+ * A toast is a floating status notice. Feishu's client renders it as a small
+ * banner-like surface: a pale status tint with a 1px border in the status
+ * colour, an 8px radius and an elevated shadow. The status icon and the title
+ * share one row, and the title is set semibold.
  */
 export const LARK_TOAST_VARIANTS = {
   root: {
     classes:
-      "rounded-lg ring ring-lark-line bg-lark-elevated p-6 shadow-lark-notification text-lark-default",
-    description: "Toast container with background, border, and shadow",
+      "rounded-lg border bg-clip-padding px-5 py-4 shadow-lark-popover text-lark-default",
+    description:
+      "Toast container with a status tint (or neutral surface), 1px border, and shadow",
   },
   title: {
-    classes: "text-base leading-[22px] font-medium text-lark-default",
-    description: "Toast title with primary text color",
+    classes: "text-base leading-[22px] font-semibold text-lark-default",
+    description: "Toast title in Feishu's semibold notice type",
   },
   description: {
     classes: "text-base leading-[22px] text-lark-subtle",
     description: "Toast description with muted text color",
   },
-  close: {
-    classes:
-      "absolute top-6 right-6 size-5 rounded text-lark-subtle hover:bg-current/15",
-    description: "Button-based close control with variant-aware hover tint",
-  },
   variant: {
     default: {
-      classes: "",
-      description: "Default toast style",
+      // Neutral toast: the elevated surface with a hairline border.
+      classes: "border-lark-line bg-lark-elevated",
+      description: "Default neutral toast style",
     },
     success: {
-      classes: "[&_[data-toast-icon]]:text-lark-success",
+      classes:
+        "border-lark-success-outline bg-lark-toast-success-outlined",
+      iconClasses: "text-lark-success",
       description: "Success toast for confirmations and positive outcomes",
       icon: CheckCircleIcon,
     },
     error: {
-      classes: "[&_[data-toast-icon]]:text-lark-danger",
+      classes: "border-lark-danger-outline bg-lark-toast-danger-outlined",
+      iconClasses: "text-lark-danger",
       description: "Error toast for critical issues",
-      icon: WarningOctagonIcon,
+      icon: XCircleIcon,
     },
     warning: {
-      classes: "[&_[data-toast-icon]]:text-lark-warning",
+      classes: "border-lark-warning-outline bg-lark-toast-warning-outlined",
+      iconClasses: "text-lark-warning",
       description: "Warning toast for cautionary messages",
       icon: WarningIcon,
     },
     info: {
-      classes: "[&_[data-toast-icon]]:text-lark-info",
+      classes: "border-lark-info-outline bg-lark-toast-info-outlined",
+      iconClasses: "text-lark-info",
       description: "Info toast for neutral informational messages",
       icon: InfoIcon,
     },
@@ -82,16 +87,17 @@ export const LARK_TOAST_DEFAULT_VARIANTS = {
 export const LARK_TOAST_STYLING = {
   container: {
     width: 420,
-    padding: 24,
+    padding: 20,
+    paddingY: 16,
     borderRadius: 8,
     background: "bg-lark-elevated",
-    border: "ring ring-lark-line",
-    shadow: "shadow-lark-notification",
-    gap: 8,
+    border: "border border-lark-line",
+    shadow: "shadow-lark-popover",
+    gap: 10,
   },
   title: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: 600,
     color: "text-lark-default",
   },
   description: {
@@ -99,14 +105,9 @@ export const LARK_TOAST_STYLING = {
     fontWeight: 400,
     color: "text-lark-subtle",
   },
-  closeButton: {
-    size: 20,
-    iconSize: 16,
-    iconName: "ph-x",
-    iconColor: "text-lark-subtle",
-    hoverBackground: "color-color-2",
-    hoverColor: "text-color-label",
-    borderRadius: 4,
+  icon: {
+    size: 16,
+    defaultIconName: "ph-info",
   },
 } as const;
 
@@ -121,10 +122,11 @@ export function toastVariants({
   variant = LARK_TOAST_DEFAULT_VARIANTS.variant,
 }: LarkToastVariantsProps = {}) {
   return cn(
-    // Base styles for the toast surface — Feishu `ud__notification__notice-content`:
-    // `--bg-float` surface, 1px `--line-border-card` edge, 8px radius,
-    // `--shadow-s5-down` and 24px padding.
-    "overflow-hidden rounded-lg bg-lark-elevated bg-clip-padding p-6 ring ring-lark-line shadow-lark-notification",
+    // Base surface — the floating, bordered counterpart to Banner's filled
+    // inline notice (Feishu `ud__notice--outlined`): pale status tint, 1px
+    // status border, 8px radius, `--shadow-s4-down` (Feishu `ud__toast`),
+    // 20px by 16px padding.
+    "overflow-hidden rounded-lg border bg-clip-padding px-5 py-4 text-lark-default shadow-lark-popover",
     // Apply variant styles from LARK_TOAST_VARIANTS
     resolveVariant(
       LARK_TOAST_VARIANTS.variant,
@@ -329,8 +331,9 @@ export const createLarkToastManager = () => {
 /**
  * Toasty — toast notification provider and viewport.
  *
- * Renders a `Toast.Provider` with a fixed-position viewport in the bottom-right corner.
- * Toasts stack with smooth enter/exit animations, swipe-to-dismiss, and expand-on-hover.
+ * Renders a `Toast.Provider` with a fixed-position viewport at the top centre
+ * of the screen, matching the Feishu client. Toasts stack downwards in a
+ * column, slide in from above and fade out.
  *
  * Built on `@base-ui/react/toast`.
  *
@@ -353,7 +356,7 @@ export function Toasty({
     <Toast.Provider toastManager={toastManager}>
       {children}
       <Toast.Portal container={container}>
-        <Toast.Viewport className="fixed top-auto right-4 bottom-4 z-1 mx-auto flex w-[calc(100%-2rem)] sm:right-8 sm:bottom-8 sm:w-[420px]">
+        <Toast.Viewport className="fixed inset-x-0 top-0 z-1 mx-auto w-[calc(100%-2rem)] max-w-[600px]">
           <ToastList />
         </Toast.Viewport>
       </Toast.Portal>
@@ -375,109 +378,71 @@ function getBumpAnimation(toast: LarkToastOptions<any>) {
 
   // Alternate between two identical animations so each bump replays.
   // Unlike clipboard-text, don't remount with `key={updateKey}`: that would
-  // drop focus from a focused action or close button inside the toast.
+  // drop focus from a focused action inside the toast.
   return (
     shouldBump &&
     (updateKey % 2 === 0 ? "animate-toast-bump-alternate" : "animate-toast-bump")
   );
 }
 
-// The root owns the slide transition and the inner surface owns the bump,
-// so a bump never cancels an in-progress slide-in.
+// The root owns the slide/fade transition and the inner surface owns the
+// bump, so a bump never cancels an in-progress entrance.
+//
+// Feishu stacks toasts in a full column at the top of the viewport, newest
+// first, 16px apart. Each root is positioned by its measured height
+// (`--toast-offset-y`), so every toast stays fully visible instead of
+// collapsing into a hover-to-expand deck.
 function ToastList() {
   const { toasts } = useLarkToastManager();
   return toasts.map((toast) => (
     <Toast.Root
       key={toast.id}
       toast={toast}
+      swipeDirection="up"
       className={cn(
-        "absolute right-0 bottom-0 left-auto z-[calc(1000-var(--toast-index))] mr-0 h-[var(--height)] w-full origin-bottom rounded-lg select-none motion-reduce:[transition-property:opacity]",
-        "[--gap:0.75rem] [--height:var(--toast-frontmost-height,var(--toast-height))] [--offset-y:calc(var(--toast-offset-y)*-1+calc(var(--toast-index)*var(--gap)*-1)+var(--toast-swipe-movement-y))] [--peek:0.75rem] [--scale:calc(max(0,1-(var(--toast-index)*0.1)))] [--shrink:calc(1-var(--scale))]",
-        "[transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--toast-swipe-movement-y)-(var(--toast-index)*var(--peek))-(var(--shrink)*var(--height))))_scale(var(--scale))] [transition:transform_0.5s_cubic-bezier(0.22,1,0.36,1),opacity_0.5s,height_0.15s]",
-        "after:absolute after:top-full after:left-0 after:h-[calc(var(--gap)+1px)] after:w-full after:content-['']",
-        "data-[ending-style]:opacity-0 data-[expanded]:h-[var(--toast-height)] data-[expanded]:[transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--offset-y)))] data-[limited]:opacity-0 data-[starting-style]:[transform:translateY(150%)]",
-        "data-[ending-style]:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))] data-[expanded]:data-[ending-style]:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))]",
-        "data-[ending-style]:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))] data-[expanded]:data-[ending-style]:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))]",
-        "data-[ending-style]:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))] data-[expanded]:data-[ending-style]:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))]",
-        "data-[ending-style]:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))] data-[expanded]:data-[ending-style]:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))]",
-        "[&[data-ending-style]:not([data-limited]):not([data-swipe-direction])]:[transform:translateY(150%)]",
+        "absolute top-4 right-0 left-0 z-[calc(1000-var(--toast-index))] mx-auto w-fit max-w-full origin-top select-none",
+        "[--gap:1rem] [--offset-y:calc(var(--toast-offset-y)+calc(var(--toast-index)*var(--gap))+var(--toast-swipe-movement-y))]",
+        "[transform:translateX(var(--toast-swipe-movement-x))_translateY(var(--offset-y))] [transition:transform_0.4s_cubic-bezier(0.22,1,0.36,1),opacity_0.25s]",
+        "data-[ending-style]:opacity-0 data-[limited]:pointer-events-none data-[limited]:opacity-0",
+        "data-[starting-style]:opacity-0 data-[starting-style]:[transform:translateY(calc(var(--offset-y)-100%))]",
+        "motion-reduce:[transition-property:opacity]",
       )}
     >
       <div
         data-lark-part="surface"
         className={cn(
-          "relative h-full w-full",
+          "relative w-full",
           toastVariants({ variant: toast.variant }),
           getBumpAnimation(toast),
         )}
       >
-        <ToastBackground variant={toast.variant} />
-        <Toast.Content className="isolate flex flex-col gap-2 transition-opacity [transition-duration:250ms] data-[behind]:pointer-events-none data-[behind]:opacity-0 data-[expanded]:pointer-events-auto data-[expanded]:opacity-100">
-          {toast.content ?? (
+        <Toast.Content className="isolate flex items-start gap-2.5">
+          {toast.content ? (
+            <div className="min-w-0 flex-1">{toast.content}</div>
+          ) : (
             <>
-              <div className="flex items-start gap-2">
-                <ToastIcon variant={toast.variant} />
-                <div className="flex flex-col gap-2 overflow-hidden">
-                  <Toast.Title
-                    data-toast-title
-                    className="pr-4 text-base leading-[22px] font-medium text-lark-default"
-                  />
-                  <Toast.Description className="text-base leading-[22px] text-lark-subtle" />
+              <ToastIcon variant={toast.variant} />
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <Toast.Title
+                  data-toast-title
+                  className="text-base leading-[22px] font-semibold text-lark-default"
+                />
+                <Toast.Description className="text-base leading-[22px] text-lark-subtle" />
 
-                  {!!toast.actions && (
-                    <div className="flex min-w-0 flex-nowrap gap-3 overflow-x-auto p-px">
-                      {toast.actions.map((actionProps, idx) => (
-                        <Button key={idx} {...actionProps} />
-                      ))}
-                    </div>
-                  )}
-                </div>
+                {!!toast.actions && (
+                  <div className="mt-1 flex min-w-0 flex-nowrap gap-3 overflow-x-auto p-px">
+                    {toast.actions.map((actionProps, idx) => (
+                      <Button key={idx} {...actionProps} />
+                    ))}
+                  </div>
+                )}
               </div>
             </>
           )}
-          <Toast.Close
-            data-lark-part="close"
-            aria-label="Close"
-            render={
-              <Button
-                variant="ghost"
-                size="sm"
-                shape="square"
-                aria-label="Close"
-                className={cn(
-                  "absolute top-6 right-6 size-5 rounded text-lark-subtle hover:bg-current/15",
-                )}
-                icon={<XIcon className="h-3 w-3" />}
-              />
-            }
-          />
         </Toast.Content>
       </div>
     </Toast.Root>
   ));
-}
-
-/**
- * Feishu marks a notification with a 4px colour bar on the leading edge
- * (`ud__notification__notice-border`) instead of tinting the whole surface.
- * The bar uses Feishu's notice colours (#4e83fd / #62d256 / #ffa53d / #f76964).
- */
-const TOAST_BAR_CLASSES: Record<string, string> = {
-  success: "bg-lark-notice-success",
-  error: "bg-lark-notice-danger",
-  warning: "bg-lark-notice-warning",
-  info: "bg-lark-notice-info",
-};
-
-function ToastBackground({ variant }: { variant?: LarkToastVariant }) {
-  const background = variant && TOAST_BAR_CLASSES[variant];
-  if (!background) return null;
-  return (
-    <div
-      data-lark-part="accent-bar"
-      className={cn("absolute inset-y-0 left-0 w-1", background)}
-    />
-  );
 }
 
 function ToastIcon({ variant }: { variant?: LarkToastVariant }) {
@@ -490,6 +455,13 @@ function ToastIcon({ variant }: { variant?: LarkToastVariant }) {
   if (!("icon" in variantConfig)) return null;
   const Icon = variantConfig.icon;
   return (
-    <Icon data-toast-icon className="mt-0.5 h-6 w-6 shrink-0" weight="fill" />
+    <Icon
+      data-toast-icon
+      className={cn(
+        "mt-[3px] size-4 shrink-0",
+        "iconClasses" in variantConfig ? variantConfig.iconClasses : undefined,
+      )}
+      weight="fill"
+    />
   );
 }

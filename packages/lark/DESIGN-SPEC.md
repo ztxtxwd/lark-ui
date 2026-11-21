@@ -154,7 +154,7 @@ is not) it appends the `LOADING_CLASSES` entry for the variant plus
 
 Every floating surface — select list, menu, popover, tooltip, modal — uses the
 same elevation (`shadow-s4-down`) and a 6px radius; tooltips use an 8px radius.
-Toasts use `shadow-s5-down` with an 8px radius, and a raised card uses
+Toasts also use `shadow-s4-down`, with an 8px radius, and a raised card uses
 `shadow-s3-down`.
 
 A tooltip has **no border** — its dark surface (`#1f2329`) plus the shadow
@@ -169,20 +169,22 @@ between them.
 
 ## Toasts and notifications
 
-The library ships **one** floating surface for transient messages: a
-notification card, 420px wide, with a **4px colour bar** on its leading edge
-rather than a tint over the whole surface. The bar colours are `#4e83fd`
-(info), `#62d256` (success), `#ffa53d` (warning) and `#f76964` (danger).
+The library ships **one** floating surface for transient messages: `Toast`,
+anchored at the top centre of the viewport. It follows the Feishu client's
+toast design: a pale status tint with a **1px border in the status colour**,
+an 8px radius, `shadow-s4-down`, 20px by 16px padding, a 16px filled status
+icon, and a semibold 14px/22px message. Multiple toasts stack downwards in a
+full column, 16px apart.
 
-`Banner` covers the inline variant of the same idea: a compact surface that
-either tints the whole background (`theme="filled"`, the default) or adds a 1px
-border in the status colour (`theme="outlined"`).
+`Banner` is the inline counterpart, not a floating toast: a full-width compact
+surface that always tints the whole background (`ud__notice--filled`) with no
+border and a 6px radius. Banner has no outlined theme — the bordered treatment
+belongs to Toast.
 
-| Variant    | Banner                               |
-| ---------- | ------------------------------------ |
-| `filled`   | pale status tint, no border          |
-| `outlined` | pale status tint + 1px status border |
-| `plain`    | white surface with the shadow        |
+| Component | Surface                                             |
+| --------- | --------------------------------------------------- |
+| `Banner`  | inline, pale status tint, no border, 6px            |
+| `Toast`   | floating, pale status tint + 1px status border, 8px |
 
 The outlined border is **one scale step stronger than the status icon** — the
 icon uses the 500 shade and the border the 600 shade. Lark keeps that

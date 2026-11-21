@@ -42,6 +42,7 @@ import {
   WarningCircleIcon as PhosphorWarningCircleIcon,
   WarningIcon as PhosphorWarningIcon,
   WarningOctagonIcon as PhosphorWarningOctagonIcon,
+  XCircleIcon as PhosphorXCircleIcon,
   XIcon as PhosphorXIcon,
 } from "./icon-registry";
 
@@ -198,4 +199,9 @@ export const WarningOctagonIcon = createIcon(
   PhosphorWarningOctagonIcon,
 );
 export const X = createIcon("X", "x", PhosphorXIcon);
+export const XCircleIcon = createIcon(
+  "XCircleIcon",
+  "x-circle",
+  PhosphorXCircleIcon,
+);
 export const XIcon = createIcon("XIcon", "x", PhosphorXIcon);

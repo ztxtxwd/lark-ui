@@ -3,12 +3,14 @@
  *
  * Generates a single Banner ComponentSet in Figma with variant property.
  * Reads variant definitions from component-registry.json (the source of truth).
+ *
+ * Banner is Feishu's inline `ud__notice--filled`: a flat status tint with no
+ * border. The floating, bordered surface is Toast, not Banner.
  */
 
 import {
   createTextNode,
   bindFillToVariable,
-  bindStrokeToVariable,
   getVariableByName,
   createModeSection,
   createRowLabel,
@@ -47,19 +49,6 @@ const sizeProp = bannerProps.size as {
   descriptions: Record<string, string>;
   default: string;
 };
-const themeProp = bannerProps.theme as {
-  values: string[];
-  classes: Record<string, string>;
-  descriptions: Record<string, string>;
-  default: string;
-};
-
-/**
- * The `data-banner-theme` attribute the Banner sets on its root. The outlined
- * overrides live inside the variant/size class strings as
- * `data-[banner-theme=outlined]:` utilities.
- */
-const BANNER_THEME_ATTRIBUTE = "banner-theme";
 
 /**
  * Banner base styles from LARK_BANNER_BASE_STYLES in banner.tsx
@@ -133,68 +122,34 @@ export function getBannerParsedVariantStyles(variant: string) {
 }
 
 /**
- * Get theme configuration from registry
- */
-export function getBannerThemeConfig() {
-  return {
-    values: themeProp.values,
-    classes: themeProp.classes,
-    descriptions: themeProp.descriptions,
-    default: themeProp.default,
-  };
-}
-
-/**
- * Resolve the styles a (theme, variant, size) combination renders with.
+ * Resolve the styles a (variant, size) combination renders with.
  *
- * The Banner swaps its surface at runtime through the `data-banner-theme`
- * attribute, so the outlined overrides live inside the variant and size
- * class strings as `data-[banner-theme=outlined]:` utilities. The parser
- * collects them under `data["banner-theme=outlined"]`.
+ * Banner always uses the filled surface: a status tint and no border.
  */
-export function getBannerEffectiveStyles(
-  variant: string,
-  size: string,
-  theme: string,
-) {
+export function getBannerEffectiveStyles(variant: string, size: string) {
   const variantStyles = parseTailwindClasses(
     variantProp.classes[variant] || "",
   );
   const sizeStyles = parseTailwindClasses(sizeProp.classes[size] || "");
 
-  const dataKey = BANNER_THEME_ATTRIBUTE + "=" + theme;
-  const variantOverride = variantStyles.data
-    ? variantStyles.data[dataKey]
-    : undefined;
-  const sizeOverride = sizeStyles.data ? sizeStyles.data[dataKey] : undefined;
-
   return {
     variantStyles,
     sizeStyles,
-    /** Surface fill — the outlined theme swaps the tint. */
-    fillVariable:
-      variantOverride && variantOverride.fillVariable !== undefined
-        ? variantOverride.fillVariable
-        : variantStyles.fillVariable,
-    /** Border colour — only the outlined theme draws one. */
-    strokeVariable:
-      variantOverride && variantOverride.strokeVariable !== undefined
-        ? variantOverride.strokeVariable
-        : variantStyles.strokeVariable,
+    /** Surface fill — the flat status tint. */
+    fillVariable: variantStyles.fillVariable,
+    /** Border colour — Banner never draws one. */
+    strokeVariable: undefined,
     /** Text colour — always the notice title colour. */
     textVariable: variantStyles.textVariable,
     paddingLeft:
-      sizeOverride && sizeOverride.paddingLeft !== undefined
-        ? sizeOverride.paddingLeft
-        : sizeStyles.paddingLeft,
+      sizeStyles.paddingLeft !== undefined
+        ? sizeStyles.paddingLeft
+        : sizeStyles.paddingX,
     paddingRight:
-      sizeOverride && sizeOverride.paddingRight !== undefined
-        ? sizeOverride.paddingRight
-        : sizeStyles.paddingRight,
-    paddingY:
-      sizeOverride && sizeOverride.paddingY !== undefined
-        ? sizeOverride.paddingY
-        : sizeStyles.paddingY,
+      sizeStyles.paddingRight !== undefined
+        ? sizeStyles.paddingRight
+        : sizeStyles.paddingX,
+    paddingY: sizeStyles.paddingY,
     gap: sizeStyles.gap,
     borderRadius: sizeStyles.borderRadius,
     fontSize: sizeStyles.fontSize,
@@ -209,6 +164,7 @@ const BANNER_ICONS: Record<string, string> = {
   default: "ph-info",
   alert: "ph-warning",
   error: "ph-warning",
+  secondary: "ph-info",
 };
 
 /**
@@ -218,7 +174,6 @@ const BANNER_ICONS: Record<string, string> = {
 export function getAllBannerVariantData() {
   const baseStyles = getBannerParsedBaseStyles();
   const config = getBannerVariantConfig();
-  const themeConfig = getBannerThemeConfig();
   // Layout (padding, radius, gap, type) lives in the size variants.
   const sizeStyles = getBannerParsedSizeStyles(sizeProp.default).parsed;
 
@@ -227,10 +182,6 @@ export function getAllBannerVariantData() {
       raw: BANNER_BASE_STYLES,
       parsed: baseStyles,
     },
-    themes: themeConfig.values.map((theme) => ({
-      theme,
-      description: themeConfig.descriptions[theme] || "",
-    })),
     variants: config.values.map((variant) => {
       const variantData = getBannerParsedVariantStyles(variant);
       return {
@@ -260,42 +211,28 @@ export function getAllBannerVariantData() {
           fontWeight:
             sizeStyles.fontWeight ?? FALLBACK_VALUES.fontWeight.semiBold,
         },
-        // The surface each theme renders with.
-        themes: themeConfig.values.map((theme) => {
-          const styles = getBannerEffectiveStyles(
-            variant,
-            sizeProp.default,
-            theme,
-          );
-          return {
-            theme,
-            fillVariable: styles.fillVariable,
-            strokeVariable: styles.strokeVariable,
-          };
-        }),
+        // The flat filled surface this variant renders with.
+        fillVariable: variantData.parsed.fillVariable,
+        strokeVariable: undefined,
       };
     }),
   };
 }
 
 /**
- * Create a single Banner component for a theme/variant pair
+ * Create a single Banner component for a variant
  */
-async function createBannerComponent(
-  variant: string,
-  theme: string,
-): Promise<ComponentNode> {
+async function createBannerComponent(variant: string): Promise<ComponentNode> {
   const description = variantProp.descriptions[variant] || "";
 
-  // Resolve the styles for this theme/variant pair. The outlined theme swaps
-  // the surface fill and draws a 1px border in the status colour.
-  const styles = getBannerEffectiveStyles(variant, sizeProp.default, theme);
+  // Resolve the filled surface styles for this variant.
+  const styles = getBannerEffectiveStyles(variant, sizeProp.default);
   const variantStyles = styles.variantStyles;
   const sizeStyles = styles.sizeStyles;
 
   // Create component
   const component = figma.createComponent();
-  component.name = "theme=" + theme + ", variant=" + variant;
+  component.name = "variant=" + variant;
   component.description = description;
 
   // Set up auto-layout (horizontal for banner with icon + text)
@@ -317,7 +254,7 @@ async function createBannerComponent(
   component.counterAxisSizingMode = "AUTO";
   component.cornerRadius = sizeStyles.borderRadius ?? BORDER_RADIUS.md; // rounded-md = 6px
 
-  // Apply fill from variant
+  // Apply the flat status tint
   // (bg-lark-banner-info-solid, bg-lark-banner-warning-solid, …)
   // Uses bindFillToVariableWithOpacity to handle opacity suffix in variable name
   if (styles.fillVariable) {
@@ -327,14 +264,8 @@ async function createBannerComponent(
     component.fills = [];
   }
 
-  // Apply border — the filled theme has none, the outlined theme draws a 1px
-  // border in the status colour.
-  if (styles.strokeVariable) {
-    const strokeVar = getVariableByName(styles.strokeVariable);
-    if (strokeVar) {
-      bindStrokeToVariable(component, strokeVar.id, 1);
-    }
-  }
+  // Banner never draws a border; the outlined treatment belongs to Toast.
+  // (Component fills/strokes start empty, so there is nothing to clear.)
 
   // Create icon based on variant
   // - default (info): ph-info
@@ -393,11 +324,10 @@ async function createBannerComponent(
 }
 
 /**
- * Generate Banner ComponentSet with theme and variant properties
+ * Generate Banner ComponentSet with variant properties
  *
- * Creates a single "Banner" ComponentSet with the theme and variant axes
- * derived from component-registry.json. Creates both light and dark mode
- * sections.
+ * Creates a single "Banner" ComponentSet with the variant axis derived from
+ * component-registry.json. Creates both light and dark mode sections.
  *
  * @param startY - Y position to start placing the section
  * @returns The Y position after this section (for next section placement)
@@ -407,71 +337,30 @@ export async function generateBannerComponents(
 ): Promise<number> {
   if (startY === undefined) startY = 100;
 
-  // Get theme and variant keys from the registry
-  const themes = themeProp.values;
+  // Get variant keys from the registry
   const variants = variantProp.values;
   const components: ComponentNode[] = [];
 
-  // Track row labels: { y, text }
-  const rowLabels: { y: number; text: string }[] = [];
-
-  // Layout spacing - one row per theme, one column per variant
-  const rowGap = GRID_LAYOUT.rowGap.standard;
   const columnGap = GRID_LAYOUT.componentGapX.standard;
-  const labelColumnWidth = GRID_LAYOUT.labelColumnWidth.standard;
+  const headerOffset = GRID_LAYOUT.headerRowHeight;
 
-  // Build every theme/variant pair first so the grid can be sized from the
-  // real component measurements.
-  const rows: ComponentNode[][] = [];
-  for (const theme of themes) {
-    const row: ComponentNode[] = [];
-    for (const variant of variants) {
-      const component = await createBannerComponent(variant, theme);
-      row.push(component);
-      components.push(component);
-    }
-    rows.push(row);
+  // Build one component per variant.
+  for (const variant of variants) {
+    components.push(await createBannerComponent(variant));
   }
-
-  // Column widths — the widest component in each column
-  const columnWidths = variants.map((_, columnIndex) => {
-    let width = 0;
-    for (const row of rows) {
-      width = Math.max(width, row[columnIndex].width);
-    }
-    return width;
-  });
 
   // Column x positions
   const columnX: number[] = [];
-  let currentX = labelColumnWidth;
-  for (const width of columnWidths) {
+  let currentX = 0;
+  for (const component of components) {
     columnX.push(currentX);
-    currentX += width + columnGap;
+    currentX += component.width + columnGap;
   }
 
-  // Row y positions — the tallest component in each row.
-  // They are relative to the ComponentSet origin (the first row starts at 0);
-  // the column header row is added on top of the set when it is placed.
-  const rowY: number[] = [];
-  let currentY = 0;
-  for (const row of rows) {
-    rowY.push(currentY);
-    let height = 0;
-    for (const component of row) {
-      height = Math.max(height, component.height);
-    }
-    currentY += height + rowGap;
-  }
-
-  // Position the components on the grid and record the labels
-  for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    rowLabels.push({ y: rowY[rowIndex], text: "theme=" + themes[rowIndex] });
-    for (let columnIndex = 0; columnIndex < variants.length; columnIndex++) {
-      const component = rows[rowIndex][columnIndex];
-      component.x = columnX[columnIndex];
-      component.y = rowY[rowIndex];
-    }
+  // Position the components on the grid
+  for (let columnIndex = 0; columnIndex < components.length; columnIndex++) {
+    components[columnIndex].x = columnX[columnIndex];
+    components[columnIndex].y = 0;
   }
 
   // Column headers - one per variant
@@ -486,16 +375,14 @@ export async function generateBannerComponents(
   // @ts-ignore - combineAsVariants works at runtime
   const componentSet = figma.combineAsVariants(components, figma.currentPage);
   componentSet.name = "Banner";
-  componentSet.description = "Banner component with theme and variant styles";
+  componentSet.description = "Banner component with variant styles";
 
-  // Calculate content dimensions (add label column width)
-  const contentWidth = componentSet.width + labelColumnWidth;
+  // Calculate content dimensions
+  const contentWidth = componentSet.width;
   const contentHeight = componentSet.height;
 
   // Content Y offset to make room for title inside frame
   const contentYOffset = SECTION_TITLE.height;
-  // Extra offset for the column header row
-  const headerOffset = GRID_LAYOUT.headerRowHeight;
 
   // Create light mode section
   const lightSection = createModeSection(figma.currentPage, "Banner", "light");
@@ -511,11 +398,9 @@ export async function generateBannerComponents(
     contentHeight + SECTION_PADDING * 2 + contentYOffset + headerOffset,
   );
 
-  // Add title inside each frame
-
   // Move ComponentSet into light section frame
   lightSection.frame.appendChild(componentSet);
-  componentSet.x = SECTION_PADDING + labelColumnWidth;
+  componentSet.x = SECTION_PADDING;
   componentSet.y = SECTION_PADDING + headerOffset + contentYOffset;
 
   // Add column headers to light section
@@ -528,26 +413,10 @@ export async function generateBannerComponents(
     lightSection.frame.appendChild(headerNode);
   }
 
-  // Add row labels to light section
-  for (const label of rowLabels) {
-    const labelNode = await createRowLabel(
-      label.text,
-      SECTION_PADDING,
-      SECTION_PADDING +
-        headerOffset +
-        contentYOffset +
-        label.y +
-        GRID_LAYOUT.labelVerticalOffset.md, // +8 to vertically center with banner
-    );
-    lightSection.frame.appendChild(labelNode);
-  }
-
   // Create instances for dark section
-  // Note: component positions are relative to ComponentSet after combineAsVariants
-  // We need to add labelColumnWidth to match the light section layout
   for (const component of components) {
     const instance = component.createInstance();
-    instance.x = component.x + SECTION_PADDING + labelColumnWidth;
+    instance.x = component.x + SECTION_PADDING;
     instance.y = component.y + SECTION_PADDING + headerOffset + contentYOffset;
     darkSection.frame.appendChild(instance);
   }
@@ -560,20 +429,6 @@ export async function generateBannerComponents(
       SECTION_PADDING + contentYOffset,
     );
     darkSection.frame.appendChild(headerNode);
-  }
-
-  // Add row labels to dark section
-  for (const label of rowLabels) {
-    const labelNode = await createRowLabel(
-      label.text,
-      SECTION_PADDING,
-      SECTION_PADDING +
-        headerOffset +
-        contentYOffset +
-        label.y +
-        GRID_LAYOUT.labelVerticalOffset.md,
-    );
-    darkSection.frame.appendChild(labelNode);
   }
 
   // Resize sections to fit content with padding
@@ -594,8 +449,6 @@ export async function generateBannerComponents(
 
   logComplete(
     "Generated Banner ComponentSet with " +
-      themes.length +
-      " themes x " +
       variants.length +
       " variants (light + dark)",
   );
