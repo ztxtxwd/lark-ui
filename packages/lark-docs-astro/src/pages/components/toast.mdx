@@ -64,6 +64,9 @@ import { Toasty, useLarkToastManager } from "@lark-ui/core/components/toast";
   <p>
     轻提示悬浮在页面顶部居中位置，采用飞书客户端的描边样式：浅色状态底 + 1px 状态色描边，配以状态图标和加粗标题。它与行内通告栏（Banner）是两种不同的组件：Banner 使用平铺的填充底色，Toast 使用浮动的描边样式。
   </p>
+  <p>
+    与飞书客户端一致，轻提示默认在 3 秒后自动消失。需要更长时间时，可在 <code>add()</code> 选项中传入 <code>timeout</code> 覆盖。
+  </p>
 
 ```tsx
 import { Toasty, useLarkToastManager, Button } from "@lark-ui/core";
@@ -249,7 +252,7 @@ toastManager.add(options);
 
 // Update from the current toast state
 toastManager.update(toastId, (toast) => ({
-  description: `Updated after ${toast.timeout ?? 5000}ms`,
+  description: `Updated after ${toast.timeout ?? 3000}ms`,
 }));
 
 // Promise-based toast
@@ -313,9 +316,9 @@ toastManager.promise(asyncFn(), {
       <tr class="border-b border-lark-hairline">
         <td class="py-3 pr-4 font-mono text-lark-default">timeout</td>
         <td class="py-3 pr-4 font-mono">number</td>
-        <td class="py-3 pr-4 font-mono">5000</td>
+        <td class="py-3 pr-4 font-mono">3000</td>
         <td class="py-3">
-          轻提示自动消失前的毫秒数。
+          轻提示自动消失前的毫秒数，默认 3 秒（与飞书客户端一致）。
         </td>
       </tr>
     </tbody>

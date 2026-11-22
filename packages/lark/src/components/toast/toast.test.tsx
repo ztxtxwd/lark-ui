@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { useEffect } from "react";
 import {
   Toasty,
@@ -64,6 +64,42 @@ describe("toastVariants", () => {
 });
 
 describe("Toasty", () => {
+  // Feishu's toast manager dismisses toasts after `duration: 3e3`, not
+  // Base UI's 5 second default.
+  it("auto-dismisses after Feishu's 3 second timeout", () => {
+    vi.useFakeTimers();
+    try {
+      const mgr = createLarkToastManager();
+
+      render(
+        <Toasty toastManager={mgr}>
+          <div />
+        </Toasty>,
+      );
+
+      act(() => {
+        mgr.add({ title: "Short lived" });
+      });
+
+      const title = screen.getByText("Short lived");
+      const root = title.closest('[role="dialog"]');
+      expect(root).not.toBeNull();
+      expect(root?.hasAttribute("data-ending-style")).toBe(false);
+
+      act(() => {
+        vi.advanceTimersByTime(2999);
+      });
+      expect(root?.hasAttribute("data-ending-style")).toBe(false);
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(root?.hasAttribute("data-ending-style")).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("renders status toasts as bordered banners with a status icon", async () => {
     const mgr = createLarkToastManager();
 

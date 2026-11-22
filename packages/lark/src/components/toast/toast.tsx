@@ -81,6 +81,15 @@ export const LARK_TOAST_DEFAULT_VARIANTS = {
 } as const;
 
 /**
+ * How long a toast stays on screen before auto-dismissing.
+ *
+ * Feishu's toast manager uses `duration: 3e3` (3 seconds) by default, so we
+ * override Base UI's 5 second default at the provider. A per-toast `timeout`
+ * option still wins for one-off messages that need longer.
+ */
+export const LARK_TOAST_DEFAULT_TIMEOUT = 3000;
+
+/**
  * Toast styling configuration for Figma plugin consumption.
  * Provides structured metadata for generating Toast components in Figma.
  */
@@ -333,7 +342,9 @@ export const createLarkToastManager = () => {
  *
  * Renders a `Toast.Provider` with a fixed-position viewport at the top centre
  * of the screen, matching the Feishu client. Toasts stack downwards in a
- * column, slide in from above and fade out.
+ * column, slide in from above and fade out. Each toast auto-dismisses after
+ * 3 seconds, like the Feishu client; pass `timeout` when adding a toast to
+ * override it.
  *
  * Built on `@base-ui/react/toast`.
  *
@@ -353,7 +364,10 @@ export function Toasty({
   const container = containerProp ?? contextContainer ?? undefined;
 
   return (
-    <Toast.Provider toastManager={toastManager}>
+    <Toast.Provider
+      toastManager={toastManager}
+      timeout={LARK_TOAST_DEFAULT_TIMEOUT}
+    >
       {children}
       <Toast.Portal container={container}>
         <Toast.Viewport className="fixed inset-x-0 top-0 z-1 mx-auto w-[calc(100%-2rem)] max-w-[600px]">
