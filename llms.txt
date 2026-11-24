@@ -1,0 +1,54 @@
+# LarkUI (@larkui/core)
+
+> Feishu Universe Design (UD) React 19 component library covering all 44 official components. Headless behaviour comes from @ui-sdk/react; visual specs come from the official Feishu design docs and the extracted 7.72 client CSS. Styles are Tailwind CSS v4 + cva + CSS custom properties.
+
+## When to use
+
+- Building a Feishu/Lark product UI in React 19.
+- Needing accessible, keyboard-complete controls without hand-rolling ARIA.
+- Wanting UD-faithful dimensions, colours and states.
+
+## Setup
+
+```tsx
+import { Button, Input, Select, Dialog, DialogContent, DialogTrigger } from "@larkui/core";
+import "@larkui/core/styles.css";
+```
+
+- React 19 peer dependency.
+- Import global styles once at the app root.
+- Dark mode: add `.dark` or `data-theme="dark"` to `html`.
+- Override tokens with the `--lark-*` custom properties from `packages/tokens/src/tokens.css`.
+
+## Conventions
+
+- Every component has one folder: `src/components/<Name>/{index.ts,<Name>.tsx,<Name>.test.tsx,<Name>.stories.tsx}`.
+- Every part exposes `data-slot`; state uses attributes such as `data-checked`, `data-open`, `data-disabled`, `data-pending`.
+- Behaviours are imported from `@ui-sdk/react/<component>`; never add a bare `role="dialog"`, `role="listbox"` or keyboard handler.
+- Variants use `cva`; final classes use `cn()` (tailwind-merge configured with the Lark colour scale).
+- Use `--lark-*` tokens or the `text-lark-*`, `bg-lark-*`, `border-lark-*` utilities. Do not hardcode hex colours.
+
+## Component inventory
+
+Data entry: Button, Input, Checkbox, Radio, Switch, Select, Form, Slider, Stepper, Rate, Cascader, ColorPicker, DatePicker, TimePicker, Transfer, TreeSelect, Upload.
+Data display: Tag, Badge, Avatar, Card, Collapse, Tabs, Tooltip, Timeline, Empty, Popover, Table, ImageViewer, Placeholder.
+Feedback: Dialog, Drawer, Notice, Notification, Loading, Progress, Toast.
+Navigation: Anchor, Breadcrumb, Dropdown, NavigationMenu, Pagination, ScrollBar, Steps.
+
+See `COMPONENTS.md` for statuses and `README.md` for usage. Storybook story ids use `components-<name>--<story>` under `Components/<Name>`.
+
+## Commands
+
+```bash
+pnpm --filter @larkui/core typecheck
+pnpm --filter @larkui/core test
+pnpm --filter @larkui/core build
+pnpm storybook
+```
+
+## Ground truth
+
+- Official docs: `larkit doc read /tools-and-resources/design-specification/<category>/<component>`
+- Client CSS: `/root/code/lark-kumo/.feishu-extracted/asar/messenger/**/*.css`
+- Tokens: `packages/tokens/src/tokens.css`
+- Authoring contract: `AGENTS.md`

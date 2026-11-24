@@ -1,0 +1,51 @@
+export const tokens = {
+  color: {
+    primary: "var(--lark-primary-fill-default)",
+    primaryHover: "var(--lark-primary-fill-hover)",
+    primaryPressed: "var(--lark-primary-fill-pressed)",
+    primaryLoading: "var(--lark-primary-fill-loading)",
+    textTitle: "var(--lark-text-title)",
+    textCaption: "var(--lark-text-caption)",
+    textPlaceholder: "var(--lark-text-placeholder)",
+    textDisabled: "var(--lark-text-disabled)",
+    background: "var(--lark-bg-body)",
+    backgroundBase: "var(--lark-bg-base)",
+    border: "var(--lark-border-component)",
+    borderCard: "var(--lark-border-card)",
+    danger: "var(--lark-danger-fill-default)",
+    success: "var(--lark-success-fill-default)",
+    warning: "var(--lark-warning-fill-default)",
+  },
+  radius: {
+    xs: "var(--lark-radius-xs)",
+    sm: "var(--lark-radius-sm)",
+    md: "var(--lark-radius-md)",
+    lg: "var(--lark-radius-lg)",
+    xl: "var(--lark-radius-xl)",
+    full: "var(--lark-radius-full)",
+  },
+  font: {
+    sans: "var(--lark-font-sans)",
+    mono: "var(--lark-font-mono)",
+    size12: "var(--lark-font-size-12)",
+    size14: "var(--lark-font-size-14)",
+    size16: "var(--lark-font-size-16)",
+    size18: "var(--lark-font-size-18)",
+    size20: "var(--lark-font-size-20)",
+    size24: "var(--lark-font-size-24)",
+    size32: "var(--lark-font-size-32)",
+  },
+  shadow: {
+    s1: "var(--lark-shadow-s1)",
+    s2: "var(--lark-shadow-s2)",
+    s3: "var(--lark-shadow-s3)",
+    s4: "var(--lark-shadow-s4)",
+    s5: "var(--lark-shadow-s5)",
+  },
+  duration: {
+    fast: "var(--lark-duration-fast)",
+    normal: "var(--lark-duration-normal)",
+  },
+} as const;
+
+export type Tokens = typeof tokens;

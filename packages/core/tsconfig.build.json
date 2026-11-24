@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "composite": false,
+    "types": []
+  },
+  "include": ["src/index.ts", "src/components/**/*.tsx", "src/components/**/*.ts"],
+  "exclude": ["**/*.test.tsx", "**/*.stories.tsx"]
+}

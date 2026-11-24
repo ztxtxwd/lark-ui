@@ -1,0 +1,95 @@
+import { type ClassValue, clsx } from "clsx";
+import { extendTailwindMerge } from "tailwind-merge";
+
+const larkColors = [
+  "primary",
+  "primary-hover",
+  "primary-pressed",
+  "primary-loading",
+  "primary-content",
+  "primary-soft",
+  "primary-softer",
+  "on-primary",
+  "title",
+  "body",
+  "caption",
+  "placeholder",
+  "disabled",
+  "link",
+  "link-hover",
+  "link-pressed",
+  "icon-1",
+  "icon-2",
+  "icon-3",
+  "icon-disabled",
+  "canvas",
+  "base",
+  "overlay",
+  "content",
+  "filler",
+  "float",
+  "mask",
+  "tips",
+  "selection",
+  "disabled-bg",
+  "border",
+  "border-card",
+  "divider",
+  "hover",
+  "pressed",
+  "focus-fill",
+  "fill-disabled",
+  "selected",
+  "tag-fill",
+  "danger",
+  "danger-hover",
+  "danger-pressed",
+  "danger-loading",
+  "danger-content",
+  "danger-strong",
+  "danger-strong-hover",
+  "danger-strong-pressed",
+  "danger-soft",
+  "danger-solid-02",
+  "danger-solid-03",
+  "on-danger",
+  "success",
+  "success-hover",
+  "success-pressed",
+  "success-content",
+  "success-soft",
+  "on-success",
+  "warning",
+  "warning-hover",
+  "warning-content",
+  "warning-soft",
+  "info",
+  "info-content",
+  "info-soft",
+  ...["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"].map(
+    (step) => `blue-${step}`,
+  ),
+  "tag-neutral",
+  "tag-primary",
+  "tag-success",
+  "tag-warning",
+  "tag-danger",
+  ...["0", "50", "100", "200", "300", "350", "400", "500", "600", "700", "800", "900", "1000"].map(
+    (step) => `neutral-${step}`,
+  ),
+];
+
+const larkText = ["12", "14", "16", "18", "20", "24", "32"].map((step) => `lark-${step}`);
+
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      color: larkColors.map((color) => `lark-${color}`),
+      text: larkText,
+    },
+  },
+});
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}

@@ -1,0 +1,394 @@
+/*
+ * LarkUI tokens.
+ *
+ * Values are taken from the Feishu 7.72 client theme (`theme.css`) and the
+ * Universe Design specification. Token names keep the UD semantics so that a
+ * component can always be traced back to its source.
+ */
+:root {
+  color-scheme: light;
+
+  /* Type */
+  --lark-font-sans: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "PingFang SC", "Hiragino Sans GB", "LarkHaiti", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  --lark-font-mono: "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --lark-font-size-12: 12px;
+  --lark-line-height-12: 20px;
+  --lark-font-size-14: 14px;
+  --lark-line-height-14: 22px;
+  --lark-font-size-16: 16px;
+  --lark-line-height-16: 24px;
+  --lark-font-size-18: 18px;
+  --lark-line-height-18: 26px;
+  --lark-font-size-20: 20px;
+  --lark-line-height-20: 28px;
+  --lark-font-size-24: 24px;
+  --lark-line-height-24: 32px;
+  --lark-font-size-32: 32px;
+  --lark-line-height-32: 40px;
+  --lark-font-weight-regular: 400;
+  --lark-font-weight-medium: 500;
+  --lark-font-weight-semibold: 600;
+
+  /* Brand — UD B scale, brand color is B600 */
+  --lark-blue-50: #f0f4ff;
+  --lark-blue-100: #e0e9ff;
+  --lark-blue-200: #c2d4ff;
+  --lark-blue-300: #94b4ff;
+  --lark-blue-350: #7aa2ff;
+  --lark-blue-400: #5083fb;
+  --lark-blue-500: #336df4;
+  --lark-blue-600: #1456f0;
+  --lark-blue-700: #0442d2;
+  --lark-blue-800: #002f9e;
+  --lark-blue-900: #002270;
+
+  /* Primary roles — UD `primary-*` */
+  --lark-primary-fill-default: #1456f0;
+  --lark-primary-fill-hover: #336df4;
+  --lark-primary-fill-pressed: #0442d2;
+  --lark-primary-fill-loading: #94b4ff;
+  --lark-primary-content-default: #1456f0;
+  --lark-primary-content-hover: #336df4;
+  --lark-primary-content-pressed: #0442d2;
+  --lark-primary-content-loading: #94b4ff;
+  --lark-primary-on-fill: #ffffff;
+  --lark-primary-fill-transparent-01: rgba(20, 86, 240, 0.1);
+  --lark-primary-fill-transparent-02: rgba(20, 86, 240, 0.15);
+  --lark-primary-fill-transparent-03: rgba(20, 86, 240, 0.2);
+  --lark-primary-fill-solid-02: #e0e9ff;
+  --lark-primary-fill-solid-03: #c2d4ff;
+
+  /* Neutral — UD N scale */
+  --lark-neutral-0: #ffffff;
+  --lark-neutral-50: #f5f6f7;
+  --lark-neutral-100: #f2f3f5;
+  --lark-neutral-200: #eff0f1;
+  --lark-neutral-300: #dee0e3;
+  --lark-neutral-350: #d0d3d6;
+  --lark-neutral-400: #bbbfc4;
+  --lark-neutral-500: #8f959e;
+  --lark-neutral-600: #646a73;
+  --lark-neutral-650: #51565d;
+  --lark-neutral-700: #373c43;
+  --lark-neutral-800: #2b2f36;
+  --lark-neutral-900: #1f2329;
+  --lark-neutral-1000: #000000;
+
+  /* Text */
+  --lark-text-title: #1f2329;
+  --lark-text-body: #1f2329;
+  --lark-text-caption: #646a73;
+  --lark-text-placeholder: #8f959e;
+  --lark-text-disabled: #bbbfc4;
+  --lark-text-link-normal: #1456f0;
+  --lark-text-link-hover: #336df4;
+  --lark-text-link-pressed: #0442d2;
+  --lark-text-link-loading: #94b4ff;
+  --lark-text-on-primary: #ffffff;
+
+  /* Icons */
+  --lark-icon-n1: #2b2f36;
+  --lark-icon-n2: #646a73;
+  --lark-icon-n3: #8f959e;
+  --lark-icon-disabled: #bbbfc4;
+
+  /* Backgrounds */
+  --lark-bg-body: #ffffff;
+  --lark-bg-base: #f2f3f5;
+  --lark-bg-body-overlay: #f5f6f7;
+  --lark-bg-content-base: #f8f9fa;
+  --lark-bg-filler: #eff0f1;
+  --lark-bg-float: #ffffff;
+  --lark-bg-float-base: #f2f3f5;
+  --lark-bg-mask: rgba(0, 0, 0, 0.55);
+  --lark-bg-tips: #1f2329;
+  --lark-bg-text-selection: rgba(20, 86, 240, 0.3);
+  --lark-bg-disabled: #eff0f1;
+
+  /* Borders and dividers */
+  --lark-border-component: #d0d3d6;
+  --lark-border-card: #dee0e3;
+  --lark-border-divider: rgba(31, 35, 41, 0.15);
+  --lark-border-divider-module: rgba(31, 35, 41, 0.15);
+
+  /* Interaction fills */
+  --lark-fill-hover: rgba(31, 35, 41, 0.08);
+  --lark-fill-pressed: rgba(31, 35, 41, 0.12);
+  --lark-fill-focus: rgba(31, 35, 41, 0.12);
+  --lark-fill-disabled: #bbbfc4;
+  --lark-fill-selected: rgba(20, 86, 240, 0.1);
+  --lark-fill-tag: rgba(31, 35, 41, 0.1);
+
+  /* Functional — UD `function-*` */
+  --lark-danger-fill-default: #f54a45;
+  --lark-danger-fill-hover: #ff7570;
+  --lark-danger-fill-pressed: #e22e28;
+  --lark-danger-fill-loading: #f89e9b;
+  --lark-danger-content-default: #f54a45;
+  --lark-danger-content-hover: #ff7570;
+  --lark-danger-content-pressed: #e22e28;
+  --lark-danger-content-loading: #f89e9b;
+  --lark-danger-strong: #e22e28;
+  --lark-danger-strong-hover: #c02a26;
+  --lark-danger-strong-pressed: #a11c17;
+  --lark-danger-fill-transparent-01: rgba(226, 46, 40, 0.1);
+  --lark-danger-fill-transparent-03: rgba(226, 46, 40, 0.2);
+  --lark-danger-bg-soft: #fef0f0;
+  --lark-danger-fill-solid-02: #fee3e2;
+  --lark-danger-fill-solid-03: #fdc6c4;
+  --lark-danger-on-fill: #ffffff;
+
+  /*
+   * Tag — UD `udtoken-tag-*` for the regular (non-option) tag.
+   * Neutral, blue and orange step one palette level darker than the UD tag
+   * text token because the 12px label falls below 4.5:1 on the tinted fill.
+   */
+  --lark-tag-text-neutral: #51565d; /* N650 (UD N600 is 4.49:1) */
+  --lark-tag-text-primary: #0442d2; /* B700 (UD B600 is 4.26:1) */
+  --lark-tag-text-success: #1a7526; /* G600 */
+  --lark-tag-text-warning: #a44904; /* O600 (UD O500 is 3.93:1) */
+  --lark-tag-text-danger: #c02a26; /* R600 */
+  --lark-tag-fill-neutral: rgba(31, 35, 41, 0.1); /* N900 @ 10% */
+  --lark-tag-fill-primary: rgba(20, 86, 240, 0.2); /* B600 @ 20% */
+  --lark-tag-fill-success: rgba(53, 189, 75, 0.2); /* G350 @ 20% */
+  --lark-tag-fill-warning: rgba(255, 129, 26, 0.15); /* O350 @ 15% */
+  --lark-tag-fill-danger: rgba(245, 74, 69, 0.2); /* R400 @ 20% */
+
+  --lark-success-fill-default: #35bd4b;
+  --lark-success-fill-hover: #5cd168;
+  --lark-success-fill-pressed: #32a645;
+  --lark-success-fill-loading: #5cd168;
+  --lark-success-content-default: #32a645;
+  --lark-success-content-hover: #35bd4b;
+  --lark-success-content-pressed: #258832;
+  --lark-success-content-loading: #5cd168;
+  --lark-success-fill-transparent-01: rgba(53, 189, 75, 0.1);
+  --lark-success-bg-soft: #e4fae1;
+  --lark-success-on-fill: #ffffff;
+
+  --lark-warning-fill-default: #ff811a;
+  --lark-warning-fill-hover: #ff9d4c;
+  --lark-warning-fill-pressed: #ed6d0c;
+  --lark-warning-fill-loading: #ff9d4c;
+  --lark-warning-content-default: #ed6d0c;
+  --lark-warning-content-hover: #ff811a;
+  --lark-warning-content-pressed: #c25705;
+  --lark-warning-content-loading: #ff9d4c;
+  --lark-warning-fill-transparent-01: rgba(237, 109, 12, 0.1);
+  --lark-warning-bg-soft: #fff3e5;
+
+  --lark-info-fill-default: #1456f0;
+  --lark-info-content-default: #1456f0;
+  --lark-info-bg-soft: #f0f4ff;
+
+  /* Data visualization — UD colourful palette */
+  --lark-colorful-blue: #336df4;
+  --lark-colorful-carmine: #df58a5;
+  --lark-colorful-green: #35bd4b;
+  --lark-colorful-indigo: #5b65f5;
+  --lark-colorful-lime: #91ad00;
+  --lark-colorful-orange: #ff811a;
+  --lark-colorful-purple: #8d55ed;
+  --lark-colorful-red: #f54a45;
+  --lark-colorful-sunflower: #ffe928;
+  --lark-colorful-turquoise: #2dbeab;
+  --lark-colorful-violet: #bf3dbf;
+  --lark-colorful-wathet: #25b0e7;
+  --lark-colorful-yellow: #ffc60a;
+
+  /* Radii */
+  --lark-radius-xs: 2px;
+  --lark-radius-sm: 4px;
+  --lark-radius-md: 6px;
+  --lark-radius-lg: 8px;
+  --lark-radius-xl: 12px;
+  --lark-radius-2xl: 16px;
+  --lark-radius-full: 9999px;
+
+  /* Elevation — UD `shadow-s*` */
+  --lark-shadow-s1: 0px 1px 2px -2px rgba(31, 35, 41, 0.02), 0px 2px 4px 0px rgba(31, 35, 41, 0.02),
+    0px 2px 8px 2px rgba(31, 35, 41, 0.02);
+  --lark-shadow-s2: 0px 4px 16px 4px rgba(31, 35, 41, 0.03), 0px 4px 8px 0px rgba(31, 35, 41, 0.02),
+    0px 2px 4px -4px rgba(31, 35, 41, 0.02);
+  --lark-shadow-s3: 0px 6px 18px 6px rgba(31, 35, 41, 0.03), 0px 3px 6px -6px rgba(31, 35, 41, 0.05),
+    0px 4px 8px 0px rgba(31, 35, 41, 0.03);
+  --lark-shadow-s4: 0px 8px 24px 8px rgba(31, 35, 41, 0.04), 0px 6px 12px 0px rgba(31, 35, 41, 0.04),
+    0px 4px 8px -8px rgba(31, 35, 41, 0.06);
+  --lark-shadow-s5: 0px 10px 36px 10px rgba(31, 35, 41, 0.04), 0px 8px 24px 0px rgba(31, 35, 41, 0.04),
+    0px 6px 12px -10px rgba(31, 35, 41, 0.06);
+
+  /*
+   * Smooth float elevation.
+   *
+   * `shadow-s4/s5` stack three low-alpha layers whose spreads create plateaus.
+   * On 8-bit surfaces those plateaus show as concentric tonal steps (色阶)
+   * around Toast and Notification, which float over flat backgrounds. These
+   * single-layer shadows follow the same composite falloff — fitted to the
+   * s4/s5 profiles within ±0.01 alpha at every distance — so the elevation
+   * reads the same without the banding rings.
+   */
+  --lark-shadow-float-4: 0px 8px 32px rgba(31, 35, 41, 0.1);
+  --lark-shadow-float-5: 0px 10px 40px rgba(31, 35, 41, 0.1);
+
+  /* Motion */
+  --lark-duration-fast: 100ms;
+  --lark-duration-normal: 200ms;
+  --lark-ease-standard: cubic-bezier(0.34, 0.69, 0.1, 1);
+  --lark-ease-linear: cubic-bezier(0, 0, 1, 1);
+
+  /* Focus */
+  --lark-focus-ring: rgba(20, 86, 240, 0.36);
+  --lark-focus-ring-offset: #ffffff;
+
+  /* Sizing */
+  --lark-control-height-xs: 24px;
+  --lark-control-height-sm: 28px;
+  --lark-control-height-md: 32px;
+  --lark-control-height-lg: 40px;
+  --lark-control-height-xl: 48px;
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --lark-neutral-0: #1a1a1a;
+  --lark-neutral-50: #1f1f1f;
+  --lark-neutral-100: #242424;
+  --lark-neutral-200: #292929;
+  --lark-neutral-300: #333333;
+  --lark-neutral-350: #3d3d3d;
+  --lark-neutral-400: #4a4a4a;
+  --lark-neutral-500: #757575;
+  --lark-neutral-600: #a6a6a6;
+  --lark-neutral-650: #bbbfc4;
+  --lark-neutral-700: #d0d3d6;
+  --lark-neutral-800: #dee0e3;
+  --lark-neutral-900: #ebebeb;
+  --lark-neutral-1000: #ffffff;
+
+  --lark-primary-fill-default: #3370eb;
+  --lark-primary-fill-hover: #275fce;
+  --lark-primary-fill-pressed: #4c88ff;
+  --lark-primary-fill-loading: #2655b6;
+  --lark-primary-content-default: #4c88ff;
+  --lark-primary-content-hover: #3370eb;
+  --lark-primary-content-pressed: #75a4ff;
+  --lark-primary-content-loading: #2655b6;
+  --lark-primary-on-fill: #ffffff;
+  --lark-primary-fill-transparent-01: rgba(76, 136, 255, 0.15);
+  --lark-primary-fill-transparent-03: rgba(76, 136, 255, 0.3);
+  --lark-primary-fill-solid-02: #1f2f4d;
+  --lark-primary-fill-solid-03: #263d66;
+
+  --lark-text-title: #ebebeb;
+  --lark-text-body: #ebebeb;
+  --lark-text-caption: #a6a6a6;
+  --lark-text-placeholder: #757575;
+  --lark-text-disabled: #5f5f5f;
+  --lark-text-link-normal: #4c88ff;
+  --lark-text-link-hover: #3370eb;
+  --lark-text-link-pressed: #75a4ff;
+  --lark-text-link-loading: #2655b6;
+
+  --lark-icon-n1: #e8e8e8;
+  --lark-icon-n2: #a6a6a6;
+  --lark-icon-n3: #757575;
+  --lark-icon-disabled: #5f5f5f;
+
+  --lark-bg-body: #1a1a1a;
+  --lark-bg-base: #121212;
+  --lark-bg-body-overlay: #292929;
+  --lark-bg-content-base: #121212;
+  --lark-bg-filler: #373737;
+  --lark-bg-float: #292929;
+  --lark-bg-float-base: #373737;
+  --lark-bg-mask: rgba(0, 0, 0, 0.7);
+  --lark-bg-tips: #ebebeb;
+  --lark-bg-text-selection: rgba(76, 136, 255, 0.3);
+  --lark-bg-disabled: rgba(235, 235, 235, 0.12);
+
+  --lark-border-component: #505050;
+  --lark-border-card: rgba(235, 235, 235, 0.15);
+  --lark-border-divider: rgba(235, 235, 235, 0.15);
+
+  --lark-fill-hover: rgba(235, 235, 235, 0.1);
+  --lark-fill-pressed: rgba(235, 235, 235, 0.2);
+  --lark-fill-focus: rgba(235, 235, 235, 0.1);
+  --lark-fill-disabled: #5f5f5f;
+  --lark-fill-selected: rgba(76, 136, 255, 0.15);
+  --lark-fill-tag: rgba(235, 235, 235, 0.1);
+
+  --lark-danger-fill-default: #d14642;
+  --lark-danger-fill-hover: #b33a37;
+  --lark-danger-fill-pressed: #f05b56;
+  --lark-danger-fill-loading: #a03331;
+  --lark-danger-content-default: #f05b56;
+  --lark-danger-content-hover: #d14642;
+  --lark-danger-content-pressed: #f6827e;
+  --lark-danger-content-loading: #a03331;
+  --lark-danger-strong: #c02a26;
+  --lark-danger-strong-hover: #b33a37;
+  --lark-danger-strong-pressed: #a11c17;
+  --lark-danger-fill-transparent-01: rgba(240, 91, 86, 0.15);
+  --lark-danger-fill-transparent-03: rgba(240, 91, 86, 0.3);
+  --lark-danger-bg-soft: #3d1a19;
+  --lark-danger-fill-solid-02: #591f1d;
+  --lark-danger-fill-solid-03: #7b2524;
+  --lark-tag-text-neutral: #a6a6a6; /* N600 */
+  --lark-tag-text-primary: #8fb4ff; /* B700 */
+  --lark-tag-text-success: #69cc5c; /* G700 */
+  --lark-tag-text-warning: #f89e44; /* O700 */
+  --lark-tag-text-danger: #f89e9b; /* R700 */
+  --lark-tag-fill-neutral: rgba(166, 166, 166, 0.2); /* N600 @ 20% */
+  --lark-tag-fill-primary: rgba(76, 136, 255, 0.2); /* B500 @ 20% */
+  --lark-tag-fill-success: rgba(65, 158, 52, 0.2); /* G500 @ 20% */
+  --lark-tag-fill-warning: rgba(219, 112, 24, 0.2); /* O500 @ 20% */
+  --lark-tag-fill-danger: rgba(209, 70, 66, 0.2); /* R400 @ 20% */
+
+  --lark-success-fill-default: #419e34;
+  --lark-success-fill-hover: #35872a;
+  --lark-success-fill-pressed: #51ba43;
+  --lark-success-fill-loading: #296621;
+  --lark-success-content-default: #51ba43;
+  --lark-success-content-hover: #419e34;
+  --lark-success-content-pressed: #69cc5c;
+  --lark-success-content-loading: #296621;
+  --lark-success-fill-transparent-01: rgba(65, 158, 52, 0.15);
+  --lark-success-bg-soft: #0e2b0a;
+
+  --lark-warning-fill-default: #db7018;
+  --lark-warning-fill-hover: #b85e1a;
+  --lark-warning-fill-pressed: #f38f1b;
+  --lark-warning-fill-loading: #8a4a19;
+  --lark-warning-content-default: #f38f1b;
+  --lark-warning-content-hover: #db7018;
+  --lark-warning-content-pressed: #f89e44;
+  --lark-warning-content-loading: #8a4a19;
+  --lark-warning-fill-transparent-01: rgba(243, 135, 27, 0.15);
+  --lark-warning-bg-soft: #33210b;
+
+  --lark-info-fill-default: #4c88ff;
+  --lark-info-content-default: #4c88ff;
+  --lark-info-bg-soft: #162b52;
+
+  --lark-shadow-s1: 0px 1px 2px -2px rgba(0, 0, 0, 0.24), 0px 2px 4px 0px rgba(0, 0, 0, 0.2),
+    0px 2px 8px 2px rgba(0, 0, 0, 0.18);
+  --lark-shadow-s2: 0px 4px 16px 4px rgba(0, 0, 0, 0.26), 0px 4px 8px 0px rgba(0, 0, 0, 0.22),
+    0px 2px 4px -4px rgba(0, 0, 0, 0.2);
+  --lark-shadow-s3: 0px 6px 18px 6px rgba(0, 0, 0, 0.28), 0px 3px 6px -6px rgba(0, 0, 0, 0.3),
+    0px 4px 8px 0px rgba(0, 0, 0, 0.24);
+  --lark-shadow-s4: 0px 8px 24px 8px rgba(0, 0, 0, 0.3), 0px 6px 12px 0px rgba(0, 0, 0, 0.26),
+    0px 4px 8px -8px rgba(0, 0, 0, 0.24);
+  --lark-shadow-s5: 0px 10px 36px 10px rgba(0, 0, 0, 0.32), 0px 8px 24px 0px rgba(0, 0, 0, 0.28),
+    0px 6px 12px -10px rgba(0, 0, 0, 0.26);
+
+  /* Single-layer equivalents of the dark s4/s5 composites (see :root). */
+  --lark-shadow-float-4: 0px 8px 32px rgba(0, 0, 0, 0.5);
+  --lark-shadow-float-5: 0px 10px 40px rgba(0, 0, 0, 0.5);
+
+  --lark-focus-ring: rgba(76, 136, 255, 0.5);
+  --lark-focus-ring-offset: #1a1a1a;
+}

@@ -1,0 +1,65 @@
+@import "@larkui/tokens/base.css";
+
+@source "../components/**/*.{ts,tsx}";
+
+@layer base {
+  body {
+    background: var(--lark-bg-body);
+    color: var(--lark-text-title);
+    font-family: var(--lark-font-sans);
+    font-size: var(--lark-font-size-14);
+    line-height: var(--lark-line-height-14);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/*
+ * UD skeleton screen (Loading 骨架屏).
+ *
+ * Evidence in the 7.72 client:
+ *   .ud__skeleton .ud__skeleton__item__animation-layer { background: rgba(N900, 5%) }
+ *   .ud__skeleton-animation .ud__skeleton__item__animation-layer {
+ *     background: linear-gradient(90deg, N900 5%, N900 5% 33.33%, N900 8% 50%, N900 5% 66.67%, N900 5%);
+ *     width: 300%; animation: 2s linear infinite ud-skeleton-animation;
+ *   }
+ *   @keyframes ud-skeleton-animation { 0% { transform: translate(-66.67%) } to { transform: translate(0) } }
+ */
+@keyframes lark-skeleton-shimmer {
+  from {
+    transform: translateX(-66.67%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@utility lark-skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--lark-neutral-900) 5%, transparent);
+}
+
+@utility lark-skeleton-layer {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 300%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--lark-neutral-900) 5%, transparent) 0%,
+    color-mix(in srgb, var(--lark-neutral-900) 5%, transparent) 33.33%,
+    color-mix(in srgb, var(--lark-neutral-900) 8%, transparent) 50%,
+    color-mix(in srgb, var(--lark-neutral-900) 5%, transparent) 66.67%,
+    color-mix(in srgb, var(--lark-neutral-900) 5%, transparent) 100%
+  );
+  animation: lark-skeleton-shimmer 2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lark-skeleton-layer {
+    animation: none;
+  }
+}

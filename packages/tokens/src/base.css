@@ -1,0 +1,191 @@
+@layer ui-sdk;
+
+@import "tailwindcss";
+
+@import "@larkui/tokens/tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: var(--lark-font-sans);
+  --font-mono: var(--lark-font-mono);
+
+  --color-lark-primary: var(--lark-primary-fill-default);
+  --color-lark-primary-hover: var(--lark-primary-fill-hover);
+  --color-lark-primary-pressed: var(--lark-primary-fill-pressed);
+  --color-lark-primary-loading: var(--lark-primary-fill-loading);
+  --color-lark-primary-content: var(--lark-primary-content-default);
+  --color-lark-primary-soft: var(--lark-primary-fill-solid-02);
+  --color-lark-primary-softer: var(--lark-primary-fill-solid-03);
+  --color-lark-on-primary: var(--lark-primary-on-fill);
+
+  --color-lark-title: var(--lark-text-title);
+  --color-lark-body: var(--lark-text-body);
+  --color-lark-caption: var(--lark-text-caption);
+  --color-lark-placeholder: var(--lark-text-placeholder);
+  --color-lark-disabled: var(--lark-text-disabled);
+  --color-lark-link: var(--lark-text-link-normal);
+  --color-lark-link-hover: var(--lark-text-link-hover);
+  --color-lark-link-pressed: var(--lark-text-link-pressed);
+
+  --color-lark-icon-1: var(--lark-icon-n1);
+  --color-lark-icon-2: var(--lark-icon-n2);
+  --color-lark-icon-3: var(--lark-icon-n3);
+  --color-lark-icon-disabled: var(--lark-icon-disabled);
+
+  --color-lark-canvas: var(--lark-bg-body);
+  --color-lark-base: var(--lark-bg-base);
+  --color-lark-overlay: var(--lark-bg-body-overlay);
+  --color-lark-content: var(--lark-bg-content-base);
+  --color-lark-filler: var(--lark-bg-filler);
+  --color-lark-float: var(--lark-bg-float);
+  --color-lark-mask: var(--lark-bg-mask);
+  --color-lark-tips: var(--lark-bg-tips);
+  --color-lark-selection: var(--lark-bg-text-selection);
+  --color-lark-disabled-bg: var(--lark-bg-disabled);
+
+  --color-lark-border: var(--lark-border-component);
+  --color-lark-border-card: var(--lark-border-card);
+  --color-lark-divider: var(--lark-border-divider);
+
+  --color-lark-hover: var(--lark-fill-hover);
+  --color-lark-pressed: var(--lark-fill-pressed);
+  --color-lark-focus-fill: var(--lark-fill-focus);
+  --color-lark-fill-disabled: var(--lark-fill-disabled);
+  --color-lark-selected: var(--lark-fill-selected);
+  --color-lark-tag-fill: var(--lark-fill-tag);
+
+  --color-lark-danger: var(--lark-danger-fill-default);
+  --color-lark-danger-hover: var(--lark-danger-fill-hover);
+  --color-lark-danger-pressed: var(--lark-danger-fill-pressed);
+  --color-lark-danger-loading: var(--lark-danger-fill-loading);
+  --color-lark-danger-content: var(--lark-danger-content-default);
+  --color-lark-danger-strong: var(--lark-danger-strong);
+  --color-lark-danger-strong-hover: var(--lark-danger-strong-hover);
+  --color-lark-danger-strong-pressed: var(--lark-danger-strong-pressed);
+  --color-lark-danger-soft: var(--lark-danger-bg-soft);
+  --color-lark-danger-solid-02: var(--lark-danger-fill-solid-02);
+  --color-lark-danger-solid-03: var(--lark-danger-fill-solid-03);
+  --color-lark-on-danger: var(--lark-danger-on-fill);
+
+  --color-lark-success: var(--lark-success-fill-default);
+  --color-lark-success-hover: var(--lark-success-fill-hover);
+  --color-lark-success-pressed: var(--lark-success-fill-pressed);
+  --color-lark-success-content: var(--lark-success-content-default);
+  --color-lark-success-soft: var(--lark-success-bg-soft);
+  --color-lark-on-success: var(--lark-success-on-fill);
+
+  --color-lark-warning: var(--lark-warning-fill-default);
+  --color-lark-warning-hover: var(--lark-warning-fill-hover);
+  --color-lark-warning-content: var(--lark-warning-content-default);
+  --color-lark-warning-soft: var(--lark-warning-bg-soft);
+
+  --color-lark-info: var(--lark-info-fill-default);
+  --color-lark-info-content: var(--lark-info-content-default);
+  --color-lark-info-soft: var(--lark-info-bg-soft);
+
+  --color-lark-blue-50: var(--lark-blue-50);
+  --color-lark-blue-100: var(--lark-blue-100);
+  --color-lark-blue-200: var(--lark-blue-200);
+  --color-lark-blue-300: var(--lark-blue-300);
+  --color-lark-blue-400: var(--lark-blue-400);
+  --color-lark-blue-500: var(--lark-blue-500);
+  --color-lark-blue-600: var(--lark-blue-600);
+  --color-lark-blue-700: var(--lark-blue-700);
+  --color-lark-blue-800: var(--lark-blue-800);
+  --color-lark-blue-900: var(--lark-blue-900);
+
+  --color-lark-tag-neutral: var(--lark-tag-text-neutral);
+  --color-lark-tag-primary: var(--lark-tag-text-primary);
+  --color-lark-tag-success: var(--lark-tag-text-success);
+  --color-lark-tag-warning: var(--lark-tag-text-warning);
+  --color-lark-tag-danger: var(--lark-tag-text-danger);
+
+  --color-lark-neutral-0: var(--lark-neutral-0);
+  --color-lark-neutral-50: var(--lark-neutral-50);
+  --color-lark-neutral-100: var(--lark-neutral-100);
+  --color-lark-neutral-200: var(--lark-neutral-200);
+  --color-lark-neutral-300: var(--lark-neutral-300);
+  --color-lark-neutral-350: var(--lark-neutral-350);
+  --color-lark-neutral-400: var(--lark-neutral-400);
+  --color-lark-neutral-500: var(--lark-neutral-500);
+  --color-lark-neutral-600: var(--lark-neutral-600);
+  --color-lark-neutral-700: var(--lark-neutral-700);
+  --color-lark-neutral-800: var(--lark-neutral-800);
+  --color-lark-neutral-900: var(--lark-neutral-900);
+  --color-lark-neutral-1000: var(--lark-neutral-1000);
+
+  --radius-lark-xs: var(--lark-radius-xs);
+  --radius-lark-sm: var(--lark-radius-sm);
+  --radius-lark-md: var(--lark-radius-md);
+  --radius-lark-lg: var(--lark-radius-lg);
+  --radius-lark-xl: var(--lark-radius-xl);
+  --radius-lark-2xl: var(--lark-radius-2xl);
+  --radius-lark-full: var(--lark-radius-full);
+
+  --shadow-lark-1: var(--lark-shadow-s1);
+  --shadow-lark-2: var(--lark-shadow-s2);
+  --shadow-lark-3: var(--lark-shadow-s3);
+  --shadow-lark-4: var(--lark-shadow-s4);
+  --shadow-lark-5: var(--lark-shadow-s5);
+  --shadow-lark-float-4: var(--lark-shadow-float-4);
+  --shadow-lark-float-5: var(--lark-shadow-float-5);
+
+  --text-lark-12: var(--lark-font-size-12);
+  --text-lark-12--line-height: var(--lark-line-height-12);
+  --text-lark-14: var(--lark-font-size-14);
+  --text-lark-14--line-height: var(--lark-line-height-14);
+  --text-lark-16: var(--lark-font-size-16);
+  --text-lark-16--line-height: var(--lark-line-height-16);
+  --text-lark-18: var(--lark-font-size-18);
+  --text-lark-18--line-height: var(--lark-line-height-18);
+  --text-lark-20: var(--lark-font-size-20);
+  --text-lark-20--line-height: var(--lark-line-height-20);
+  --text-lark-24: var(--lark-font-size-24);
+  --text-lark-24--line-height: var(--lark-line-height-24);
+  --text-lark-32: var(--lark-font-size-32);
+  --text-lark-32--line-height: var(--lark-line-height-32);
+
+  --ease-lark: var(--lark-ease-standard);
+  --ease-lark-linear: var(--lark-ease-linear);
+}
+
+@layer base {
+  :where([data-slot]) {
+    font-family: var(--lark-font-sans);
+  }
+
+  :where(button, input, textarea, select) {
+    font: inherit;
+  }
+
+  ::selection {
+    background: var(--lark-bg-text-selection);
+  }
+}
+
+@utility lark-focus-ring {
+  outline: 2px solid var(--lark-primary-fill-default);
+  outline-offset: 2px;
+}
+
+@keyframes lark-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility lark-spinner {
+  display: inline-block;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  border-bottom-color: transparent;
+  animation: lark-spin 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lark-spinner {
+    animation-duration: 1.6s;
+  }
+}
