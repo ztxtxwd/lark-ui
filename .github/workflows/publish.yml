@@ -52,6 +52,13 @@ jobs:
             echo "publish=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # pnpm resolves this workspace link locally, but npm would ship the
+      # `workspace:*` specifier inside the published manifest.
+      - name: Drop workspace-only devDependencies from the published manifest
+        if: steps.version.outputs.publish == 'true'
+        working-directory: packages/core
+        run: npm pkg delete "devDependencies.@larkui/tokens"
+
       - name: Publish @larkui/core
         if: steps.version.outputs.publish == 'true'
         working-directory: packages/core
