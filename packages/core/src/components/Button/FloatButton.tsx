@@ -35,7 +35,11 @@ export type FloatButtonProps = Omit<
   position?: FloatButtonPosition;
   /** 固定在视口中，滚动不移动。 */
   fixed?: boolean;
-  /** 图标按钮的悬停提示；菜单模式下默认用 `menuLabel`。 */
+  /**
+   * 图标按钮的悬停提示；菜单模式下默认用 `menuLabel`。禁用时只有显式传入的
+   * 提示才会渲染，同时按钮保持可聚焦（`aria-disabled`），键盘用户才能看到
+   * 禁用原因；默认的 `menuLabel` 不解释禁用原因，因此禁用时不显示。
+   */
   tooltip?: ReactNode | false;
   /** 菜单模式：点击展开同类操作。省略时是单操作悬浮按钮。 */
   items?: FloatButtonItem[];
@@ -82,10 +86,28 @@ export function FloatButton({
   className,
   children,
   disabled = false,
+  focusableWhenDisabled: focusableWhenDisabledProp,
   ...props
 }: FloatButtonProps) {
   const metrics = sizeMetrics[size];
   const menuMode = Boolean(items && items.length > 0);
+
+  // Single-action mode shows only an explicitly passed tooltip; menu mode falls
+  // back to `menuLabel`. A natively disabled button receives no pointer events
+  // and is out of the tab order, so a hint on it could never be read (and
+  // ui-sdk warns about it). Whenever a hint is worth reading we keep the button
+  // focusable with `aria-disabled`; while disabled the default `menuLabel` is
+  // dropped because it does not explain why the control is unavailable.
+  const hint = menuMode
+    ? tooltip === false || (disabled && tooltip == null)
+      ? null
+      : (tooltip ?? menuLabel)
+    : tooltip
+      ? tooltip
+      : null;
+  // An explicit `focusableWhenDisabled` from the Button props wins; otherwise
+  // only a hint that explains the disabled state keeps the button reachable.
+  const focusableWhenDisabled = focusableWhenDisabledProp ?? (disabled && Boolean(hint));
 
   const visual = cn(
     "shadow-lark-3",
@@ -103,6 +125,9 @@ export function FloatButton({
       size={metrics.button}
       shape={shape}
       disabled={disabled}
+      // MenuTrigger merges the element's props last, so the Button's own
+      // `disabled` would restore the native attribute without this.
+      focusableWhenDisabled={focusableWhenDisabled}
       className={visual}
     >
       {children}
@@ -110,14 +135,20 @@ export function FloatButton({
   );
 
   if (!menuMode) {
-    return tooltip ? <Tooltip content={tooltip}>{surface}</Tooltip> : surface;
+    return hint ? <Tooltip content={hint}>{surface}</Tooltip> : surface;
   }
 
   const menuSide = position.startsWith("bottom") ? "top" : "bottom";
   const menuAlign = position.endsWith("right") ? "end" : "start";
-  const hint = tooltip === false ? null : (tooltip ?? menuLabel);
 
-  const trigger = <UiMenuTrigger aria-label={menuLabel} disabled={disabled} render={surface} />;
+  const trigger = (
+    <UiMenuTrigger
+      aria-label={menuLabel}
+      disabled={disabled}
+      focusableWhenDisabled={focusableWhenDisabled}
+      render={surface}
+    />
+  );
 
   return (
     <Dropdown onSelect={onSelect}>

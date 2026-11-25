@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { PlusIcon } from "../../icons";
 import { SplitButton } from "./SplitButton";
@@ -21,6 +22,7 @@ function Demo({
   disabled?: boolean;
   block?: boolean;
   variant?: "split" | "menu";
+  tooltip?: ReactNode | false;
   "aria-label"?: string;
 }) {
   return (
@@ -115,6 +117,38 @@ describe("SplitButton", () => {
     for (const button of screen.getAllByRole("button")) {
       expect(button).toBeDisabled();
     }
+  });
+
+  it("drops the default menu hint instead of hanging it on a disabled segment", () => {
+    render(<Demo disabled />);
+
+    const trigger = screen.getByRole("button", { name: "更多操作" });
+    expect(trigger).toHaveAttribute("disabled");
+    expect(trigger).not.toHaveAttribute("aria-disabled");
+    // A mounted Tooltip would describe the trigger even while closed.
+    expect(trigger).not.toHaveAttribute("aria-describedby");
+  });
+
+  it("keeps a disabled segment focusable when a tooltip explains why", async () => {
+    const onSelect = vi.fn();
+    render(<Demo disabled tooltip="当前空间没有操作权限" onSelect={onSelect} />);
+
+    const trigger = screen.getByRole("button", { name: "更多操作" });
+    expect(trigger).toHaveAttribute("aria-disabled", "true");
+    expect(trigger).not.toHaveAttribute("disabled");
+    // The focusable path still renders the UD disabled fill.
+    expect(trigger).toHaveAttribute("data-disabled");
+    expect(getComputedStyle(trigger).backgroundColor).toBe("rgb(187, 191, 196)");
+
+    await userEvent.tab();
+    expect(trigger).toHaveFocus();
+    expect(await screen.findByRole("tooltip", {}, { timeout: 1000 })).toHaveTextContent(
+      "当前空间没有操作权限",
+    );
+
+    await userEvent.click(trigger);
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    expect(onSelect).not.toHaveBeenCalled();
   });
 
   it("stretches the main action for block layouts", () => {

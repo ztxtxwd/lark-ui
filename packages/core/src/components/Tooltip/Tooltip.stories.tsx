@@ -74,3 +74,25 @@ export const IconTrigger: Story = {
     </Tooltip>
   ),
 };
+
+export const DisabledButton: Story = {
+  name: "Disabled button",
+  args: { content: "当前空间已满，无法创建文档" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "禁用按钮不在 Tab 顺序里、也收不到指针事件，直接套 Tooltip 既看不到提示，" +
+          "ui-sdk 还会报警告。给触发元素加 `focusableWhenDisabled`：按钮改用 " +
+          "`aria-disabled` 保持可聚焦，按下仍然无效，键盘和鼠标都能读到禁用原因。",
+      },
+    },
+  },
+  render: (args) => (
+    <Tooltip {...args}>
+      <Button disabled focusableWhenDisabled>
+        创建文档
+      </Button>
+    </Tooltip>
+  ),
+};

@@ -56,6 +56,16 @@ export const Secondary: Story = {
   },
 };
 
+export const DisabledWithReason: Story = {
+  name: "Disabled with tooltip",
+  args: {
+    disabled: true,
+    "aria-label": "新建",
+    tooltip: "空间已满，无法新建",
+    children: <PlusIcon />,
+  },
+};
+
 export const Text: Story = {
   args: {
     shape: "round",

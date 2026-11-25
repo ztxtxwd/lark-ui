@@ -42,7 +42,13 @@ export type SplitButtonProps = DropdownStateProps & {
   block?: boolean;
   /** Accessible name for the dropdown segment. */
   menuLabel?: string;
-  /** Hover hint for the dropdown segment. Set false to skip the tooltip. */
+  /**
+   * Hover hint for the dropdown segment; defaults to `menuLabel`. Set false to
+   * skip the tooltip. While the button is disabled only an explicitly set hint
+   * renders: the segment then stays focusable (`aria-disabled`) so keyboard
+   * users can read why it is unavailable. The default label explains nothing
+   * about the disabled state, so it is dropped.
+   */
   tooltip?: ReactNode | false;
   side?: "top" | "bottom";
   align?: "start" | "end";
@@ -104,16 +110,29 @@ export function SplitButton({
   ref,
   ...dropdownProps
 }: SplitButtonProps) {
+  // A natively disabled button leaves the tab order and receives no pointer
+  // events, so a tooltip on it can never reach keyboard users (and ui-sdk warns
+  // about it). Keep the segment focusable with `aria-disabled` whenever a hint
+  // is worth reading, and drop the default `menuLabel` hint while disabled —
+  // it says nothing about why the control is unavailable.
+  const hint = tooltip === false || (disabled && tooltip == null) ? null : (tooltip ?? menuLabel);
+  const focusableWhenDisabled = disabled && Boolean(hint);
+
   const dropdownTrigger = (
     <UiMenuTrigger
       aria-label={menuLabel}
       disabled={disabled}
+      focusableWhenDisabled={focusableWhenDisabled}
       render={
         <Button
           appearance={appearance}
           tone={tone}
           size={size}
           disabled={disabled}
+          // The element's own props win over the trigger's when ui-sdk merges
+          // them, so the native `disabled` above would come back unless this
+          // is mirrored here as well.
+          focusableWhenDisabled={focusableWhenDisabled}
           className={cn(
             "group -ml-px min-w-0 shrink-0 rounded-l-none px-0",
             triggerWidth[size],
@@ -125,7 +144,6 @@ export function SplitButton({
       }
     />
   );
-  const hint = tooltip === false ? null : (tooltip ?? menuLabel);
 
   return (
     <Dropdown {...dropdownProps} onSelect={onSelect}>

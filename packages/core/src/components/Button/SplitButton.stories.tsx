@@ -91,6 +91,14 @@ export const Disabled: Story = {
   args: { disabled: true },
 };
 
+export const DisabledWithReason: Story = {
+  name: "Disabled with tooltip",
+  args: {
+    disabled: true,
+    tooltip: "当前空间没有创建权限",
+  },
+};
+
 export const Loading: Story = {
   args: { loading: true },
 };

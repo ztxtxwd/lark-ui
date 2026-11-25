@@ -93,6 +93,75 @@ describe("FloatButton", () => {
     expect(await screen.findByRole("tooltip", {}, { timeout: 1000 })).toHaveTextContent("新建文档");
   });
 
+  it("keeps a disabled float focusable when a tooltip explains why", async () => {
+    const onClick = vi.fn();
+    render(
+      <FloatButton aria-label="新建" tooltip="空间已满，无法新建" disabled onClick={onClick}>
+        <PlusIcon />
+      </FloatButton>,
+    );
+
+    const button = screen.getByRole("button", { name: "新建" });
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    expect(button).not.toHaveAttribute("disabled");
+    expect(button).toHaveAttribute("data-disabled");
+
+    await userEvent.tab();
+    expect(button).toHaveFocus();
+    expect(await screen.findByRole("tooltip", {}, { timeout: 1000 })).toHaveTextContent(
+      "空间已满，无法新建",
+    );
+
+    await userEvent.click(button);
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it("keeps a disabled menu trigger focusable when a tooltip explains why", async () => {
+    render(
+      <FloatButton
+        aria-label="加入用户群"
+        menuLabel="加入用户群"
+        tooltip="当前空间未开通用户群"
+        disabled
+        items={[{ value: "react", label: "React 用户群" }]}
+      >
+        <MoreHorizontalIcon />
+      </FloatButton>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "加入用户群" });
+    expect(trigger).toHaveAttribute("aria-disabled", "true");
+    expect(trigger).not.toHaveAttribute("disabled");
+    expect(trigger).toHaveAttribute("data-disabled");
+
+    await userEvent.tab();
+    expect(trigger).toHaveFocus();
+    expect(await screen.findByRole("tooltip", {}, { timeout: 1000 })).toHaveTextContent(
+      "当前空间未开通用户群",
+    );
+
+    await userEvent.click(trigger);
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  });
+
+  it("drops the default menu hint instead of hanging it on a disabled trigger", () => {
+    render(
+      <FloatButton
+        aria-label="加入用户群"
+        menuLabel="加入用户群"
+        disabled
+        items={[{ value: "react", label: "React 用户群" }]}
+      >
+        <MoreHorizontalIcon />
+      </FloatButton>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "加入用户群" });
+    expect(trigger).toHaveAttribute("disabled");
+    expect(trigger).not.toHaveAttribute("aria-disabled");
+    expect(trigger).not.toHaveAttribute("aria-describedby");
+  });
+
   it("opens a menu of related actions above the float", async () => {
     const onSelect = vi.fn();
     render(
